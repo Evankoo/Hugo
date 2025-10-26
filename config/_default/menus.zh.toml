@@ -1,0 +1,54 @@
+[[main]]
+name = "首页"
+identifier = "home"
+weight = 100
+url = "/"
+
+[[main]]
+name = "文章"
+identifier = "posts"
+weight = 200
+url = "/post/"
+
+[[main]]
+name = "作品集"
+identifier = "portfolio"
+weight = 300
+url = "/portfolio/"
+
+[[main]]
+name = "关于"
+identifier = "about"
+weight = 400
+url = "/about/"
+
+[[main]]
+name = "成就"
+identifier = "accomplishments"
+weight = 500
+
+[[main]]
+name = "奖项"
+identifier = "awards"
+weight = 510
+url = "/awards/"
+parent = "accomplishments"
+
+[[main]]
+name = "认证"
+identifier = "certifications"
+weight = 520
+url = "/certifications/"
+parent = "accomplishments"
+
+[[main]]
+name = "联系"
+identifier = "contact"
+weight = 600
+url = "/contact/"
+
+[[footer]]
+name = "版权信息"
+identifier = "imprint"
+weight = 1
+url = "/imprint/"

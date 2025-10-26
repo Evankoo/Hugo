@@ -1,0 +1,12 @@
+
+[zh]
+title = "伊万的个人主页"
+weight = 1
+LanguageName = "ZH"
+contentDir = "content/zh"
+
+[en]
+title = "My blog"
+weight = 2
+LanguageName = "EN"
+contentDir = "content/en"
