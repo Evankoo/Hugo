@@ -6,3 +6,4 @@ theme = 'anatole'
 
 [params]
 profilePicture = "images/profile.png"
+favicon = "favicons/"   # 注意路径只到文件夹，不带文件名
