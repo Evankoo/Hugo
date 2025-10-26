@@ -2,7 +2,7 @@
 title = "我是伊万"
 author = "伊万"
 #copyright = "2021-2025"
-description = "一直在做高客单培训项目线上获客<br>有时会给企业做自媒体陪跑<br>举办过百来场活动的心理博主<br>详情可浏览主页（建设中）<br>业务对口可以链接Evankoo"
+description = "一直在做高客单培训项目线上获客<br>有时会给企业做自媒体陪跑<br>ACT流派心理博主<br>详情可浏览主页（建设中）<br>合作+vx：Egan89757"
 profilePicture = "images/profile.png"
 keywords = ""
 favicon = "favicons/"
@@ -59,30 +59,24 @@ reversepagetitle = true # When set to 'true', the Window Title will be reversed 
 ## Social links
 # use 'fa-brands' when brand icons, use 'fas' when standard solid icons.
 [[socialIcons]]
-icon = "fa-brands fa-linkedin"
-title = "Linkedin"
-url = "https://de.linkedin.com/"
+icon = "fa-brands fa-tiktok"
+title = "Douyin"
+url = "https://v.douyin.com/t59c51MW_AI/"
 
 [[socialIcons]]
-icon = "fa-brands fa-github"
-title = "GitHub"
-url = "https://github.com/lxndrblz/anatole/"
-
-[[socialIcons]]
-icon = "fa-brands fa-instagram"
-title = "instagram"
-url = "https://www.instagram.com/"
-
-[[socialIcons]]
-icon = "fa-solid fa-envelope"
-title = "e-mail"
-url = "mailto:mail@example.com"
-
-[[socialIcons]]
-# Hugo 主题可能没有官方小红书图标，这里用通用的 Font Awesome 星形图标代替
-icon = "simple-icons:xiaohongshu"  
-title = "xiaohongshu"
+icon = "fa-solid fa-hashtag"
+title = "Rednote"
 url = "https://xhslink.com/m/A6TTJjtFHwC"
+
+[[socialIcons]]
+icon = "fa-brands fa-weixin"
+title = "Weixin"
+url = "/contact/"
+
+[[socialIcons]]
+icon = "fa-solid fa-podcast"
+title = "podcast"
+url = "https://www.xiaoyuzhoufm.com/podcast/6546ac72d4c94bc46aec5147"
 
 [mermaid]
 # enable = true

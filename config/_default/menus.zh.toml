@@ -23,23 +23,10 @@ weight = 400
 url = "/about/"
 
 [[main]]
-name = "成就"
-identifier = "accomplishments"
+name = "标签"
+identifier = "tags"
 weight = 500
-
-[[main]]
-name = "奖项"
-identifier = "awards"
-weight = 510
-url = "/awards/"
-parent = "accomplishments"
-
-[[main]]
-name = "认证"
-identifier = "certifications"
-weight = 520
-url = "/certifications/"
-parent = "accomplishments"
+url = "/tags/"
 
 [[main]]
 name = "联系"

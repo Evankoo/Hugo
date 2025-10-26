@@ -1,0 +1,114 @@
+{{ define "main" }}
+<div class="tag-page-container">
+  <h1 class="tag-page-title">标签列表</h1>
+
+  {{ $tags := .Site.Taxonomies.tags }}
+  {{ if $tags }}
+    {{ $tagSlice := slice }}
+    {{ range $name, $pages := $tags }}
+      {{ $tagSlice = $tagSlice | append (dict "name" $name "pages" $pages "count" (len $pages)) }}
+    {{ end }}
+    {{ $sortedTags := sort $tagSlice "count" "desc" }}
+
+    <div class="tag-list-columns">
+      {{ range $tag := $sortedTags }}
+        <div class="tag-block">
+	<h2 class="tag-title">
+  		<a href="{{ "/tags/" | relLangURL }}{{ $tag.name | urlize }}">
+    		{{ $tag.name }} ({{ $tag.count }})
+  		</a>
+	</h2>
+          <ul class="tag-articles">
+            {{ $limit := 5 }}
+            {{ range $index, $page := first $limit $tag.pages }}
+              <li>
+                <a href="{{ $page.Permalink }}">{{ $page.Title }}</a>
+                <span class="article-date">{{ $page.Date.Format "2006-01-02" }}</span>
+              </li>
+            {{ end }}
+            {{ if gt $tag.count $limit }}
+              <li class="tag-more">
+                <a href="{{ "/tags/" | relLangURL }}{{ $tag.name | urlize }}">查看更多 &raquo;</a>
+              </li>
+            {{ end }}
+          </ul>
+        </div>
+      {{ end }}
+    </div>
+  {{ else }}
+    <p>暂无标签。</p>
+  {{ end }}
+</div>
+
+<style>
+.tag-page-container {
+  padding: 20px;
+}
+
+.tag-page-title {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 25px;
+}
+
+/* 两列布局 */
+.tag-list-columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+/* 单个标签块占50%，两列布局 */
+.tag-block {
+  width: calc(50% - 15px); /* 两列间距 30px，左右各减半 */
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #ccc;
+}
+
+.tag-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: inherit;
+}
+
+.tag-articles {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tag-articles li {
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.tag-articles a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.tag-articles a:hover {
+  text-decoration: underline;
+}
+
+.article-date {
+  font-size: 13px;
+  color: #999;
+}
+
+.tag-more a {
+  font-style: italic;
+  font-size: 14px;
+}
+
+/* 响应式：小屏幕下一列显示 */
+@media (max-width: 768px) {
+  .tag-block {
+    width: 100%;
+  }
+}
+</style>
+{{ end }}

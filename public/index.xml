@@ -140,17 +140,6 @@
     </item>
     
     <item>
-      <title>Contact</title>
-      <link>http://localhost:1313/contact/</link>
-      <pubDate>Fri, 08 Mar 2019 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/contact/</guid>
-      
-        <description>Contact Page</description>
-      
-    </item>
-    
-    <item>
       <title>Emoji Support</title>
       <link>http://localhost:1313/post/emoji-support/</link>
       <pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate>
@@ -190,12 +179,44 @@
       
       <guid>http://localhost:1313/imprint/</guid>
       
-        <description>&lt;h1 id=&#34;legal-disclosure&#34;&gt;Legal Disclosure&lt;/h1&gt;
-&lt;p&gt;Information in accordance with the applicable law&lt;/p&gt;
-&lt;p&gt;Jane Doe&lt;br&gt;
-Anatole Street 10&lt;br&gt;
-2016 GoHugo&lt;br&gt;
-Germany&lt;/p&gt;</description>
+        <description>&lt;h1 id=&#34;版权声明&#34;&gt;版权声明&lt;/h1&gt;
+&lt;p&gt;更新日期：2025-10-26&lt;/p&gt;
+&lt;p&gt;适用范围：本声明适用于本网站及所有子页面与相关服务。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;版权归属&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;除另有说明外，本网站所载之文字、图片、音视频、版式设计与程序代码等内容的著作权及/或其他相关权利，均归本网站域名归属人所有。&lt;/li&gt;
+&lt;li&gt;未经书面许可，任何单位或个人不得以任何形式（包括但不限于复制、转载、改编、汇编、镜像、抓取或将内容用于训练模型或商业用途）使用本站内容。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;授权与转载&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;非商业转载：在不作实质性改动、保留作者署名与来源链接的前提下，允许非商业转载。请注明来源：evan-manual.com。&lt;/li&gt;
+&lt;li&gt;商业使用：须事先取得书面授权，请联系网站域名归属人。&lt;/li&gt;
+&lt;li&gt;第三方内容：标注来源的第三方作品版权归原权利人所有，使用请遵循其授权规定；如需再使用，请直接联系原权利人。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;免责声明&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;本站信息仅供参考，不构成任何投资、医疗、法律或其他专业建议。因使用本站内容导致的直接或间接损失，本站不承担责任。&lt;/li&gt;
+&lt;li&gt;本站力求内容准确与及时，但不保证其完整性、及时性与适用性。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;侵权处理&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;如认为本站内容侵犯您的合法权益，请邮件至：gqj9071@gmail.com，并提供：
+&lt;ul&gt;
+&lt;li&gt;权利人身份证明（或授权证明）&lt;/li&gt;
+&lt;li&gt;作品权属证明与涉嫌侵权页面链接/截图&lt;/li&gt;
+&lt;li&gt;侵权情况说明与有效联系方式&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;我们将在收到合规材料后尽快核查并处理（通常于3-5个工作日内）。&lt;/li&gt;
+&lt;/ul&gt;</description>
       
     </item>
     

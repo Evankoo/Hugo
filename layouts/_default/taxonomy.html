@@ -1,0 +1,59 @@
+{{ define "main" }}
+<div class="single-tag-page">
+  <!-- 标签标题 -->
+  <h1 class="single-tag-title">{{ .Title }}</h1>
+
+  {{ $pages := .Pages.ByDate.Reverse }}
+
+  <ul class="single-tag-list">
+    {{ range $pages }}
+      <li class="single-tag-item">
+        <a class="single-tag-link" href="{{ .Permalink }}">{{ .Title }}</a>
+        <span class="single-tag-date">{{ .Date.Format "2006-01-02" }}</span>
+      </li>
+    {{ end }}
+  </ul>
+</div>
+
+<style>
+.single-tag-page {
+  padding: 20px;
+}
+
+.single-tag-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+.single-tag-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.single-tag-item {
+  display: flex;            /* 标题和日期在同一行 */
+  justify-content: space-between; /* 左右对齐 */
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.single-tag-link {
+  font-size: 20px;
+  font-weight: 600;
+  color: #222;
+  text-decoration: none;
+}
+
+.single-tag-link:hover {
+  color: #000;
+}
+
+.single-tag-date {
+  font-size: 14px;
+  color: #888;
+  flex-shrink: 0;           /* 防止日期换行 */
+}
+</style>
+{{ end }}
