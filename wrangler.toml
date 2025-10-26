@@ -1,4 +1,5 @@
-name = "hosting-cloudflare-worker"
+# wrangler.toml
+name = 'evanmaunal'
 compatibility_date = "2025-10-26"
 
 [build]
@@ -7,3 +8,8 @@ command = "chmod a+x build.sh && ./build.sh"
 [assets]
 directory = "./public"
 not_found_handling = "404-page"
+
+# ✅ 新增路由配置（告诉 Cloudflare 你的域名在哪）
+routes = [
+  { pattern = "evan-manual.com/*", zone_name = "evan-manual.com" }
+]

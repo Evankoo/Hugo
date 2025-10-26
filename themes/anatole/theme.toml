@@ -17,6 +17,6 @@ min_version = "0.128.0"
 
 # If porting an existing theme
 [original]
-  author = "Cai Cai"
-  homepage = "https://www.caicai.me/"
-  repo = "https://github.com/hi-caicai/farbox-theme-Anatole"
+  author = "伊万"
+  homepage = "https://www.evan-manual.com/"
+  repo = "https://github.com/Evankoo/Hugo"
