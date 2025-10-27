@@ -54,11 +54,16 @@
         {{ else }}
           <h3><a href="{{ .RelPermalink }}">{{ upper .Title }}</a></h3>
         {{ end }}
-        {{ if .Site.Params.fullPostContent }}
-          <p>{{ .Content | safeHTML | plainify }}</p>
-        {{ else }}
-          <p>{{ .Summary | safeHTML | plainify }}</p>
-        {{ end }}
+
+        <!-- 改成一行显示 -->
+        <p class="post-line">
+          {{ if .Params.summary }}
+            {{ .Params.summary | safeHTML | plainify | truncate 100 }}
+          {{ else }}
+            {{ .Content | safeHTML | plainify | truncate 100 }}
+          {{ end }}
+        </p>
+
         <!-- add read more -->
         {{- if and (.Truncated) (.Site.Params.readMore) -}}
           <a href="{{ .RelPermalink }}">{{ i18n "read_more" }}</a>

@@ -27,3 +27,10 @@
 @use 'partials/vendors/contactform';
 @use 'partials/vendors/tableofcontents';
 @use 'partials/vendors/table';
+.post__content p {
+  display: -webkit-box;       // 兼容webkit浏览器
+  -webkit-line-clamp: 1;      // 限制显示1行
+  -webkit-box-orient: vertical;
+  overflow: hidden;           // 超出部分隐藏
+  text-overflow: ellipsis;    // 用省略号表示
+}

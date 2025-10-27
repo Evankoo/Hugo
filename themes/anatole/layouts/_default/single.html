@@ -1,117 +1,76 @@
 {{ define "main" }}
-  <div
-    class="post {{ with .Site.Params.doNotLoadAnimations }}
-      .
+<div class="post animated fadeInDown">
+
+  {{ if .Params.thumbnail }}
+    <div class="post__thumbnail-wrapper">
+      <img class="post__thumbnail" src="{{ .Params.thumbnail | relURL }}" alt="{{ .Title }}">
+    </div>
+  {{ end }}
+
+  <div class="post__content">
+    {{ if eq .Site.Params.disableTitleCapitalization true }}
+      <h1>{{ .Title }}</h1>
     {{ else }}
-      animated fadeInDown
-    {{ end }}"
-  >
-    {{ if .Params.thumbnail }}
-      <div class="post__thumbnail-wrapper">
-        <img class="post__thumbnail" src="{{ .Params.thumbnail | relURL }}" alt="Thumbnail image" />
-      </div>
+      <h1>{{ title .Title }}</h1>
     {{ end }}
-    <div class="post__content">
-      {{ if (eq .Site.Params.disableTitleCapitalization true) }}
-        <h1>{{ .Title }}</h1>
-      {{ else }}
-        <h1>{{ title .Title }}</h1>
-      {{ end }}
-      {{ if or (eq .Type "post") (eq .Type .Site.Params.postSectionName) }}
-        <ul class="post__meta">
-          <li class="post__meta-item">
-            <em class="fas fa-calendar-day post__meta-icon"></em>
-            <span class="post__meta-text"
-              >{{ if isset .Site.Params "singledateformat" }}
-                {{ if .Site.Params.localizedDates }}
-                  {{ time.Format .Site.Params.singleDateFormat .Date }}
-                {{ else }}
-                  {{ .Date.Format .Site.Params.singleDateFormat }}
-                {{ end }}
 
-              {{ else }}
-                {{ if .Site.Params.localizedDates }}
-                  {{ time.Format "Mon, Jan 2, 2006" .Date }}
-                {{ else }}
-                  {{ .Date.Format "Mon, Jan 2, 2006" }}
-                {{ end }}
+    {{ if or (eq .Type "post") (eq .Type .Site.Params.postSectionName) }}
+      <ul class="post__meta">
+        <li class="post__meta-item">
+          <em class="fas fa-calendar-day post__meta-icon"></em>
+<span class="post__meta-text">
+  {{ with .Params.date }}
+    {{ $d := time . }}          <!-- Hugo 内置 time 函数 -->
+    {{ $d.Format "2006-01-02" }} <!-- 只显示年月日 -->
+  {{ else }}
+    未设置日期
+  {{ end }}
+</span>
+        </li>
+      </ul>
+    {{ end }}
 
-              {{ end }}
-            </span>
-          </li>
-          <li class="post__meta-item">
-            <em class="fas fa-stopwatch post__meta-icon"></em>
-            <span class="post__meta-text">{{ i18n "reading_time" .ReadingTime }}</span>
-          </li>
-        </ul>
-      {{ end }}
+    {{- partial "expirationnote.html" . -}}
 
-      {{- partial "expirationnote.html" . -}}
+    {{- if eq .Params.toc true -}}
+      {{- partial "toc.html" . -}}
+    {{- end -}}
 
-      {{- if (eq .Params.toc true) -}}
-        {{- partial "toc.html" . -}}
-      {{- end -}}
+    {{ .Content }}
 
-      {{ .Content }}
+    {{- if isset .Params "series" -}}
+      {{- partial "series.html" . -}}
+    {{- end -}}
 
-      {{- if isset .Params "series" -}}
-        {{- partial "series.html" . -}}
-      {{- end -}}
+    {{- if eq .Site.Params.relatedPosts true -}}
+      {{- partial "related.html" . -}}
+    {{- end -}}
 
-      {{- if (eq .Site.Params.relatedPosts true) -}}
-        {{- partial "related.html" . -}}
-      {{- end -}}
+    {{- if eq .Params.contact true -}}
+      {{- partial "contact.html" . -}}
+    {{- end -}}
 
-      {{- if (eq .Params.contact true) -}}
-        {{- partial "contact.html" . -}}
-      {{- end -}}
+    {{- if eq .Site.Params.mermaid.enable true -}}
+      {{- partial "mermaid.html" . -}}
+    {{- end -}}
+  </div>
 
-      {{- if (eq .Site.Params.mermaid.enable true) -}}
-        {{- partial "mermaid.html" . -}}
-      {{- end -}}
-    </div>
-    <div class="post__footer">
-      {{ with .Page.Params.Categories }}
-        {{ partial "taxonomy/categories.html" . }}
-      {{ end }}
+  <div class="post__footer">
+    {{ with .Page.Params.Categories }}
+      {{ partial "taxonomy/categories.html" . }}
+    {{ end }}
 
-      {{ with .Page.Params.Tags }}
-        {{ partial "taxonomy/tags.html" . }}
-      {{ end }}
-    </div>
-
-    {{ if and (or (eq .Type "post") (eq .Type .Site.Params.postSectionName)) (ne .Page.Params.disableComments true) }}
-      {{- if .Site.Config.Services.Disqus.Shortname -}}
-        <div id="comment">
-          <h2>{{ i18n "comments" }}</h2>
-          {{ template "_internal/disqus.html" . }}
-        </div>
-      {{- end -}}
-      {{- if .Site.Params.utterances.repo -}}
-        <div id="comment">
-          <h2>{{ i18n "comments" }}</h2>
-          {{ partial "comments/utterances.html" . }}
-        </div>
-      {{- end -}}
-      {{- if .Site.Params.giscus.repo -}}
-        <div id="comment">
-          <h2>{{ i18n "comments" }}</h2>
-          {{ partial "comments/giscus.html" . }}
-        </div>
-      {{- end -}}
-      {{- if .Site.Params.CommentoURL -}}
-        <div id="comment">
-          <h2>{{ i18n "comments" }}</h2>
-          {{ partial "comments/commento.html" . }}
-        </div>
-      {{- end -}}
-      {{- if .Site.Params.gitalk.repo -}}
-        <div id="comment">
-          <h2>{{ i18n "comments" }}</h2>
-          {{ partial "comments/gitalk.html" . }}
-        </div>
-      {{- end -}}
-
+    {{ with .Page.Params.Tags }}
+      {{ partial "taxonomy/tags.html" . }}
     {{ end }}
   </div>
+
+  {{ if and (or (eq .Type "post") (eq .Type .Site.Params.postSectionName)) (ne .Site.Config.Services.Disqus.Shortname "") }}
+    <div id="comment">
+      <h2>{{ i18n "comments" }}</h2>
+      {{ template "_internal/disqus.html" . }}
+    </div>
+  {{ end }}
+
+</div>
 {{ end }}
