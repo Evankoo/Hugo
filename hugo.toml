@@ -22,6 +22,9 @@ localizedDates = false
 [[module.imports]]
 path = "github.com/hugomods/icons"
 
+[permalinks]
+post = "/post/:slug/"
+
 # [params] 主题自定义参数
 [params]
 mermaidEnable = true

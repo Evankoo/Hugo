@@ -9,10 +9,10 @@
     <lastBuildDate>Mon, 27 Oct 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>测试文章</title>
-      <link>http://localhost:1313/post/20231126-%E6%AD%BB%E4%BA%A1%E8%87%AA%E7%94%B1%E5%AD%A4%E7%8B%AC%E6%97%A0%E6%84%8F%E4%B9%89%E5%AD%98%E5%9C%A8%E4%B8%BB%E4%B9%89%E5%BF%83%E7%90%86%E6%B2%BB%E7%96%97/</link>
+      <link>http://localhost:1313/post/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/</link>
       <pubDate>Mon, 27 Oct 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/20231126-%E6%AD%BB%E4%BA%A1%E8%87%AA%E7%94%B1%E5%AD%A4%E7%8B%AC%E6%97%A0%E6%84%8F%E4%B9%89%E5%AD%98%E5%9C%A8%E4%B8%BB%E4%B9%89%E5%BF%83%E7%90%86%E6%B2%BB%E7%96%97/</guid>
+      <guid>http://localhost:1313/post/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/</guid>
       
         <description>&lt;p&gt;这是正文内容，用来测试阅读时间。&lt;/p&gt;</description>
       
@@ -20,10 +20,10 @@
     
     <item>
       <title>每个人都有哪些基本生活困境｜《存在主义心理治疗》</title>
-      <link>http://localhost:1313/post/%E6%AF%8F%E4%B8%AA%E4%BA%BA%E9%83%BD%E6%9C%89%E5%93%AA%E4%BA%9B%E5%9F%BA%E6%9C%AC%E7%94%9F%E6%B4%BB%E5%9B%B0%E5%A2%83/</link>
+      <link>http://localhost:1313/post/basic-life-difficulties/</link>
       <pubDate>Mon, 27 Oct 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/%E6%AF%8F%E4%B8%AA%E4%BA%BA%E9%83%BD%E6%9C%89%E5%93%AA%E4%BA%9B%E5%9F%BA%E6%9C%AC%E7%94%9F%E6%B4%BB%E5%9B%B0%E5%A2%83/</guid>
+      <guid>http://localhost:1313/post/basic-life-difficulties/</guid>
       
         <description>&lt;p&gt;这段是最后补充的，这本书里有大量的对各个存在主义大师的摘录和总结，知识点是非常密的。我认为这也是本书有意思的一点，它试图结一张网，连接存在主义的各个部分。&lt;/p&gt;
 &lt;p&gt;书里探讨的是存在主义心理学所关注的一些基本议题，欧文亚隆在《存在主义心理治疗》一书中探讨了4个议题：死亡、自由、孤独和无意义，此书（应该是）在欧文亚隆的分类基础上，做了完善。扩展成书中的标题：&lt;/p&gt;
@@ -129,10 +129,10 @@
     
     <item>
       <title>Guide to Mermaid Diagrams in Hugo</title>
-      <link>http://localhost:1313/post/mermaid-test/</link>
+      <link>http://localhost:1313/post/guide-to-mermaid-diagrams-in-hugo/</link>
       <pubDate>Mon, 11 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/mermaid-test/</guid>
+      <guid>http://localhost:1313/post/guide-to-mermaid-diagrams-in-hugo/</guid>
       
         <description>Guide to Mermaid Diagrams in Hugo</description>
       
@@ -173,10 +173,10 @@
     
     <item>
       <title>The Notice Shortcode</title>
-      <link>http://localhost:1313/post/notice-shortcode/</link>
+      <link>http://localhost:1313/post/the-notice-shortcode/</link>
       <pubDate>Fri, 18 Mar 2022 21:47:41 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/notice-shortcode/</guid>
+      <guid>http://localhost:1313/post/the-notice-shortcode/</guid>
       
         <description>&lt;p&gt;The notice shortcode supports three different types of disclaimers. These are as following:&lt;/p&gt;</description>
       
@@ -217,10 +217,10 @@
     
     <item>
       <title>The Figure Shortcode</title>
-      <link>http://localhost:1313/post/figure-shortcode/</link>
+      <link>http://localhost:1313/post/the-figure-shortcode/</link>
       <pubDate>Sat, 13 Mar 2021 21:47:41 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/figure-shortcode/</guid>
+      <guid>http://localhost:1313/post/the-figure-shortcode/</guid>
       
         <description>&lt;p&gt;Hugo has &lt;code&gt;figure&lt;/code&gt; shortcode built-in, so you can easily add figure captions or hyperlink rel attributes to images. Documentations can be found here:&lt;/p&gt;</description>
       
@@ -239,10 +239,10 @@
     
     <item>
       <title>Markdown Syntax Guide</title>
-      <link>http://localhost:1313/post/markdown-syntax/</link>
+      <link>http://localhost:1313/post/markdown-syntax-guide/</link>
       <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/markdown-syntax/</guid>
+      <guid>http://localhost:1313/post/markdown-syntax-guide/</guid>
       
         <description>Sample article showcasing basic Markdown syntax and formatting for HTML elements.</description>
       
@@ -283,10 +283,10 @@
     
     <item>
       <title>Guide to Thumbnails in Hugo</title>
-      <link>http://localhost:1313/post/image-test/</link>
+      <link>http://localhost:1313/post/guide-to-thumbnails-in-hugo/</link>
       <pubDate>Mon, 04 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/image-test/</guid>
+      <guid>http://localhost:1313/post/guide-to-thumbnails-in-hugo/</guid>
       
         <description>Guide to Thumbnails in Hugo</description>
       
