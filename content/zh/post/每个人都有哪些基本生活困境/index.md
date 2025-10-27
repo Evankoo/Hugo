@@ -3,7 +3,6 @@ title: "每个人都有哪些基本生活困境｜《存在主义心理治疗》
 date: 2025-10-27
 description: "本文介绍了人们在日常生活中常见的困境与应对方式。"
 Slug: basic-life-difficulties
-image: "cover.jpg"
 draft: false
 tags:
   - 心理学
