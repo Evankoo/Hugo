@@ -1,11 +1,17 @@
+
 {{ define "main" }}
 <div class="post animated fadeInDown">
 
-  {{ if .Params.thumbnail }}
-    <div class="post__thumbnail-wrapper">
-      <img class="post__thumbnail" src="{{ .Params.thumbnail | relURL }}" alt="{{ .Title }}">
-    </div>
-  {{ end }}
+{{ $thumb := .Resources.GetMatch "cover*" }}
+{{ if not $thumb }}
+  {{ $thumb = .Params.image }}
+{{ end }}
+
+{{ if $thumb }}
+  <div class="post__thumbnail-wrapper">
+    <img class="post__thumbnail" src="{{ $thumb.RelPermalink }}" alt="{{ .Title }}">
+  </div>
+{{ end }}
 
 <div class="post__content"> 
   {{ if eq .Site.Params.disableTitleCapitalization true }}

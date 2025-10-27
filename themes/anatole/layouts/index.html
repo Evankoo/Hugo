@@ -41,13 +41,18 @@
         animated fadeInDown
       {{ end }}"
     >
-      {{ if .Params.thumbnail }}
-        <div class="post__thumbnail-wrapper">
-          <a href="{{ .RelPermalink }}">
-            <img class="post__thumbnail" src="{{ .Params.thumbnail | relURL }}" alt="Thumbnail image" loading="lazy" />
-          </a>
-        </div>
-      {{ end }}
+
+{{ $thumb := .Resources.GetMatch "cover*" }}
+{{ if not $thumb }}
+  {{ $thumb = .Params.image }}
+{{ end }}
+
+{{ if $thumb }}
+  <div class="post__thumbnail-wrapper">
+      <img class="post__thumbnail" src="{{ $thumb.RelPermalink }}" alt="{{ .Title }}" loading="lazy" />
+  </div>
+{{ end }}
+
       <div class="post__content">
         {{ if (eq .Site.Params.disableTitleCapitalization true) }}
           <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>

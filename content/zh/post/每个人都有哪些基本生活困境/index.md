@@ -1,14 +1,21 @@
 ---
 title: "每个人都有哪些基本生活困境｜《存在主义心理治疗》"
 date: 2025-10-27
+description: "本文介绍了人们在日常生活中常见的困境与应对方式。"
 Slug: basic-life-difficulties
+image: "cover.jpg"
 draft: false
-series:
-  - series-setup
-tags: ["心理学", "存在主义"]
+tags:
+  - 心理学
+  - 存在主义
+thumbnail: "cover.jpg"
 categories: 
   - 读书笔记
 ---
+
+
+
+![image1](cover.jpeg)
 
 这段是最后补充的，这本书里有大量的对各个存在主义大师的摘录和总结，知识点是非常密的。我认为这也是本书有意思的一点，它试图结一张网，连接存在主义的各个部分。
 
