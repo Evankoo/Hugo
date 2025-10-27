@@ -6,30 +6,13 @@
       "name": {{ .Site.Title | jsonify | safeJS }},
       "url": "{{ .Site.BaseURL }}",
       "description": "{{ .Site.Params.description }}",
+      "thumbnailUrl": "{{ .Site.Params.Logo | absURL }}",
       "license": "{{ .Site.Params.license}}"
       {{ with .Site.Params.copyright }}
         {{ $copyright := replace . "{{ YEAR }}" (now.Format "2006") }}
         ,"copyrightYear": "{{ index (findRE `^\d{4}` $copyright 1) 0 }}"
       {{ end }}
     }
-{{/* 定义分享图片变量 */}}
-{{ $shareImage := .Resources.GetMatch "cover*" }}
-{{ if not $shareImage }}
-  {{ if .Params.image }}
-    {{ $shareImage = .Params.image | relURL }}
-  {{ else }}
-    {{ $shareImage = "/images/default-share.jpg" }}
-  {{ end }}
-{{ end }}
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "{{ .Title }}",
-  "thumbnailUrl": "{{ $shareImage }}",
-  ...
-}
   </script>
 {{ else if .IsPage }}
   {{ $author :=  or (.Params.author) (.Site.Params.author) }}
