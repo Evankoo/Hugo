@@ -1,0 +1,102 @@
+<!-- 悬浮圆形分享按钮 -->
+<div id="share-button" class="share-button-circle" style="top: 50%;">
+  <button onclick="shareArticle('{{ .Permalink }}')" title="分享文章">
+    <i class="fas fa-share-alt"></i>
+  </button>
+</div>
+
+<script>
+function shareArticle(url) {
+  // 复制链接到剪贴板
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(url).then(function() {
+      alert("文章链接已复制，可直接分享！");
+    }, function(err) {
+      alert("复制失败，请手动复制链接: " + url);
+    });
+  } else {
+    const textArea = document.createElement("textarea");
+    textArea.value = url;
+    textArea.style.position = "fixed";
+    textArea.style.top = "-9999px";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try { 
+      document.execCommand('copy'); 
+      alert("文章链接已复制，可直接分享！");
+    } catch(e){ 
+      alert("复制失败，请手动复制链接: "+url);
+    }
+    document.body.removeChild(textArea);
+  }
+}
+
+// 上下拖动功能
+(function() {
+  const btn = document.getElementById("share-button");
+  let isDragging = false;
+  let startY, startTop;
+
+  btn.addEventListener("mousedown", function(e) {
+    isDragging = true;
+    startY = e.clientY;
+    startTop = btn.offsetTop;
+    e.preventDefault();
+  });
+
+  document.addEventListener("mousemove", function(e) {
+    if (!isDragging) return;
+    let deltaY = e.clientY - startY;
+    let newTop = startTop + deltaY;
+    newTop = Math.max(0, Math.min(window.innerHeight - btn.offsetHeight, newTop));
+    btn.style.top = newTop + "px";
+  });
+
+  document.addEventListener("mouseup", function(){ isDragging = false; });
+
+  // 移动端拖动
+  btn.addEventListener("touchstart", function(e){
+    isDragging = true;
+    startY = e.touches[0].clientY;
+    startTop = btn.offsetTop;
+  });
+  btn.addEventListener("touchmove", function(e){
+    if (!isDragging) return;
+    let deltaY = e.touches[0].clientY - startY;
+    let newTop = startTop + deltaY;
+    newTop = Math.max(0, Math.min(window.innerHeight - btn.offsetHeight, newTop));
+    btn.style.top = newTop + "px";
+  });
+  btn.addEventListener("touchend", function(){ isDragging = false; });
+})();
+</script>
+
+<style>
+/* 圆形悬浮按钮 */
+.share-button-circle {
+  position: fixed;
+  right: 10px;
+  z-index: 9999;
+}
+
+.share-button-circle button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%; /* 圆形 */
+  background-color: #B9375D;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  transition: background-color 0.3s;
+}
+
+.share-button-circle button:hover {
+  background-color: #E45A92;
+}
+</style>
