@@ -1216,10 +1216,8 @@ td {
   border: 1px solid #464646;
 }
 
-.post__content p {
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
+.post-line {
   overflow: hidden;
+  white-space: nowrap;
   text-overflow: ellipsis;
 }

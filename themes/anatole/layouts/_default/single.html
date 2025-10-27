@@ -15,19 +15,59 @@
     {{ end }}
 
     {{ if or (eq .Type "post") (eq .Type .Site.Params.postSectionName) }}
-      <ul class="post__meta">
-        <li class="post__meta-item">
-          <em class="fas fa-calendar-day post__meta-icon"></em>
-<span class="post__meta-text">
-  {{ with .Params.date }}
-    {{ $d := time . }}          <!-- Hugo 内置 time 函数 -->
-    {{ $d.Format "2006-01-02" }} <!-- 只显示年月日 -->
-  {{ else }}
-    未设置日期
+<ul class="post__meta">
+  <li class="post__meta-item">
+    <em class="fas fa-calendar-day post__meta-icon"></em>
+    <span class="post__meta-text"
+      >{{ if isset .Site.Params "singledateformat" }}
+        {{ if .Site.Params.localizedDates }}
+          {{ time.Format .Site.Params.singleDateFormat .Date }}
+        {{ else }}
+          {{ .Date.Format .Site.Params.singleDateFormat }}
+        {{ end }}
+      {{ else }}
+        {{ if .Site.Params.localizedDates }}
+          {{ time.Format "Mon, Jan 2, 2006" .Date }}
+        {{ else }}
+          {{ .Date.Format "Mon, Jan 2, 2006" }}
+        {{ end }}
+      {{ end }}
+    </span>
+  </li>
+ <!-- 阅读时间 -->
+  {{ $wc := countwords .Content }}         <!-- 统计全文字数 -->
+  {{ $rt := div $wc 265 }}                <!-- 计算分钟数 -->
+  {{ if lt $rt 1 }}{{ $rt = 1 }}{{ end }} <!-- 最少显示1分钟 -->
+  <li class="post__meta-item">
+    <em class="fas fa-stopwatch post__meta-icon"></em>
+    <span class="post__meta-text">阅读时间 {{ $rt }} 分钟</span>
+  </li>
+
+<!-- 分类 -->
+{{ with .Params.Categories }}
+<li class="post__meta-item" style="display: flex; gap: 10px; align-items: center;">
+  {{ range . }}
+    <a href="{{ "/categories/" | relURL }}{{ . | urlize }}" 
+       style="background-color:#d9d9d9; color:#333; padding:2px 8px; border-radius:8px; font-size:14px; line-height:1; text-decoration:none; display:inline-flex; align-items:center;">
+      {{ . }}
+    </a>
   {{ end }}
-</span>
-        </li>
-      </ul>
+</li>
+{{ end }}
+
+  <!-- 标签 -->
+  {{ with .Params.Tags }}
+  <li class="post__meta-item" style="display: flex; gap: 10px;">
+    {{ range . }}
+      <a href="{{ "/tags/" | relURL }}{{ . | urlize }}" 
+         style="color:#007bff; font-size:14px; text-decoration:none;">
+        #{{ . }}
+      </a>
+    {{ end }}
+  </li>
+  {{ end }}
+</ul>
+
     {{ end }}
 
     {{- partial "expirationnote.html" . -}}
