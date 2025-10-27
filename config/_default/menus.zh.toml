@@ -11,13 +11,13 @@ weight = 200
 url = "/post/"
 
 [[main]]
-name = "作品集"
+name = "服务"
 identifier = "portfolio"
 weight = 300
 url = "/portfolio/"
 
 [[main]]
-name = "关于"
+name = "个人介绍"
 identifier = "about"
 weight = 400
 url = "/about/"
@@ -29,7 +29,7 @@ weight = 500
 url = "/tags/"
 
 [[main]]
-name = "联系"
+name = "联系我"
 identifier = "contact"
 weight = 600
 url = "/contact/"

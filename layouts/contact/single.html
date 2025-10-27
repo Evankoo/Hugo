@@ -1,9 +1,13 @@
+{{ define "head" }}
+  {{ partial "head.html" . }}
+{{ end }}
+
 {{ define "main" }}
-<div class="contact-page">
+<div class="contact-page {{ if not .Site.Params.doNotLoadAnimations }}animated fadeInDown{{ end }}">
   <h1 class="contact-title">联系方式</h1>
-
+      
   <p>邮箱: <a href="mailto:gqj9071@gmail.com">gqj9071@gmail.com</a></p>
-
+    
   <div class="qr-container">
     <div class="qr-item">
       <img src="/images/douyin-qr.png" alt="Douyin QR">
@@ -16,7 +20,7 @@
     <div class="qr-item">
       <img src="/images/wechat-qr.png" alt="WeChat QR">
       <div class="qr-label">微信</div>
-    </div>
+    </div> 
   </div>
 
   <h2>社交媒体</h2>
@@ -30,7 +34,7 @@
     {{ end }}
   </ul>
 </div>
-
+  
 <style>
 .contact-page {
   padding: 20px;
@@ -44,24 +48,13 @@
   margin-bottom: 20px;
 }
 
-/* 联系方式和二维码之间的空隙更大 */
-.contact-info {
-  margin-bottom: 60px;
-}
-
-/* 二维码标题 */
-.contact-qr-title {
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 20px;
-}
 /* 二维码容器 */
-.qr-container {
+.qr-container { 
   display: flex;
   justify-content: center;
   gap: 40px;          /* 二维码间距 */
-  margin-top: 40px;    /* 整体往下 */
-  flex-wrap: wrap;     /* 手机端自动换行 */
+  margin-top: 40px;   /* 整体往下 */
+  flex-wrap: wrap;    /* 手机端自动换行 */
 }
 
 /* 单个二维码块 */
@@ -82,10 +75,10 @@
 }
 
 /* 二维码文字标签 */
-.qr-label {
+.qr-label {   
   margin-top: 8px;
   font-size: 16px;
-  color: var(--text-normal); /* 使用主题的文字颜色变量，随黑白模式切换 */
+  color: var(--text-normal); /* 使用主题文字颜色变量，随黑白模式切换 */
   font-weight: 500;
 }
 
@@ -96,17 +89,17 @@
 
 /* 手机端自适应 */
 @media (max-width: 600px) {
-  .qr-item img {
+  .qr-item img {   
     width: 120px;
     height: 120px;
   }
   .qr-label {
     font-size: 14px;
   }
-}
+} 
 
 /* 社交媒体列表 */
-.contact-socials {
+.contact-socials { 
   list-style: none;
   padding: 0;
   display: flex;

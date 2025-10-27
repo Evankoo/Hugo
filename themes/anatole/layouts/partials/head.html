@@ -163,6 +163,15 @@
     crossorigin="anonymous"
   ></script>
 
+{{ $animatedJS := resources.Get "js/main-animated.js" | resources.Minify | resources.Fingerprint }}
+<script
+  type="text/javascript"
+  src="{{ $animatedJS.RelPermalink }}"
+  integrity="{{ $animatedJS.Data.Integrity }}"
+  crossorigin="anonymous"
+  defer
+></script>
+
   {{ if not .Site.Params.disableThemeSwitcher }}
     {{ $anatoleThemeSwitcher := resources.Get "js/anatole-theme-switcher.js" }}
     {{ $secureThemeSwitcherJS := $anatoleThemeSwitcher |  resources.Minify | resources.Fingerprint }}
