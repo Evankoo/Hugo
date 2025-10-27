@@ -8,8 +8,29 @@
 <script>
 function shareArticle(url) {
   if (navigator.userAgent.includes("MicroMessenger")) {
-    // 微信环境提示复制链接
-    alert("请点击右上角菜单分享: " + url);
+    // 微信环境：复制链接 + 提示文案
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(url).then(function() {
+        alert("文章链接已复制成功，你也可以点击左上角分享哦！");
+      }, function(err) {
+        alert("复制失败，请手动复制链接: " + url);
+      });
+    } else {
+      // 不支持 Clipboard API 时
+      const textArea = document.createElement("textarea");
+      textArea.value = url;
+      textArea.style.position = "fixed";
+      textArea.style.top = "-9999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try { document.execCommand('copy'); 
+        alert("文章链接已复制成功，你也可以点击左上角分享");
+      } catch(e){ 
+        alert("复制失败，请手动复制链接: "+url);
+      }
+      document.body.removeChild(textArea);
+    }
   } else {
     // 其他环境直接复制链接
     if (navigator.clipboard && window.isSecureContext) {
