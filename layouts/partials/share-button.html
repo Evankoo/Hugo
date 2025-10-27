@@ -7,31 +7,31 @@
 
 <script>
 function shareArticle(url) {
-  // 复制链接到剪贴板
-  if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(url).then(function() {
-      alert("文章链接已复制，可直接分享！");
-    }, function(err) {
-      alert("复制失败，请手动复制链接: " + url);
-    });
+  if (navigator.userAgent.includes("MicroMessenger")) {
+    // 微信环境提示复制链接
+    alert("请点击右上角菜单分享到微信好友或朋友圈，或者手动复制链接: " + url);
   } else {
-    const textArea = document.createElement("textarea");
-    textArea.value = url;
-    textArea.style.position = "fixed";
-    textArea.style.top = "-9999px";
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-    try { 
-      document.execCommand('copy'); 
-      alert("文章链接已复制，可直接分享！");
-    } catch(e){ 
-      alert("复制失败，请手动复制链接: "+url);
+    // 其他环境直接复制链接
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(url).then(function() {
+        alert("文章链接已复制，可直接分享！");
+      }, function(err) {
+        alert("复制失败，请手动复制链接: " + url);
+      });
+    } else {
+      const textArea = document.createElement("textarea");
+      textArea.value = url;
+      textArea.style.position = "fixed";
+      textArea.style.top = "-9999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try { document.execCommand('copy'); alert("文章链接已复制，可直接分享！"); }
+      catch(e){ alert("复制失败，请手动复制链接: "+url);}
+      document.body.removeChild(textArea);
     }
-    document.body.removeChild(textArea);
   }
 }
-
 // 上下拖动功能
 (function() {
   const btn = document.getElementById("share-button");
