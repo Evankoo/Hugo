@@ -1,0 +1,1 @@
+html::before{content:"CUSTOM CSS LOADED";position:fixed;top:8px;right:8px;background:#f66;color:#fff;padding:4px 8px;z-index:99999;}
