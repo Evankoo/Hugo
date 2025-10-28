@@ -1,0 +1,209 @@
+$bp-mobile-max: 768px;
+
+// 通用：单行省略
+.post-line {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* 文章页：标题与元信息（通用基线） */
+.post__title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0.6em;
+  text-align: left;
+}
+
+.post__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 14px;
+
+  .post__meta-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .post__meta-icon {
+    font-size: 13px;
+    color: #999;
+  }
+  .post__meta-text {
+    color: #666;
+  }
+
+  // 分类样式
+  &-category a {
+    background-color: #e0e0e0;
+    color: #333;
+    padding: 0 6px;
+    border-radius: 3px;
+    text-decoration: none;
+    line-height: 1.6;
+    display: inline-block;
+  }
+
+  // 标签样式
+  &-tag a {
+    color: #004030;
+    text-decoration: none;
+    font-size: 14px;
+    gap: 5px;
+    display: inline-block;
+  }
+}
+
+/* 仅移动端 */
+@media (max-width: $bp-mobile-max) {
+  /* 文章页头部：标题、meta、封面图（文章详情页） */
+  .post__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    .post__title {
+      order: 1;
+      font-size: 1.8rem;
+      margin: 0.2em 0 0.4em 0;
+    }
+
+    .post__meta {
+      order: 2;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      margin-top: 0;
+      margin-bottom: 0;
+
+      &-category a {
+        font-size: 11px;
+        padding: 0 4px;
+        line-height: 1.4;
+      }
+      &-tag a {
+        font-size: 12px;
+        padding: 0 3px;
+        line-height: 1.4;
+      }
+    }
+
+    /* 文章页封面图（文章详情页） */
+    .post__thumbnail-wrapper {
+      order: 3;
+      width: 100%;
+      margin-top: 0.5em;
+      margin-bottom: 0;
+      max-height: 200px;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 150px;       // 固定高度
+        object-fit: cover;   // 裁切铺满
+        display: block;
+      }
+    }
+  }
+
+  /* 侧边栏（移动端） */
+  .wrapper__sidebar {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    margin-top: 0;
+    margin-bottom: 0;
+    min-height: auto;
+  }
+  .sidebar__list {
+    margin: 0;
+    padding: 0;
+    line-height: 1.4;
+
+    li {
+      margin-bottom: 0.5em;
+    }
+  }
+
+  /* 首页列表（仅首页） */
+  body.home {
+    .wrapper__main {
+      .post {
+        /* 列表项“视觉高度”：靠间距控制 */
+        &.animated.fadeInDown {
+          margin-bottom: 10px;   // 列表项间距
+          padding-bottom: 6px;  // 卡片底部留白
+        }
+
+        /* 缩略图容器：下端距离 + 限高 + 圆角 */
+        .post__thumbnail-wrapper {
+          margin-bottom: 8px;     // 下端距离（你点名的第3项）
+          max-height: 150px;
+          overflow: hidden;
+          border-radius: 10px;
+
+          > img.post__thumbnail {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+          }
+        }
+
+        /* 标题、摘要 */
+        .post__content {
+	  h3 {
+	    margin: 10px 0 6px;
+	    font-size: 12px !important;
+	    line-height: 1.2;
+		}
+	p.post-line {
+	    margin: 0 0 6px;
+	    font-size: 12px;
+	    line-height: 1.2;
+               }
+        }
+
+        /* 元信息在 footer 中：收紧并横排 */
+        .post__footer {
+          margin-top: 3px;
+	  padding:4px 0;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 6px 8px;
+          font-size: 12px;
+          line-height: 1.2;
+          // 如需更固定的“整体高度”，可按需加：min-height: 24px;
+        }
+
+        /* 分类、标签外观（可按需微调） */
+        .post__footer a.category {
+          background-color: #e0e0e0;
+          color: #333;
+          padding: 0 6px;
+          margin: 3px;
+          border-radius: 3px;
+          text-decoration: none;
+          line-height: 1.6;
+          display: inline-block;
+          font-size: 12px;
+        }
+        .post__footer a.tag {
+          color: #004030;
+          text-decoration: none;
+          margin: 3px;
+          padding: 0 4px;
+          line-height: 1.4;
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}
