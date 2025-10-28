@@ -68,7 +68,7 @@ $bp-mobile-max: 768px;
 
     .post__title {
       order: 1;
-      font-size: 1.8rem;
+      font-size: 2rem;
       margin: 0.2em 0 0.4em 0;
     }
 
@@ -160,7 +160,7 @@ $bp-mobile-max: 768px;
         .post__content {
 	  h3 {
 	    margin: 10px 0 6px;
-	    font-size: 12px !important;
+	    font-size: 12px;
 	    line-height: 1.2;
 		}
 	p.post-line {
@@ -172,7 +172,7 @@ $bp-mobile-max: 768px;
 
         /* 元信息在 footer 中：收紧并横排 */
         .post__footer {
-          margin-top: 3px;
+	  margin-top: 3px;
 	  padding:4px 0;
           display: flex;
           flex-wrap: wrap;
@@ -180,6 +180,8 @@ $bp-mobile-max: 768px;
           gap: 6px 8px;
           font-size: 12px;
           line-height: 1.2;
+
+  
           // 如需更固定的“整体高度”，可按需加：min-height: 24px;
         }
 
@@ -187,7 +189,7 @@ $bp-mobile-max: 768px;
         .post__footer a.category {
           background-color: #e0e0e0;
           color: #333;
-          padding: 0 6px;
+          padding: 0 3px;
           margin: 3px;
           border-radius: 3px;
           text-decoration: none;
@@ -198,8 +200,8 @@ $bp-mobile-max: 768px;
         .post__footer a.tag {
           color: #004030;
           text-decoration: none;
-          margin: 3px;
-          padding: 0 4px;
+          padding: 0 3px;
+          margin: 3px; 
           line-height: 1.4;
           font-size: 12px;
         }
