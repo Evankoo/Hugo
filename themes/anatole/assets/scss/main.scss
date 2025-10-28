@@ -142,8 +142,9 @@
       
       img {
         width: 100%;
-        height: auto;      /* 保持宽高比 */
-        object-fit: cover;  /* 图片裁剪填充，保证视觉完整 */
+	height: 150px;     /* ✅ 固定高度 */
+        object-fit: cover; /* ✅ 裁切铺满 */
+        display: block;
       }
     }
   }
