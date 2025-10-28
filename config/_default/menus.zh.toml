@@ -10,11 +10,11 @@ identifier = "posts"
 weight = 200
 url = "/post/"
 
-[[main]]
-name = "服务"
-identifier = "portfolio"
-weight = 300
-url = "/portfolio/"
+#[[main]]
+#name = "服务"
+#identifier = "portfolio"
+#weight = 300
+#url = "/portfolio/"
 
 [[main]]
 name = "个人介绍"
