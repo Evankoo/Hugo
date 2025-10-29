@@ -1,4 +1,3 @@
-
 title = "我是伊万"
 author = "伊万"
 #copyright = "2021-2025"
@@ -9,7 +8,7 @@ favicon = "favicons/"
 # example ["css/custom.css"]
 customCSS = ["css/custom.css"]
 # example ["js/custom.js"]
-customJs = [] 
+customJs = ["js/custom.js"] 
 mainSections = ["post"]
 images = ["images/site-feature-image.png"]
 doNotLoadAnimations = false

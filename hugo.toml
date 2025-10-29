@@ -31,7 +31,7 @@ mermaidEnable = true
 profilePicture = "images/profile.png"
 favicon = "favicons/"   # 注意路径只到文件夹，不带文件名
 customCSS = ["css/custom.css"]
-
+customJs = ["js/custom.js"]
 
 [markup]
   [markup.goldmark]
