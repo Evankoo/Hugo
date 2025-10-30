@@ -209,16 +209,3 @@ $bp-mobile-max: 768px;
     }
   }
 }
-#navBackdrop {
-  position: fixed;
-  left: 0; right: 0; bottom: 0; top: 0;   /* JS 会在打开时动态改 top */
-  background: rgba(0,0,0,.35);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .2s;
-  z-index: 9999; /* 遮罩层 */
-}
-#navBackdrop.show {
-  opacity: 1;
-  pointer-events: auto;
-}
