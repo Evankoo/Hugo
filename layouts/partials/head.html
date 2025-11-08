@@ -35,6 +35,42 @@
     <meta name="google-site-verification" content="{{ .Site.Params.googleSiteVerify }}" />
   {{- end -}}
 
+<script>
+(function () {
+  var NIGHT_START = 19, DAY_START = 6;
+
+  function isNightInBeijing(d) {
+    d = d || new Date();
+    var hourStr = new Intl.DateTimeFormat('zh-CN', {
+      hour: '2-digit', hour12: false, timeZone: 'Asia/Shanghai'
+    }).format(d);
+    var h = parseInt(hourStr, 10);
+    return h >= NIGHT_START || h < DAY_START;
+  }
+
+  function setTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    if (document.body) document.body.setAttribute('data-theme', t); // 兼容不同主题选择器
+  }
+
+  try {
+    // 若用户手动选择过主题，则尊重它（兼容常见键名）
+    var userPref = localStorage.getItem('theme') || localStorage.getItem('colorscheme');
+    if (!userPref) setTheme(isNightInBeijing() ? 'dark' : 'light');
+  } catch (e) {
+    setTheme(isNightInBeijing() ? 'dark' : 'light');
+  }
+
+  // 无手动设置时，每分钟校正一次
+  setInterval(function () {
+    try {
+      var userPref = localStorage.getItem('theme') || localStorage.getItem('colorscheme');
+      if (!userPref) setTheme(isNightInBeijing() ? 'dark' : 'light');
+    } catch (e) {}
+  }, 60 * 1000);
+})();
+</script>
+
   <!-- CSS -->
   {{ $contentRatio := or site.Params.contentratio 0.6 -}}
   {{ $languageDirection := or site.Language.LanguageDirection "ltr" -}}
