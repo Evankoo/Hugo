@@ -1,0 +1,213 @@
+
+{{ define "main" }}
+
+<h1 style="color:red; font-size:50px;">🔴 测试生效中 🔴</h1>
+<!-- 下面是你原来的代码 ... -->
+
+<div class="taxonomy-unified-page ">
+  <h1 class="taxonomy-title">所有分类和标签</h1>
+
+  <!-- 分类部分 -->
+  <section class="taxonomy-section">
+    <h2 class="taxonomy-subtitle">所有分类</h2>
+    <div class="taxonomy-grid taxonomy-grid-categories collapsed" id="categories-grid">
+      {{ $categories := .Site.Taxonomies.categories }}
+      {{ $count := 0 }}
+      {{ range $name, $pages := $categories }}
+        {{ $count = add $count 1 }}
+        <div class="taxonomy-block">
+          <div class="taxonomy-header">
+            <div class="taxonomy-name"><a href="{{ "/categories/" | relLangURL }}{{ $name | urlize }}">{{ $name }}</a></div>
+            {{ if gt (len $pages) 3 }}
+            <a class="taxonomy-more" href="{{ "/categories/" | relLangURL }}{{ $name | urlize }}">查看更多</a>
+            {{ end }}
+          </div>
+          <ul class="taxonomy-articles">
+            {{ range first 3 $pages }}
+              <li><a href="{{ .Permalink }}">{{ .Title }}</a></li>
+            {{ end }}
+          </ul>
+        </div>
+      {{ end }}
+    </div>
+    {{ if gt (len $categories) 9 }}
+    <div class="taxonomy-toggle-wrapper">
+      <button class="toggle-button" data-target="categories-grid">展开更多分类</button>
+    </div>
+    {{ end }}
+  </section>
+
+  <!-- 标签部分 -->
+  <section class="taxonomy-section">
+    <h2 class="taxonomy-subtitle">所有标签</h2>
+    <div class="taxonomy-grid taxonomy-grid-tags collapsed" id="tags-grid">
+      {{ $tags := .Site.Taxonomies.tags }}
+      {{ range $name, $pages := $tags }}
+        <div class="taxonomy-block">
+          <div class="taxonomy-header">
+            <div class="taxonomy-name"><a href="{{ "/tags/" | relLangURL }}{{ $name | urlize }}">{{ $name }}</a></div>
+            {{ if gt (len $pages) 3 }}
+            <a class="taxonomy-more" href="{{ "/tags/" | relLangURL }}{{ $name | urlize }}">查看更多</a>
+            {{ end }}
+          </div>
+          <ul class="taxonomy-articles">
+            {{ range first 3 $pages }}
+              <li><a href="{{ .Permalink }}">{{ .Title }}</a></li>
+            {{ end }}
+          </ul>
+        </div>
+      {{ end }}
+    </div>
+    {{ if gt (len $tags) 9 }}
+    <div class="taxonomy-toggle-wrapper">
+      <button class="toggle-button" data-target="tags-grid">展开更多标签</button>
+    </div>
+    {{ end }}
+  </section>
+</div>
+
+<style>
+.taxonomy-unified-page {
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.taxonomy-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 25px;
+}
+
+.taxonomy-subtitle {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.taxonomy-grid {
+  display: grid;
+  grid-template-columns: repeat(3, calc((100% - 40px)/3)); /* 三列，间距20px两次 */
+  gap: 20px;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.taxonomy-grid.collapsed {
+  max-height: 1100px; /* 约三行 */
+}
+
+.taxonomy-grid.expanded {
+  max-height: none;
+}
+
+.taxonomy-block {
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: #fafafa;
+}
+
+.taxonomy-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.taxonomy-name a {
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+  color: #222;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.taxonomy-name a:hover {
+  text-decoration: underline;
+}
+
+.taxonomy-more {
+  font-size: 13px;
+  color: #888 !important;
+  text-decoration: none;
+}
+
+.taxonomy-more:hover {
+  text-decoration: underline;
+}
+
+.taxonomy-articles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.taxonomy-articles li {
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 4px;
+}
+.taxonomy-articles a {
+  color: #333;
+  text-decoration: none;
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.taxonomy-articles a:hover {
+  text-decoration: underline;
+}
+
+.taxonomy-toggle-wrapper {
+  text-align: center;
+  margin: 15px 0 30px;
+}
+.toggle-button {
+  background: #f2f2f2;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.toggle-button:hover {
+  background: #e0e0e0;
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+  .taxonomy-grid {
+    grid-template-columns: 1fr; /* 单列 */
+    gap: 12px;
+  }
+  .taxonomy-name a { font-size: 14px; }
+  .taxonomy-articles li { font-size: 12px; }
+  .toggle-button { font-size: 11px; padding: 3px 8px; }
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const buttons = document.querySelectorAll(".toggle-button");
+  buttons.forEach(btn => {
+    btn.addEventListener("click", function() {
+      const targetId = btn.getAttribute("data-target");
+      const grid = document.getElementById(targetId);
+      if(grid.classList.contains("collapsed")) {
+        grid.classList.remove("collapsed");
+        grid.classList.add("expanded");
+        btn.textContent = "收起";
+      } else {
+        grid.classList.remove("expanded");
+        grid.classList.add("collapsed");
+        btn.textContent = btn.dataset.target.includes("categories") ? "展开更多分类" : "展开更多标签";
+      }
+    });
+  });
+});
+</script>
+{{ end }}

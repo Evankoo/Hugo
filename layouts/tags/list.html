@@ -1,0 +1,214 @@
+
+{{ define "main" }}
+<div class="taxonomy-unified-page">
+  <!-- 顶部标题 -->
+  <h1 class="taxonomy-title">「{{ .Title }}」下的文章</h1>
+
+  <!-- 当前分类/标签下的文章 -->
+  {{ $pages := .Pages.ByDate.Reverse }}
+  {{ if $pages }}
+    <ul class="taxonomy-article-list">
+      {{ range $pages }}
+        <li class="taxonomy-article-item">
+          <a class="taxonomy-article-link" href="{{ .Permalink }}">{{ .Title }}</a>
+          <span class="taxonomy-article-date">{{ .Date.Format "2006-01-02" }}</span>
+        </li>
+      {{ end }}
+    </ul>
+  {{ else }}
+    <p>暂无文章。</p>
+  {{ end }}
+
+  <!-- 分隔线 -->
+  <hr class="taxonomy-divider" />
+
+  <!-- 所有分类部分 -->
+  <section class="taxonomy-all-categories">
+    <h2 class="taxonomy-subtitle">所有分类</h2>
+
+    {{ $categories := .Site.Taxonomies.categories }}
+    {{ if $categories }}
+      <div class="taxonomy-tag-list">
+        {{ range $name, $pages := $categories }}
+          <a href="{{ "/categories/" | relLangURL }}{{ $name | urlize }}" class="taxonomy-tag-item">
+            {{ $name }} <span>({{ len $pages }})</span>
+          </a>
+        {{ end }}
+      </div>
+    {{ else }}
+      <p>暂无分类。</p>
+    {{ end }}
+  </section>
+
+  <!-- 所有标签部分 -->
+  <section class="taxonomy-all-tags">
+    <h2 class="taxonomy-subtitle">所有标签</h2>
+
+    {{ $tags := .Site.Taxonomies.tags }}
+    {{ if $tags }}
+      <div class="taxonomy-tag-list">
+        {{ range $name, $pages := $tags }}
+          <a href="{{ "/tags/" | relLangURL }}{{ $name | urlize }}" class="taxonomy-tag-item">
+            {{ $name }} <span>({{ len $pages }})</span>
+          </a>
+        {{ end }}
+      </div>
+{{/* 优先查找 tags 的 taxonomyTerm（一般是 /tags/），找不到则尝试 categories，再没有则回退到 /tags/ */}}
+{{ .Scratch.Set "allURL" ( ("/tags/" | relLangURL) ) }}
+
+{{ with site.GetPage "taxonomyTerm" "tags" }}
+  {{ .Scratch.Set "allURL" .RelPermalink }}
+{{ else }}
+  {{ with site.GetPage "taxonomyTerm" "categories" }}
+    {{ .Scratch.Set "allURL" .RelPermalink }}
+  {{ end }}
+{{ end }}
+
+<div class="taxonomy-footer-link">
+  <a href="{{ .Scratch.Get "allURL" }}" class="view-all-link">查看所有分类和标签 →</a>
+</div>
+      </p>
+    {{ else }}
+      <p>暂无标签。</p>
+    {{ end }}
+  </section>
+</div>
+
+<style>
+.taxonomy-unified-page {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* 标题 */
+.taxonomy-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 25px;
+}
+
+/* 文章列表 */
+.taxonomy-article-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.taxonomy-article-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+.taxonomy-article-link {
+  font-size: 18px;
+  font-weight: 500;
+  color: #222;
+  text-decoration: none;
+}
+.taxonomy-article-link:hover {
+  color: #000;
+  text-decoration: underline;
+}
+.taxonomy-article-date {
+  font-size: 14px;
+  color: #888;
+}
+
+/* 分隔线 */
+.taxonomy-divider {
+  margin: 40px 0 30px;
+  border: none;
+  border-top: 1px solid #ccc;
+}
+
+/* 所有分类与标签部分 */
+.taxonomy-subtitle {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+.taxonomy-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.taxonomy-tag-item {
+  background: #91ADC8;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 14px;
+  color: #888;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.taxonomy-tag-item:hover {
+  background: #F5F5F0;
+}
+.taxonomy-footer-link {
+  margin-top: 15px;
+}
+.taxonomy-footer-link a {
+  font-size: 14px;
+  color: #007bff;
+  text-decoration: none;
+}
+.taxonomy-footer-link a:hover {
+  text-decoration: underline;
+}
+
+/* 响应式：手机端优化 */
+@media (max-width: 768px) {
+  .taxonomy-unified-page {
+    padding: 10px;
+  }
+
+  .taxonomy-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .taxonomy-subtitle {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  /* 文章列表部分更紧凑 */
+  .taxonomy-article-item {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+  .taxonomy-article-link {
+    font-size: 14px;
+    line-height: 1.3;
+  }
+  .taxonomy-article-date {
+    font-size: 12px;
+    color: #999;
+    margin-top: 2px;
+  }
+
+  /* 分类与标签列表更紧凑排列 */
+  .taxonomy-tag-list {
+    gap: 6px;
+  }
+  .taxonomy-tag-item {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 14px;
+  }
+
+  /* “查看所有分类和标签” 链接 */
+  .taxonomy-footer-link{
+    margin-top: 10px;
+    text-align: left;
+  }
+  .taxonomy-all-tags-link a {
+    font-size: 12px;
+  }
+}
+</style>
+
+{{ end }}
