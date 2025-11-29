@@ -114,7 +114,6 @@
     {{ end }}
   {{ end }}
 
-
 {{ if .Params.redirectUrl }}
     {{ $style := resources.Get "css/spinner.css" | resources.Minify | resources.Fingerprint }}
     <link
