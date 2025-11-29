@@ -9,52 +9,34 @@
 <div id="poster-source-container">
   <div class="poster-card">
     
-    {{/* --- 🛡️ 修复版图片逻辑 start --- */}}
-    
-    {{/* 1. 初始化变量 (用空字符串代替 nil，防止报错) */}}
+    {{/* --- 🛡️ 图片逻辑 --- */}}
+    {{ $pageContext := . }}
     {{ $posterImg := "/images/profile.png" | absURL }}
     {{ $found := "" }} 
 
-    {{/* 2. 尝试在资源包里找图 */}}
-    {{/* 使用 if .Resources 判断，无需切换上下文，逻辑更直观 */}}
     {{ if .Resources }}
-      
-      {{/* A. 找配置的图 */}}
-      {{ if .Params.thumbnail }}
-        {{ $found = .Resources.GetMatch .Params.thumbnail }}
+      {{ if $pageContext.Params.thumbnail }}
+        {{ $found = .Resources.GetMatch $pageContext.Params.thumbnail }}
       {{ end }}
-
-      {{/* B. 找配置的 image */}}
-      {{ if and (not $found) .Params.image }}
-        {{ $found = .Resources.GetMatch .Params.image }}
+      {{ if and (not $found) $pageContext.Params.image }}
+        {{ $found = .Resources.GetMatch $pageContext.Params.image }}
       {{ end }}
-
-      {{/* C. 自动扫描 */}}
-      {{ if not $found }}
-        {{ $found = .Resources.GetMatch "cover*" }}
-      {{ end }}
-      {{ if not $found }}
-        {{ $found = .Resources.GetMatch "feature*" }}
-      {{ end }}
-
+      {{ if not $found }}{{ $found = .Resources.GetMatch "cover*" }}{{ end }}
+      {{ if not $found }}{{ $found = .Resources.GetMatch "feature*" }}{{ end }}
     {{ end }}
 
-    {{/* 3. 路径赋值逻辑 */}}
     {{ if $found }}
-      {{/* A. 找到了资源图 */}}
       {{ $posterImg = ($found.Resize "800x q90").Permalink }}
-    
     {{ else }}
-      {{/* B. 没找到资源图 (或者根本没有资源包)，检查配置 */}}
       {{ if .Params.thumbnail }}
         {{ $posterImg = (.Params.thumbnail | absURL) }}
       {{ else if .Params.image }}
         {{ $posterImg = (.Params.image | absURL) }}
       {{ end }}
     {{ end }}
-    {{/* --- 修复版图片逻辑 end --- */}}
 
     <div class="poster-cover">
+      <!-- ⚠️ 关键：加 useCredentials="anonymous" 配合 html2canvas -->
       <img src="{{ $posterImg }}" crossorigin="anonymous" id="hidden-poster-cover-img">
     </div>
 
@@ -73,7 +55,7 @@
   </div>
 </div>
 
-<!-- 弹窗 (UI 保持不变) -->
+<!-- 弹窗 -->
 <div id="poster-modal" onclick="closePosterModal()">
   <div class="poster-modal-content" onclick="event.stopPropagation()">
     <p style="color:white; margin-bottom:10px; font-size:14px; text-shadow:0 1px 2px black;">长按图片保存分享</p>
@@ -92,7 +74,6 @@
 .share-button-circle { position: fixed; right: 15px; z-index: 9999; touch-action: none; }
 .share-button-circle button { width: 50px; height: 50px; border-radius: 50%; background-color: #B9375D; color: #fff; border: none; cursor: pointer; font-size: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: transform 0.2s, background-color 0.3s; }
 .share-button-circle button:hover { background-color: #E45A92; transform: scale(1.05); }
-
 #poster-source-container { position: fixed; top: 0; left: 0; width: 375px; z-index: -100; background-color: #fff; opacity: 0; pointer-events: none; }
 .poster-card { background: #fff; border: 1px solid #eee; overflow: hidden; }
 .poster-cover { width: 100%; height: 200px; overflow: hidden; background: #f4f4f4; }
@@ -104,19 +85,25 @@
 .poster-footer { display: flex; justify-content: space-between; align-items: center; }
 .poster-desc { color: #666; font-size: 12px; line-height: 1.6; }
 #poster-qrcode img { width: 75px !important; height: 75px !important; display: block; }
-
 #poster-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
 .poster-modal-content { text-align: center; width: 80%; max-width: 375px; }
 #final-poster-img { width: 100%; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.5); display: none; }
 #poster-loading { color: white; font-size: 16px; margin-top: 20px; }
 .poster-close-btn { position: absolute; bottom: 50px; width: 40px; height: 40px; border: 2px solid white; border-radius: 50%; color: white; font-size: 24px; text-align: center; line-height: 36px; cursor: pointer; opacity: 0.8; }
-
 .loading-spinner { border: 4px solid rgba(255,255,255,0.3); border-radius: 50%; border-top: 4px solid #fff; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 0 auto 10px auto; }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 </style>
 
 <script>
-// JS 逻辑保持不变 (按需加载 + 智能等待)
+// --- 核心逻辑优化 ---
+
+// 1. 定义本地 JS 路径
+const LIBS = {
+  qrcode: "/js/qrcode.min.js",
+  html2canvas: "/js/html2canvas.min.js"
+};
+
+// 2. 加载函数
 function loadScript(src) {
   return new Promise((resolve, reject) => {
     if (document.querySelector(`script[src="${src}"]`)) { resolve(); return; }
@@ -128,21 +115,39 @@ function loadScript(src) {
   });
 }
 
+// 3. 🚀 闲时预加载 (页面加载3秒后自动下载库，这样点击时就不用等了)
+setTimeout(() => {
+  if (window.innerWidth <= 768) {
+    loadScript(LIBS.qrcode).catch(() => {});
+    loadScript(LIBS.html2canvas).catch(() => {});
+  }
+}, 3000);
+
+// 点击入口
 function handleShareClick(url) {
   if (window.innerWidth <= 768) {
     var modal = document.getElementById('poster-modal');
     var loading = document.getElementById('poster-loading');
     modal.style.display = 'flex';
     loading.style.display = 'block';
+
+    // 此时大概率已经预加载好了，直接执行会非常快
     Promise.all([
-      loadScript("https://cdn.bootcdn.net/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"),
-      loadScript("https://cdn.bootcdn.net/ajax/libs/html2canvas/1.4.1/html2canvas.min.js")
-    ]).then(() => { generatePoster(url); }).catch(err => { alert("组件加载失败，请检查网络"); closePosterModal(); });
+      loadScript(LIBS.qrcode),
+      loadScript(LIBS.html2canvas)
+    ]).then(() => {
+      generatePoster(url);
+    }).catch(err => {
+      alert("组件加载失败，请刷新重试");
+      closePosterModal();
+    });
+
   } else {
     shareLinkPC(url);
   }
 }
 
+// PC 复制链接
 function shareLinkPC(url) {
   if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(url).then(() => alert("链接已复制！"), () => alert("复制失败")); }
   else { const ta = document.createElement("textarea"); ta.value = url; ta.style.position = "fixed"; ta.style.top = "-9999px"; document.body.appendChild(ta); ta.focus(); ta.select(); try { document.execCommand('copy'); alert("链接已复制！"); } catch(e){ } document.body.removeChild(ta); }
@@ -165,27 +170,52 @@ function generatePoster(url) {
   loadingText.innerText = "正在加载图片...";
   var hiddenImg = document.getElementById('hidden-poster-cover-img');
   
+  // 增加图片超时判断，防止无限等待
   var imgLoadPromise = new Promise((resolve, reject) => {
     if (hiddenImg.complete && hiddenImg.naturalHeight !== 0) { resolve(); }
-    else { hiddenImg.onload = () => resolve(); hiddenImg.onerror = () => { console.warn("封面加载失败"); resolve(); }; }
+    else { hiddenImg.onload = () => resolve(); hiddenImg.onerror = () => { console.warn("封面失败"); resolve(); }; }
   });
+  
+  // 缩短超时时间到 3秒
   var timeoutPromise = new Promise((resolve) => setTimeout(resolve, 3000));
 
   Promise.race([imgLoadPromise, timeoutPromise]).then(() => {
     loadingText.innerText = "正在绘制海报...";
+    
     setTimeout(() => {
       var posterCard = document.querySelector(".poster-card");
-      if (typeof html2canvas === 'undefined') { alert("绘图组件加载失败"); return; }
-      html2canvas(posterCard, { useCORS: true, allowTaint: true, scale: 2, backgroundColor: "#ffffff", scrollY: 0, scrollX: 0 }).then(canvas => {
-        var dataUrl = canvas.toDataURL("image/png");
-        finalImg.src = dataUrl;
-        finalImg.onload = function() { loading.style.display = 'none'; finalImg.style.display = 'block'; }
-        setTimeout(() => { loading.style.display = 'none'; finalImg.style.display = 'block'; }, 100);
-      }).catch(err => { alert("海报绘制出错: " + err); modal.style.display = 'none'; });
+      // 配置优化：关闭日志，启用缓存，处理跨域
+      html2canvas(posterCard, { 
+        useCORS: true, 
+        allowTaint: false, // 设为 false 防止画布污染
+        scale: 2, 
+        backgroundColor: "#ffffff",
+        logging: false // 关闭日志提升一点点性能
+      }).then(canvas => {
+        try {
+            var dataUrl = canvas.toDataURL("image/png");
+            finalImg.src = dataUrl;
+            finalImg.onload = function() { loading.style.display = 'none'; finalImg.style.display = 'block'; }
+            // 兜底显示
+            setTimeout(() => { 
+                if(finalImg.style.display === 'none') {
+                    loading.style.display = 'none'; finalImg.style.display = 'block'; 
+                }
+            }, 200);
+        } catch(e) {
+            alert("生成失败：图片跨域限制。请确保图片和网站在同一域名下。");
+            closePosterModal();
+        }
+      }).catch(err => { 
+        alert("绘制错误: " + err); 
+        closePosterModal(); 
+      });
     }, 100);
   });
 }
 function closePosterModal() { document.getElementById('poster-modal').style.display = 'none'; }
+
+// 拖拽
 (function() {
   const btn = document.getElementById("share-button"); let isDragging = false; let startY, startTop;
   btn.addEventListener("mousedown", function(e) { isDragging = true; startY = e.clientY; startTop = btn.offsetTop; e.preventDefault(); });
