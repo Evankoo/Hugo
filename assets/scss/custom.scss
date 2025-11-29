@@ -1,179 +1,77 @@
-$bp-mobile-max: 768px;
+/* assets/scss/custom.scss */
 
-// --- 通用样式 ---
-.post-line {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
+/* ... 你原本的其他样式保留 ... */
 
-/* 桌面端：文章页标题与元信息 */
-.post__title {
-  font-size: 2.4rem;
-  font-weight: 700;
-  line-height: 1.2;
-  margin-bottom: 0.6em;
-  text-align: left;
-}
+/* --- 📱 移动端首页：强制紧凑布局 (修正版) --- */
+@media only screen and (max-width: 768px) {
 
-.post__meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 10px;
-  font-size: 14px;
-
-  .post__meta-icon { font-size: 13px; color: #999; }
-  .post__meta-text { color: #666; }
-  
-  &-category a {
-    background-color: #e0e0e0;
-    color: #333;
-    padding: 0 6px;
-    border-radius: 3px;
-    text-decoration: none;
-    line-height: 1.6;
-    display: inline-block;
+  /* 1. 卡片整体 */
+  body.home .wrapper__main .post {
+    margin-bottom: 20px !important;
+    padding-bottom: 15px !important;
+    border-bottom: 1px dashed #e0e0e0 !important;
   }
-  
-  &-tag a {
-    color: #004030;
-    text-decoration: none;
-    font-size: 14px;
-    gap: 5px;
-    display: inline-block;
+
+  /* 2. 图片容器：锁死高度 */
+  body.home .wrapper__main .post .post__thumbnail-wrapper {
+    display: block !important;
+    margin-top: 0 !important;
+    margin-bottom: 8px !important;
+    height: 160px !important;      /* 关键 */
+    max-height: 160px !important;
+    overflow: hidden !important;
+    border-radius: 6px !important;
   }
-}
 
-// ==========================================
-// 📱 移动端专属样式 (强制覆盖)
-// ==========================================
-@media (max-width: $bp-mobile-max) {
+  /* 3. 图片本身 */
+  body.home .wrapper__main .post .post__thumbnail-wrapper img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+  }
 
-  /* 1. 移动端：文章详情页 (Single Page) 头部 */
-  .post__header {
+  /* 4. 标题 */
+  body.home .wrapper__main .post .post__title {
+    font-size: 17px !important;
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
+    margin-top: 4px !important;
+    margin-bottom: 4px !important;
+  }
+
+  /* 5. 摘要 */
+  body.home .wrapper__main .post .post__content p,
+  body.home .wrapper__main .post .post__content .post-line {
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    color: #666 !important;
+    margin-bottom: 8px !important;
+    margin-top: 0 !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    white-space: normal !important;
+  }
+
+  /* 6. 底部标签 */
+  body.home .wrapper__main .post .post__footer {
+    margin-top: 0 !important;
+    padding: 0 !important;
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-bottom: 15px !important; // 减小详情页头部与正文的距离
-
-    .post__title {
-      order: 1;
-      font-size: 1.8rem !important; // 标题改小一点，避免换行太难看
-      margin: 5px 0 10px 0 !important;
-    }
-
-    .post__meta {
-      order: 2;
-      gap: 5px;
-      font-size: 12px;
-      margin: 0 !important;
-    }
-
-    .post__thumbnail-wrapper {
-      order: 3;
-      width: 100%;
-      margin-top: 10px !important;
-      margin-bottom: 0 !important;
-      
-      img {
-        width: 100%;
-        height: auto; // 详情页图片让它自适应高度，别裁切
-        max-height: 250px;
-        object-fit: cover;
-        border-radius: 8px;
-      }
-    }
+    flex-wrap: wrap;
+    gap: 5px !important;
   }
 
-  /* 2. 移动端：侧边栏 */
-  .wrapper__sidebar {
-    padding: 10px 0 !important;
-    margin: 0 !important;
-    min-height: auto;
-    
-    .sidebar__list li {
-      margin-bottom: 0.5em;
-    }
-  }
-
-  /* 3. 移动端：首页文章列表 (重点优化这里) */
-  body.home .wrapper__main {
-    
-    // 每一个文章卡片
-    .post {
-      margin-bottom: 25px !important; // 卡片之间的距离
-      padding-bottom: 15px !important;
-      border-bottom: 1px dashed #eee; // 加个虚线区分，视觉更紧凑
-      
-      // A. 列表图片
-      .post__thumbnail-wrapper {
-        margin-top: 0 !important;
-        margin-bottom: 8px !important; // 图片和标题的距离
-        max-height: 160px;
-        border-radius: 8px;
-        overflow: hidden;
-
-        img.post__thumbnail {
-          width: 100%;
-          height: 160px;
-          object-fit: cover;
-          display: block;
-        }
-      }
-
-      // B. 列表标题 (修正选择器)
-      .post__title {
-        font-size: 1.3rem !important; 
-        font-weight: bold;
-        margin-top: 5px !important;
-        margin-bottom: 5px !important; // 标题和摘要的距离
-        line-height: 1.3 !important;
-      }
-
-      // C. 列表摘要内容
-      .post__content {
-        margin-top: 0 !important;
-        
-        // 修正：摘要通常是 p 标签
-        p, .post-line {
-          margin: 0 0 8px 0 !important; // 摘要和底部标签的距离
-          font-size: 13px !important;
-          line-height: 1.5 !important;
-          color: #666;
-          
-          // 限制摘要显示两行
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-          white-space: normal; // 覆盖原本的 nowrap
-        }
-      }
-
-      // D. 列表底部标签区
-      .post__footer {
-        margin-top: 0 !important;
-        padding: 0 !important;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        
-        a.category {
-          font-size: 11px !important;
-          padding: 1px 5px !important;
-          background-color: #f0f0f0;
-          color: #666;
-          border-radius: 4px;
-        }
-        
-        a.tag {
-          font-size: 11px !important;
-          color: #999;
-          padding: 0;
-        }
-      }
-    }
+  /* 标签微调 */
+  body.home .wrapper__main .post .post__footer a {
+    font-size: 11px !important;
+    padding: 1px 6px !important;
+    background-color: #f0f0f0 !important;
+    border-radius: 3px !important;
+    line-height: 1.5 !important;
+    color: #666 !important;
+    text-decoration: none !important;
   }
 }
