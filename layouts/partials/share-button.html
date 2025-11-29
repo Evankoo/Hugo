@@ -1,123 +1,219 @@
-<!-- 悬浮圆形分享按钮 -->
+<!-- 🚀 优化 1: 换用国内 BootCDN，加载速度更快更稳 -->
+<script src="https://cdn.bootcdn.net/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<!-- 悬浮按钮 (保持不变) -->
 <div id="share-button" class="share-button-circle" style="top: 50%;">
-  <button onclick="shareArticle('{{ .Permalink }}')" title="分享文章">
+  <button onclick="handleShareClick('{{ .Permalink }}')" title="分享/生成海报">
     <i class="fas fa-share-alt"></i>
   </button>
 </div>
 
+<!-- 海报源结构 (隐藏) -->
+<div id="poster-source-container">
+  <div class="poster-card">
+    <!-- 🚀 优化 2: 图片逻辑优化，使用 absURL (绝对路径) -->
+    {{ $posterImg := "" }}
+    {{ if .Params.thumbnail }}
+      {{ $img := .Resources.GetMatch .Params.thumbnail }}
+      {{ if $img }}
+        {{/* 使用 Permalink 获取完整的 https 链接，html2canvas 更喜欢这个 */}}
+        {{ $posterImg = ($img.Resize "800x q90").Permalink }}
+      {{ else }}
+        {{ $posterImg = (.Params.thumbnail | absURL) }}
+      {{ end }}
+    {{ else if .Params.image }}
+      {{ $img := .Resources.GetMatch .Params.image }}
+      {{ if $img }}
+        {{ $posterImg = ($img.Resize "800x q90").Permalink }}
+      {{ else }}
+        {{ $posterImg = (.Params.image | absURL) }}
+      {{ end }}
+    {{ else }}
+      <!-- ⚠️ 确保这个默认图存在！否则海报会白屏 -->
+      {{ $posterImg = "/images/profile.png" | absURL }}
+    {{ end }}
+
+    <div class="poster-cover">
+      <!-- 增加 crossOrigin 属性，防止画布被污染 -->
+      <img src="{{ $posterImg }}" crossorigin="anonymous" id="hidden-poster-img">
+    </div>
+
+    <div class="poster-content">
+      <h2 class="poster-title">{{ .Title }}</h2>
+      <div class="poster-info">
+        <span class="poster-author">@{{ .Site.Params.author }}</span>
+        <span class="poster-date">{{ .Date.Format "2006-01-02" }}</span>
+      </div>
+      <hr class="poster-divider">
+      <div class="poster-footer">
+        <div class="poster-desc">
+          <p>长按识别二维码</p>
+          <p>阅读原文</p>
+        </div>
+        <div id="poster-qrcode"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 结果弹窗 -->
+<div id="poster-modal" onclick="closePosterModal()">
+  <div class="poster-modal-content" onclick="event.stopPropagation()">
+    <p style="color:white; margin-bottom:10px; font-size:14px; text-shadow:0 1px 2px black;">长按图片保存分享</p>
+    <img id="final-poster-img" src="" alt="Share Poster">
+    <div id="poster-loading">
+        <i class="fas fa-spinner fa-spin"></i> 正在生成海报...
+    </div>
+  </div>
+  <div class="poster-close-btn" onclick="closePosterModal()">×</div>
+</div>
+
+<style>
+/* 样式保持不变，为了节省篇幅，这里复用你上一次的 CSS */
+/* ...请确保保留了原来的 CSS 样式... */
+/* 如果你需要，我可以把 CSS 再贴一遍，但原则上刚才的 CSS 没问题 */
+
+.share-button-circle { position: fixed; right: 15px; z-index: 9999; touch-action: none; }
+.share-button-circle button { width: 50px; height: 50px; border-radius: 50%; background-color: #B9375D; color: #fff; border: none; cursor: pointer; font-size: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: transform 0.2s, background-color 0.3s; }
+.share-button-circle button:hover { background-color: #E45A92; transform: scale(1.05); }
+#poster-source-container { position: fixed; top: 0; left: -9999px; width: 375px; z-index: -1; background-color: #fff; }
+.poster-card { background: #fff; border: 1px solid #eee; overflow: hidden; }
+.poster-cover { width: 100%; height: 200px; overflow: hidden; background: #f4f4f4; }
+.poster-cover img { width: 100%; height: 100%; object-fit: cover; }
+.poster-content { padding: 20px; }
+.poster-title { font-size: 20px; font-weight: bold; color: #333; line-height: 1.4; margin: 0 0 10px 0; text-align: left; }
+.poster-info { color: #888; font-size: 13px; margin-bottom: 15px; }
+.poster-divider { border: 0; border-top: 1px dashed #eee; margin: 15px 0; }
+.poster-footer { display: flex; justify-content: space-between; align-items: center; }
+.poster-desc { color: #666; font-size: 12px; line-height: 1.6; }
+#poster-qrcode img { width: 75px !important; height: 75px !important; display: block; }
+#poster-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+.poster-modal-content { text-align: center; width: 80%; max-width: 375px; }
+#final-poster-img { width: 100%; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.5); display: none; }
+#poster-loading { color: white; font-size: 16px; margin-top: 20px; }
+.poster-close-btn { position: absolute; bottom: 50px; width: 40px; height: 40px; border: 2px solid white; border-radius: 50%; color: white; font-size: 24px; text-align: center; line-height: 36px; cursor: pointer; opacity: 0.8; }
+</style>
+
 <script>
-function shareArticle(url) {
-  if (navigator.userAgent.includes("MicroMessenger")) {
-    // 微信环境：复制链接 + 提示文案
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(url).then(function() {
-        alert("文章链接已复制成功，你也可以点击左上角分享哦！");
-      }, function(err) {
-        alert("复制失败，请手动复制链接: " + url);
-      });
-    } else {
-      // 不支持 Clipboard API 时
-      const textArea = document.createElement("textarea");
-      textArea.value = url;
-      textArea.style.position = "fixed";
-      textArea.style.top = "-9999px";
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
-      try { document.execCommand('copy'); 
-        alert("文章链接已复制成功，你也可以点击左上角分享");
-      } catch(e){ 
-        alert("复制失败，请手动复制链接: "+url);
-      }
-      document.body.removeChild(textArea);
-    }
+function handleShareClick(url) {
+  // 简单判断移动端
+  if (window.innerWidth <= 768) {
+    generatePoster(url);
   } else {
-    // 其他环境直接复制链接
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(url).then(function() {
-        alert("文章链接已复制，可直接分享！");
-      }, function(err) {
-        alert("复制失败，请手动复制链接: " + url);
-      });
-    } else {
-      const textArea = document.createElement("textarea");
-      textArea.value = url;
-      textArea.style.position = "fixed";
-      textArea.style.top = "-9999px";
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
-      try { document.execCommand('copy'); alert("文章链接已复制，可直接分享！"); }
-      catch(e){ alert("复制失败，请手动复制链接: "+url);}
-      document.body.removeChild(textArea);
-    }
+    shareLinkPC(url);
   }
 }
-// 上下拖动功能
+
+function shareLinkPC(url) {
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(url).then(() => alert("链接已复制！"), () => alert("复制失败: " + url));
+  } else {
+    // 兼容旧浏览器
+    const ta = document.createElement("textarea");
+    ta.value = url; ta.style.position = "fixed"; ta.style.top = "-9999px";
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try { document.execCommand('copy'); alert("链接已复制！"); } catch(e){ alert("复制失败"); }
+    document.body.removeChild(ta);
+  }
+}
+
+// ----------------------------------------------------
+// 海报生成核心逻辑 (V2 修复版)
+// ----------------------------------------------------
+var qrcodeGenerated = false;
+
+function generatePoster(url) {
+  var modal = document.getElementById('poster-modal');
+  var loading = document.getElementById('poster-loading');
+  var finalImg = document.getElementById('final-poster-img');
+  
+  // 1. 显示弹窗 & Loading
+  modal.style.display = 'flex';
+  loading.style.display = 'block';
+  finalImg.style.display = 'none';
+
+  // 2. 生成二维码 (仅一次)
+  if (!qrcodeGenerated) {
+    // 检查 QRCode 库是否加载成功
+    if (typeof QRCode === 'undefined') {
+      alert("错误：二维码组件加载失败，请检查网络或稍后再试。");
+      modal.style.display = 'none';
+      return;
+    }
+    
+    new QRCode(document.getElementById("poster-qrcode"), {
+      text: url, width: 75, height: 75,
+      colorDark : "#000000", colorLight : "#ffffff",
+      correctLevel : QRCode.CorrectLevel.H
+    });
+    qrcodeGenerated = true;
+  }
+
+  // 3. 🚀 关键修改：等待 1000ms (1秒) 确保图片在 DOM 中渲染完毕
+  // 手机性能差或网速慢时，300ms 往往不够，导致截图为空
+  setTimeout(function() {
+    
+    // 检查 html2canvas 是否加载
+    if (typeof html2canvas === 'undefined') {
+      alert("错误：绘图组件加载失败，请检查网络。");
+      modal.style.display = 'none';
+      return;
+    }
+
+    var posterCard = document.querySelector(".poster-card");
+
+    // 开始截图
+    html2canvas(posterCard, {
+      useCORS: true,       // 允许跨域图片
+      allowTaint: true,    // 允许污染 (有时能解决 CORS 报错)
+      scale: 2,            // 2倍清晰度
+      backgroundColor: "#ffffff", // 确保背景是白的不是透明的
+      scrollY: 0,          // 修复页面滚动导致截图偏移的问题
+      scrollX: 0
+    }).then(canvas => {
+      try {
+        var dataUrl = canvas.toDataURL("image/png");
+        finalImg.src = dataUrl;
+        
+        // 只有当图片 src 赋值成功后，才显示
+        finalImg.onload = function() {
+            loading.style.display = 'none';
+            finalImg.style.display = 'block';
+        }
+        // 防止 onload 不触发（比如已经缓存），手动兜底
+        setTimeout(() => {
+             loading.style.display = 'none';
+             finalImg.style.display = 'block';
+        }, 200);
+
+      } catch (e) {
+        alert("海报生成被浏览器拦截 (CORS)，可能是图片跨域问题。");
+        console.error(e);
+        modal.style.display = 'none';
+      }
+    }).catch(err => {
+      console.error("生成失败:", err);
+      alert("生成失败，请重试。\n错误信息: " + err);
+      modal.style.display = 'none';
+    });
+
+  }, 1000); // ⏳ 这里改成了 1000ms
+}
+
+function closePosterModal() {
+  document.getElementById('poster-modal').style.display = 'none';
+}
+
+// 拖拽逻辑 (保持不变)
 (function() {
   const btn = document.getElementById("share-button");
-  let isDragging = false;
-  let startY, startTop;
-
-  btn.addEventListener("mousedown", function(e) {
-    isDragging = true;
-    startY = e.clientY;
-    startTop = btn.offsetTop;
-    e.preventDefault();
-  });
-
-  document.addEventListener("mousemove", function(e) {
-    if (!isDragging) return;
-    let deltaY = e.clientY - startY;
-    let newTop = startTop + deltaY;
-    newTop = Math.max(0, Math.min(window.innerHeight - btn.offsetHeight, newTop));
-    btn.style.top = newTop + "px";
-  });
-
+  let isDragging = false; let startY, startTop;
+  btn.addEventListener("mousedown", function(e) { isDragging = true; startY = e.clientY; startTop = btn.offsetTop; e.preventDefault(); });
+  document.addEventListener("mousemove", function(e) { if (!isDragging) return; let deltaY = e.clientY - startY; let newTop = startTop + deltaY; newTop = Math.max(0, Math.min(window.innerHeight - btn.offsetHeight, newTop)); btn.style.top = newTop + "px"; });
   document.addEventListener("mouseup", function(){ isDragging = false; });
-
-  // 移动端拖动
-  btn.addEventListener("touchstart", function(e){
-    isDragging = true;
-    startY = e.touches[0].clientY;
-    startTop = btn.offsetTop;
-  });
-  btn.addEventListener("touchmove", function(e){
-    if (!isDragging) return;
-    let deltaY = e.touches[0].clientY - startY;
-    let newTop = startTop + deltaY;
-    newTop = Math.max(0, Math.min(window.innerHeight - btn.offsetHeight, newTop));
-    btn.style.top = newTop + "px";
-  });
+  btn.addEventListener("touchstart", function(e){ isDragging = true; startY = e.touches[0].clientY; startTop = btn.offsetTop; });
+  btn.addEventListener("touchmove", function(e){ if (!isDragging) return; e.preventDefault(); let deltaY = e.touches[0].clientY - startY; let newTop = startTop + deltaY; newTop = Math.max(0, Math.min(window.innerHeight - btn.offsetHeight, newTop)); btn.style.top = newTop + "px"; });
   btn.addEventListener("touchend", function(){ isDragging = false; });
 })();
 </script>
-
-<style>
-/* 圆形悬浮按钮 */
-.share-button-circle {
-  position: fixed;
-  right: 10px;
-  z-index: 9999;
-}
-
-.share-button-circle button {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%; /* 圆形 */
-  background-color: #B9375D;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  font-size: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-  transition: background-color 0.3s;
-}
-
-.share-button-circle button:hover {
-  background-color: #E45A92;
-}
-</style>
