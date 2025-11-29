@@ -13,49 +13,29 @@
 <div id="poster-source-container">
   <div class="poster-card">
     
-    <!-- 🚀 图片逻辑终极版：配置优先 -> 自动扫描 cover.jpg -> 默认图 -->
+    <!-- 图片路径逻辑 -->
     {{ $posterImg := "" }}
-    {{ $imgResource := nil }}
-
-    {{/* 1. 优先尝试：Front Matter 指定的 thumbnail */}}
     {{ if .Params.thumbnail }}
-      {{ $imgResource = .Resources.GetMatch .Params.thumbnail }}
-    {{ end }}
-
-    {{/* 2. 其次尝试：Front Matter 指定的 image */}}
-    {{ if and (not $imgResource) .Params.image }}
-      {{ $imgResource = .Resources.GetMatch .Params.image }}
-    {{ end }}
-
-    {{/* 3. 🚀 关键修复：如果没有指定，自动去文件夹里找 cover.jpg 或 feature.jpg */}}
-    {{ if not $imgResource }}
-      {{ $imgResource = .Resources.GetMatch "cover*" }}
-    {{ end }}
-    {{ if not $imgResource }}
-      {{ $imgResource = .Resources.GetMatch "feature*" }}
-    {{ end }}
-
-    {{/* --- 根据结果赋值路径 --- */}}
-    
-    {{ if $imgResource }}
-      {{/* A. 找到了资源文件 (无论是配置的还是自动扫描的) -> 转绝对路径 */}}
-      {{ $posterImg = ($imgResource.Resize "800x q90").Permalink }}
-    
-    {{ else if .Params.thumbnail }}
-      {{/* B. 没找到资源，但配置了路径 (可能是 static 下的文件或外链) */}}
-      {{ $posterImg = (.Params.thumbnail | absURL) }}
-    
+      {{ $img := .Resources.GetMatch .Params.thumbnail }}
+      {{ if $img }}
+        {{ $posterImg = ($img.Resize "800x q90").Permalink }}
+      {{ else }}
+        {{/* 针对旧文章的兼容：强制转为绝对路径 */}}
+        {{ $posterImg = (.Params.thumbnail | absURL) }}
+      {{ end }}
     {{ else if .Params.image }}
-      {{/* C. 同上 */}}
-      {{ $posterImg = (.Params.image | absURL) }}
-    
+      {{ $img := .Resources.GetMatch .Params.image }}
+      {{ if $img }}
+        {{ $posterImg = ($img.Resize "800x q90").Permalink }}
+      {{ else }}
+        {{ $posterImg = (.Params.image | absURL) }}
+      {{ end }}
     {{ else }}
-      {{/* D. 实在没有，用默认图 */}}
       {{ $posterImg = "/images/profile.png" | absURL }}
     {{ end }}
 
     <div class="poster-cover">
-      <!-- 增加 id 供 JS 监听 -->
+      <!-- 给 img 加一个 id，方便 JS 抓取它 -->
       <img src="{{ $posterImg }}" crossorigin="anonymous" id="hidden-poster-cover-img">
     </div>
 
@@ -77,7 +57,7 @@
   </div>
 </div>
 
-<!-- 弹窗 (保持不变) -->
+<!-- 弹窗 -->
 <div id="poster-modal" onclick="closePosterModal()">
   <div class="poster-modal-content" onclick="event.stopPropagation()">
     <p style="color:white; margin-bottom:10px; font-size:14px; text-shadow:0 1px 2px black;">长按图片保存分享</p>
@@ -93,11 +73,14 @@
 </div>
 
 <style>
-/* 样式保持不变 (V3版本) */
+/* 样式部分 */
 .share-button-circle { position: fixed; right: 15px; z-index: 9999; touch-action: none; }
 .share-button-circle button { width: 50px; height: 50px; border-radius: 50%; background-color: #B9375D; color: #fff; border: none; cursor: pointer; font-size: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: transform 0.2s, background-color 0.3s; }
 .share-button-circle button:hover { background-color: #E45A92; transform: scale(1.05); }
+
+/* 这里用 opacity:0 代替 left:-9999px，防止部分浏览器不加载屏幕外的图片 */
 #poster-source-container { position: fixed; top: 0; left: 0; width: 375px; z-index: -100; background-color: #fff; opacity: 0; pointer-events: none; }
+
 .poster-card { background: #fff; border: 1px solid #eee; overflow: hidden; }
 .poster-cover { width: 100%; height: 200px; overflow: hidden; background: #f4f4f4; }
 .poster-cover img { width: 100%; height: 100%; object-fit: cover; }
@@ -108,58 +91,136 @@
 .poster-footer { display: flex; justify-content: space-between; align-items: center; }
 .poster-desc { color: #666; font-size: 12px; line-height: 1.6; }
 #poster-qrcode img { width: 75px !important; height: 75px !important; display: block; }
+
 #poster-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
 .poster-modal-content { text-align: center; width: 80%; max-width: 375px; }
 #final-poster-img { width: 100%; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.5); display: none; }
 #poster-loading { color: white; font-size: 16px; margin-top: 20px; }
 .poster-close-btn { position: absolute; bottom: 50px; width: 40px; height: 40px; border: 2px solid white; border-radius: 50%; color: white; font-size: 24px; text-align: center; line-height: 36px; cursor: pointer; opacity: 0.8; }
+
+/* 简单的转圈动画 */
 .loading-spinner { border: 4px solid rgba(255,255,255,0.3); border-radius: 50%; border-top: 4px solid #fff; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 0 auto 10px auto; }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 </style>
 
 <script>
-// JS 逻辑保持不变 (V3版本)
-function handleShareClick(url) { if (window.innerWidth <= 768) { generatePoster(url); } else { shareLinkPC(url); } }
-function shareLinkPC(url) {
-  if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(url).then(() => alert("链接已复制！"), () => alert("复制失败: " + url)); }
-  else { const ta = document.createElement("textarea"); ta.value = url; ta.style.position = "fixed"; ta.style.top = "-9999px"; document.body.appendChild(ta); ta.focus(); ta.select(); try { document.execCommand('copy'); alert("链接已复制！"); } catch(e){ alert("复制失败"); } document.body.removeChild(ta); }
+// 点击入口
+function handleShareClick(url) {
+  if (window.innerWidth <= 768) {
+    generatePoster(url);
+  } else {
+    shareLinkPC(url);
+  }
 }
+
+// PC 复制链接
+function shareLinkPC(url) {
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(url).then(() => alert("链接已复制！"), () => alert("复制失败: " + url));
+  } else {
+    const ta = document.createElement("textarea");
+    ta.value = url; ta.style.position = "fixed"; ta.style.top = "-9999px";
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try { document.execCommand('copy'); alert("链接已复制！"); } catch(e){ alert("复制失败"); }
+    document.body.removeChild(ta);
+  }
+}
+
 var qrcodeGenerated = false;
+
+// 🚀 核心：智能生成海报
 function generatePoster(url) {
   var modal = document.getElementById('poster-modal');
   var loadingText = document.getElementById('loading-text');
   var loading = document.getElementById('poster-loading');
   var finalImg = document.getElementById('final-poster-img');
-  modal.style.display = 'flex'; loading.style.display = 'block'; finalImg.style.display = 'none'; loadingText.innerText = "正在准备二维码...";
+  
+  // 1. 初始化弹窗
+  modal.style.display = 'flex';
+  loading.style.display = 'block';
+  finalImg.style.display = 'none';
+  loadingText.innerText = "正在准备二维码...";
+
+  // 2. 生成二维码 (仅一次)
   if (!qrcodeGenerated) {
     if (typeof QRCode === 'undefined') { alert("二维码组件加载失败"); return; }
-    new QRCode(document.getElementById("poster-qrcode"), { text: url, width: 75, height: 75, colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H });
+    new QRCode(document.getElementById("poster-qrcode"), {
+      text: url, width: 75, height: 75,
+      colorDark : "#000000", colorLight : "#ffffff",
+      correctLevel : QRCode.CorrectLevel.H
+    });
     qrcodeGenerated = true;
   }
+
+  // 3. 智能等待图片加载
   loadingText.innerText = "正在加载图片...";
+  
+  // 获取那张隐形海报里的封面图
   var hiddenImg = document.getElementById('hidden-poster-cover-img');
+  
+  // 创建一个 Promise 来等待图片加载
   var imgLoadPromise = new Promise((resolve, reject) => {
-    if (hiddenImg.complete && hiddenImg.naturalHeight !== 0) { resolve(); }
-    else { hiddenImg.onload = () => resolve(); hiddenImg.onerror = () => { console.warn("海报封面加载失败"); resolve(); }; }
+    if (hiddenImg.complete && hiddenImg.naturalHeight !== 0) {
+      resolve(); // 图片已经在缓存里了，直接通过
+    } else {
+      hiddenImg.onload = () => resolve(); // 图片加载完成时触发
+      hiddenImg.onerror = () => {
+        console.warn("海报封面加载失败，将生成无图海报");
+        resolve(); // 即使失败也继续，不要卡死，只是没有图而已
+      };
+    }
   });
+
+  // 设置一个超时，万一图片 5秒 都没下来，就不等了
   var timeoutPromise = new Promise((resolve) => setTimeout(resolve, 5000));
+
+  // 竞速：图片加载 vs 超时
   Promise.race([imgLoadPromise, timeoutPromise]).then(() => {
     loadingText.innerText = "正在绘制海报...";
+    
+    // 开始截图
+    // 稍微延迟 100ms 让渲染引擎喘口气
     setTimeout(() => {
       var posterCard = document.querySelector(".poster-card");
       if (typeof html2canvas === 'undefined') { alert("绘图组件加载失败"); return; }
-      html2canvas(posterCard, { useCORS: true, allowTaint: true, scale: 2, backgroundColor: "#ffffff", scrollY: 0, scrollX: 0 }).then(canvas => {
+
+      html2canvas(posterCard, {
+        useCORS: true,
+        allowTaint: true,
+        scale: 2,
+        backgroundColor: "#ffffff",
+        scrollY: 0,
+        scrollX: 0
+      }).then(canvas => {
         var dataUrl = canvas.toDataURL("image/png");
         finalImg.src = dataUrl;
-        finalImg.onload = function() { loading.style.display = 'none'; finalImg.style.display = 'block'; }
-        setTimeout(() => { loading.style.display = 'none'; finalImg.style.display = 'block'; }, 100);
-      }).catch(err => { alert("海报绘制出错: " + err); modal.style.display = 'none'; });
+        
+        // 图片生成完毕
+        finalImg.onload = function() {
+            loading.style.display = 'none';
+            finalImg.style.display = 'block';
+        }
+        // 兜底显示
+        setTimeout(() => {
+             loading.style.display = 'none';
+             finalImg.style.display = 'block';
+        }, 100);
+      }).catch(err => {
+        alert("海报绘制出错: " + err);
+        modal.style.display = 'none';
+      });
     }, 100);
   });
 }
-function closePosterModal() { document.getElementById('poster-modal').style.display = 'none'; }
+
+function closePosterModal() {
+  document.getElementById('poster-modal').style.display = 'none';
+}
+
+// 拖拽逻辑 (保持不变)
 (function() {
-  const btn = document.getElementById("share-button"); let isDragging = false; let startY, startTop;
+  const btn = document.getElementById("share-button");
+  let isDragging = false; let startY, startTop;
   btn.addEventListener("mousedown", function(e) { isDragging = true; startY = e.clientY; startTop = btn.offsetTop; e.preventDefault(); });
   document.addEventListener("mousemove", function(e) { if (!isDragging) return; let deltaY = e.clientY - startY; let newTop = startTop + deltaY; newTop = Math.max(0, Math.min(window.innerHeight - btn.offsetHeight, newTop)); btn.style.top = newTop + "px"; });
   document.addEventListener("mouseup", function(){ isDragging = false; });
