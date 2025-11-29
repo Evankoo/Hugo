@@ -43,5 +43,16 @@
     {{- if (eq .Site.Params.simpleAnalytics.enable true) -}}
       {{- partial "analytics/simpleanalytics.html" . -}}
     {{- end -}}
+
+{{/* ⚡️ Mermaid 优化版：只有在 config 开启且文章头部声明 mermaid: true 时才加载 */}}
+    {{ if and .Site.Params.mermaidEnable .Params.mermaid }}
+      <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js" crossorigin="anonymous"></script>
+      <script>
+        // 检测暗色模式，自动切换 Mermaid 主题
+        const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default';
+        mermaid.initialize({ startOnLoad: true, theme: theme });
+      </script>
+    {{ end }}
+
   </body>
 </html>

@@ -20,7 +20,8 @@
   {{- hugo.Generator -}}
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="author" content="{{ .Site.Params.author }}" />
-  <meta
+
+<meta
     name="description"
     content="{{ if .Params.description }}
       {{- .Params.description -}}
@@ -28,6 +29,7 @@
       {{- .Site.Params.description -}}
     {{ end }}"
   />
+
   {{ if .Params.redirectUrl }}
     <meta http-equiv="refresh" content="1; url={{ .Params.redirectUrl }}" />
   {{ end }}
@@ -98,48 +100,8 @@
     {{ end -}}
   {{ end -}}
 
-  <!-- 自定义样式：放在主题主样式之后，便于覆盖 -->
-
-  {{ $markupHighlightStyle := resources.Get "css/markupHighlight.css" | resources.Minify | resources.Fingerprint }}
-  <link
-    rel="stylesheet"
-    href="{{ $markupHighlightStyle.RelPermalink }}"
-    integrity="{{ $markupHighlightStyle.Data.Integrity }}"
-    crossorigin="anonymous"
-    type="text/css"
-  />
-  {{ $style := resources.Get "fontawesome/css/fontawesome.min.css" | resources.Fingerprint }}
-  <link
-    rel="stylesheet"
-    href="{{ $style.RelPermalink }}"
-    integrity="{{ $style.Data.Integrity }}"
-    crossorigin="anonymous"
-    type="text/css"
-  />
-  {{ $style := resources.Get "fontawesome/css/solid.min.css" | resources.Fingerprint }}
-  <link
-    rel="stylesheet"
-    href="{{ $style.RelPermalink }}"
-    integrity="{{ $style.Data.Integrity }}"
-    crossorigin="anonymous"
-    type="text/css"
-  />
-  {{ $style := resources.Get "fontawesome/css/regular.min.css" | resources.Fingerprint }}
-  <link
-    rel="stylesheet"
-    href="{{ $style.RelPermalink }}"
-    integrity="{{ $style.Data.Integrity }}"
-    crossorigin="anonymous"
-    type="text/css"
-  />
-  {{ $style := resources.Get "fontawesome/css/brands.min.css" | resources.Fingerprint }}
-  <link
-    rel="stylesheet"
-    href="{{ $style.RelPermalink }}"
-    integrity="{{ $style.Data.Integrity }}"
-    crossorigin="anonymous"
-    type="text/css"
-  />
+<!-- ⚡️ FontAwesome CDN 优化：直接引用公共库，速度快且不丢图标 -->
+  <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
 
   {{/* 自定义样式（放最后，方便覆盖） */}}
   {{ $custom := resources.Get "scss/custom.scss" | toCSS (dict "transpiler" "dartsass") }}

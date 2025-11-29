@@ -1,0 +1,19 @@
+{{/* layouts/_default/_markup/render-image.html */}}
+{{- $u := .Destination -}}
+{{- $img := .Page.Resources.GetMatch $u -}}
+
+{{- if $img -}}
+  {{/* 如果图片在文件夹内，执行自动优化 */}}
+  {{- $webp := $img.Resize "800x WebP q85" -}} 
+  {{- $fallback := $img.Resize "800x jpg q85" -}}
+  <figure>
+    <picture>
+      <source srcset="{{ $webp.RelPermalink }}" type="image/webp">
+      <img loading="lazy" src="{{ $fallback.RelPermalink }}" alt="{{ .Text }}" width="{{ $fallback.Width }}" height="{{ $fallback.Height }}">
+    </picture>
+    {{- with .Title }}<figcaption>{{ . }}</figcaption>{{ end -}}
+  </figure>
+{{- else -}}
+  {{/* 如果找不到图片（或者是外部链接），保持原样但增加懒加载 */}}
+  <img loading="lazy" src="{{ .Destination | safeURL }}" alt="{{ .Text }}" {{ with .Title}} title="{{ . }}"{{ end }} />
+{{- end -}}

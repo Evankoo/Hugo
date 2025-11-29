@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /404.html
+Disallow: /search/
+Disallow: /tags/
+Disallow: /categories/
+# 如果你不希望爬虫抓取标签和分类页（防止权重分散），保留上面两行；否则可以删掉
+
+Sitemap: {{ "sitemap.xml" | absURL }}

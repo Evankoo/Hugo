@@ -1,0 +1,140 @@
+{{ define "main" }}
+<div class="post animated fadeInDown">
+
+  <div class="post__header">
+    {{/* 1. 标题部分 */}}
+    <h1 class="post__title">
+      {{ if eq .Site.Params.disableTitleCapitalization true }}
+        {{ .Title }}
+      {{ else }}
+        {{ title .Title }}
+      {{ end }}
+    </h1>
+
+    {{/* 2. ⚡️ 头图优化核心部分 (修复版) */}}
+    <div class="post__thumbnail-wrapper">
+      {{/* 定义变量：尝试获取图片资源 */}}
+      {{ $featureImage := "" }}
+
+      {{/* 逻辑：优先查找 Params.thumbnail 对应的资源，如果没有，再找 Params.image */}}
+      {{ if .Params.thumbnail }}
+        {{ $featureImage = .Resources.GetMatch .Params.thumbnail }}
+      {{ else if .Params.image }}
+        {{ $featureImage = .Resources.GetMatch .Params.image }}
+      {{ end }}
+
+      {{/* 如果都没找到资源，尝试找默认的 cover* 文件 */}}
+      {{ if not $featureImage }}
+        {{ $featureImage = .Resources.GetMatch "cover*" }}
+      {{ end }}
+
+      {{/* --- 开始渲染 --- */}}
+      {{ if $featureImage }}
+        {{/* A. 找到了 Page Bundle 资源图片 -> 转 WebP 压缩 */}}
+        {{ $webp := $featureImage.Resize "1200x WebP q85" }}
+        <img class="post__thumbnail" src="{{ $webp.RelPermalink }}" alt="{{ .Title }}" width="{{ $webp.Width }}" height="{{ $webp.Height }}">
+      
+      {{ else if .Params.thumbnail }}
+        {{/* B. 没找到资源，但 FrontMatter 里写了 thumbnail (可能是 static 文件夹的路径) */}}
+        <img class="post__thumbnail" src="{{ .Params.thumbnail | relURL }}" alt="{{ .Title }}">
+      
+      {{ else if .Params.image }}
+        {{/* C. 同上，检查 image 字段 */}}
+        <img class="post__thumbnail" src="{{ .Params.image | relURL }}" alt="{{ .Title }}">
+      {{ end }}
+    </div>
+
+    {{/* 3. Meta 信息 (日期、阅读时间等) */}}
+    {{ if or (eq .Type "post") (eq .Type .Site.Params.postSectionName) }}
+    <ul class="post__meta">
+      <!-- 发布日期 -->
+      <li class="post__meta-item">
+        <em class="fas fa-calendar-day post__meta-icon"></em>
+        <span class="post__meta-text">
+          {{ $fmt := cond (isset .Site.Params "singleDateFormat") .Site.Params.singleDateFormat "2006-01-02" }}
+          {{ if .Site.Params.localizedDates }}
+            {{ time.Format $fmt .Date }}
+          {{ else }}
+            {{ .Date.Format $fmt }}
+          {{ end }}
+        </span>
+      </li>
+
+      <!-- 阅读时间 -->
+      {{ $wc := countwords .Content }}
+      {{ $rt := div $wc 265 }}
+      {{ if lt $rt 1 }}{{ $rt = 1 }}{{ end }}
+      <li class="post__meta-item">
+        <em class="fas fa-stopwatch post__meta-icon"></em>
+        <span class="post__meta-text">阅读时间 {{ $rt }} 分钟</span>
+      </li>
+
+      <!-- 分类 -->
+      {{ with .Params.Categories }}
+      <li class="post__meta-item post__meta-category">
+        {{ range . }}
+          <a href="{{ "/categories/" | relURL }}{{ . | urlize }}">{{ . }}</a>
+        {{ end }}
+      </li>
+      {{ end }}
+
+      <!-- 标签 -->
+      {{ with .Params.Tags }}
+      <li class="post__meta-item post__meta-tag">
+        {{ range . }}
+          <a href="{{ "/tags/" | relURL }}{{ . | urlize }}">#{{ . }}</a>
+        {{ end }}
+      </li>
+      {{ end }}
+    </ul>
+    {{ end }}
+  </div>
+
+  {{/* 4. 文章正文 */}}
+  <div class="post__content">
+    {{- partial "expirationnote.html" . -}}
+    {{- if eq .Params.toc true -}}
+      {{- partial "toc.html" . -}}
+    {{- end -}}
+
+    {{ .Content }}
+
+    {{- if isset .Params "series" -}}
+      {{- partial "series.html" . -}}
+    {{- end -}}
+    {{- if eq .Site.Params.relatedPosts true -}}
+      {{- partial "related.html" . -}}
+    {{- end -}}
+    {{- if eq .Params.contact true -}}
+      {{- partial "contact.html" . -}}
+    {{- end -}}
+    {{/* Mermaid 已经在 baseof.html 统一处理，这里不需要 partial mermaid.html 了，除非 Anatole 有特殊逻辑，一般建议保留以防万一 */}}
+    {{- if eq .Site.Params.mermaid.enable true -}}
+      {{- partial "mermaid.html" . -}}
+    {{- end -}}
+  </div>
+
+  {{/* 5. 页脚分类标签 */}}
+  <div class="post__footer">
+    {{ with .Page.Params.Categories }}
+      {{ partial "taxonomy/categories.html" . }}
+    {{ end }}
+
+    {{ with .Page.Params.Tags }}
+      {{ partial "taxonomy/tags.html" . }}
+    {{ end }}
+  </div>
+
+  {{/* 6. 评论系统 */}}
+  {{ if and (or (eq .Type "post") (eq .Type .Site.Params.postSectionName)) (ne .Site.Params.disableComments true) }}
+  <div id="comment">
+    <h2>{{ i18n "comments" }}</h2>
+    {{ template "_internal/disqus.html" . }}
+  </div>
+  {{ end }}
+
+</div>
+
+<!-- 7. 分享按钮 -->
+{{ partial "share-button.html" . }}
+{{ end }}
