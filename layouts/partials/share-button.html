@@ -1,25 +1,26 @@
-<!-- 🚀 优化 1: 换用国内 BootCDN，加载速度更快更稳 -->
+<!-- 引入库 -->
 <script src="https://cdn.bootcdn.net/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.bootcdn.net/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-<!-- 悬浮按钮 (保持不变) -->
+<!-- 悬浮按钮 -->
 <div id="share-button" class="share-button-circle" style="top: 50%;">
   <button onclick="handleShareClick('{{ .Permalink }}')" title="分享/生成海报">
     <i class="fas fa-share-alt"></i>
   </button>
 </div>
 
-<!-- 海报源结构 (隐藏) -->
+<!-- 海报源 (隐藏结构) -->
 <div id="poster-source-container">
   <div class="poster-card">
-    <!-- 🚀 优化 2: 图片逻辑优化，使用 absURL (绝对路径) -->
+    
+    <!-- 图片路径逻辑 -->
     {{ $posterImg := "" }}
     {{ if .Params.thumbnail }}
       {{ $img := .Resources.GetMatch .Params.thumbnail }}
       {{ if $img }}
-        {{/* 使用 Permalink 获取完整的 https 链接，html2canvas 更喜欢这个 */}}
         {{ $posterImg = ($img.Resize "800x q90").Permalink }}
       {{ else }}
+        {{/* 针对旧文章的兼容：强制转为绝对路径 */}}
         {{ $posterImg = (.Params.thumbnail | absURL) }}
       {{ end }}
     {{ else if .Params.image }}
@@ -30,13 +31,12 @@
         {{ $posterImg = (.Params.image | absURL) }}
       {{ end }}
     {{ else }}
-      <!-- ⚠️ 确保这个默认图存在！否则海报会白屏 -->
       {{ $posterImg = "/images/profile.png" | absURL }}
     {{ end }}
 
     <div class="poster-cover">
-      <!-- 增加 crossOrigin 属性，防止画布被污染 -->
-      <img src="{{ $posterImg }}" crossorigin="anonymous" id="hidden-poster-img">
+      <!-- 给 img 加一个 id，方便 JS 抓取它 -->
+      <img src="{{ $posterImg }}" crossorigin="anonymous" id="hidden-poster-cover-img">
     </div>
 
     <div class="poster-content">
@@ -57,27 +57,30 @@
   </div>
 </div>
 
-<!-- 结果弹窗 -->
+<!-- 弹窗 -->
 <div id="poster-modal" onclick="closePosterModal()">
   <div class="poster-modal-content" onclick="event.stopPropagation()">
     <p style="color:white; margin-bottom:10px; font-size:14px; text-shadow:0 1px 2px black;">长按图片保存分享</p>
     <img id="final-poster-img" src="" alt="Share Poster">
+    
+    <!-- Loading 状态提示 -->
     <div id="poster-loading">
-        <i class="fas fa-spinner fa-spin"></i> 正在生成海报...
+        <div class="loading-spinner"></div>
+        <p id="loading-text">正在加载封面图...</p>
     </div>
   </div>
   <div class="poster-close-btn" onclick="closePosterModal()">×</div>
 </div>
 
 <style>
-/* 样式保持不变，为了节省篇幅，这里复用你上一次的 CSS */
-/* ...请确保保留了原来的 CSS 样式... */
-/* 如果你需要，我可以把 CSS 再贴一遍，但原则上刚才的 CSS 没问题 */
-
+/* 样式部分 */
 .share-button-circle { position: fixed; right: 15px; z-index: 9999; touch-action: none; }
 .share-button-circle button { width: 50px; height: 50px; border-radius: 50%; background-color: #B9375D; color: #fff; border: none; cursor: pointer; font-size: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: transform 0.2s, background-color 0.3s; }
 .share-button-circle button:hover { background-color: #E45A92; transform: scale(1.05); }
-#poster-source-container { position: fixed; top: 0; left: -9999px; width: 375px; z-index: -1; background-color: #fff; }
+
+/* 这里用 opacity:0 代替 left:-9999px，防止部分浏览器不加载屏幕外的图片 */
+#poster-source-container { position: fixed; top: 0; left: 0; width: 375px; z-index: -100; background-color: #fff; opacity: 0; pointer-events: none; }
+
 .poster-card { background: #fff; border: 1px solid #eee; overflow: hidden; }
 .poster-cover { width: 100%; height: 200px; overflow: hidden; background: #f4f4f4; }
 .poster-cover img { width: 100%; height: 100%; object-fit: cover; }
@@ -88,16 +91,21 @@
 .poster-footer { display: flex; justify-content: space-between; align-items: center; }
 .poster-desc { color: #666; font-size: 12px; line-height: 1.6; }
 #poster-qrcode img { width: 75px !important; height: 75px !important; display: block; }
+
 #poster-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
 .poster-modal-content { text-align: center; width: 80%; max-width: 375px; }
 #final-poster-img { width: 100%; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.5); display: none; }
 #poster-loading { color: white; font-size: 16px; margin-top: 20px; }
 .poster-close-btn { position: absolute; bottom: 50px; width: 40px; height: 40px; border: 2px solid white; border-radius: 50%; color: white; font-size: 24px; text-align: center; line-height: 36px; cursor: pointer; opacity: 0.8; }
+
+/* 简单的转圈动画 */
+.loading-spinner { border: 4px solid rgba(255,255,255,0.3); border-radius: 50%; border-top: 4px solid #fff; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 0 auto 10px auto; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 </style>
 
 <script>
+// 点击入口
 function handleShareClick(url) {
-  // 简单判断移动端
   if (window.innerWidth <= 768) {
     generatePoster(url);
   } else {
@@ -105,11 +113,11 @@ function handleShareClick(url) {
   }
 }
 
+// PC 复制链接
 function shareLinkPC(url) {
   if (navigator.clipboard && window.isSecureContext) {
     navigator.clipboard.writeText(url).then(() => alert("链接已复制！"), () => alert("复制失败: " + url));
   } else {
-    // 兼容旧浏览器
     const ta = document.createElement("textarea");
     ta.value = url; ta.style.position = "fixed"; ta.style.top = "-9999px";
     document.body.appendChild(ta); ta.focus(); ta.select();
@@ -118,30 +126,24 @@ function shareLinkPC(url) {
   }
 }
 
-// ----------------------------------------------------
-// 海报生成核心逻辑 (V2 修复版)
-// ----------------------------------------------------
 var qrcodeGenerated = false;
 
+// 🚀 核心：智能生成海报
 function generatePoster(url) {
   var modal = document.getElementById('poster-modal');
+  var loadingText = document.getElementById('loading-text');
   var loading = document.getElementById('poster-loading');
   var finalImg = document.getElementById('final-poster-img');
   
-  // 1. 显示弹窗 & Loading
+  // 1. 初始化弹窗
   modal.style.display = 'flex';
   loading.style.display = 'block';
   finalImg.style.display = 'none';
+  loadingText.innerText = "正在准备二维码...";
 
   // 2. 生成二维码 (仅一次)
   if (!qrcodeGenerated) {
-    // 检查 QRCode 库是否加载成功
-    if (typeof QRCode === 'undefined') {
-      alert("错误：二维码组件加载失败，请检查网络或稍后再试。");
-      modal.style.display = 'none';
-      return;
-    }
-    
+    if (typeof QRCode === 'undefined') { alert("二维码组件加载失败"); return; }
     new QRCode(document.getElementById("poster-qrcode"), {
       text: url, width: 75, height: 75,
       colorDark : "#000000", colorLight : "#ffffff",
@@ -150,55 +152,65 @@ function generatePoster(url) {
     qrcodeGenerated = true;
   }
 
-  // 3. 🚀 关键修改：等待 1000ms (1秒) 确保图片在 DOM 中渲染完毕
-  // 手机性能差或网速慢时，300ms 往往不够，导致截图为空
-  setTimeout(function() {
-    
-    // 检查 html2canvas 是否加载
-    if (typeof html2canvas === 'undefined') {
-      alert("错误：绘图组件加载失败，请检查网络。");
-      modal.style.display = 'none';
-      return;
+  // 3. 智能等待图片加载
+  loadingText.innerText = "正在加载图片...";
+  
+  // 获取那张隐形海报里的封面图
+  var hiddenImg = document.getElementById('hidden-poster-cover-img');
+  
+  // 创建一个 Promise 来等待图片加载
+  var imgLoadPromise = new Promise((resolve, reject) => {
+    if (hiddenImg.complete && hiddenImg.naturalHeight !== 0) {
+      resolve(); // 图片已经在缓存里了，直接通过
+    } else {
+      hiddenImg.onload = () => resolve(); // 图片加载完成时触发
+      hiddenImg.onerror = () => {
+        console.warn("海报封面加载失败，将生成无图海报");
+        resolve(); // 即使失败也继续，不要卡死，只是没有图而已
+      };
     }
+  });
 
-    var posterCard = document.querySelector(".poster-card");
+  // 设置一个超时，万一图片 5秒 都没下来，就不等了
+  var timeoutPromise = new Promise((resolve) => setTimeout(resolve, 5000));
 
+  // 竞速：图片加载 vs 超时
+  Promise.race([imgLoadPromise, timeoutPromise]).then(() => {
+    loadingText.innerText = "正在绘制海报...";
+    
     // 开始截图
-    html2canvas(posterCard, {
-      useCORS: true,       // 允许跨域图片
-      allowTaint: true,    // 允许污染 (有时能解决 CORS 报错)
-      scale: 2,            // 2倍清晰度
-      backgroundColor: "#ffffff", // 确保背景是白的不是透明的
-      scrollY: 0,          // 修复页面滚动导致截图偏移的问题
-      scrollX: 0
-    }).then(canvas => {
-      try {
+    // 稍微延迟 100ms 让渲染引擎喘口气
+    setTimeout(() => {
+      var posterCard = document.querySelector(".poster-card");
+      if (typeof html2canvas === 'undefined') { alert("绘图组件加载失败"); return; }
+
+      html2canvas(posterCard, {
+        useCORS: true,
+        allowTaint: true,
+        scale: 2,
+        backgroundColor: "#ffffff",
+        scrollY: 0,
+        scrollX: 0
+      }).then(canvas => {
         var dataUrl = canvas.toDataURL("image/png");
         finalImg.src = dataUrl;
         
-        // 只有当图片 src 赋值成功后，才显示
+        // 图片生成完毕
         finalImg.onload = function() {
             loading.style.display = 'none';
             finalImg.style.display = 'block';
         }
-        // 防止 onload 不触发（比如已经缓存），手动兜底
+        // 兜底显示
         setTimeout(() => {
              loading.style.display = 'none';
              finalImg.style.display = 'block';
-        }, 200);
-
-      } catch (e) {
-        alert("海报生成被浏览器拦截 (CORS)，可能是图片跨域问题。");
-        console.error(e);
+        }, 100);
+      }).catch(err => {
+        alert("海报绘制出错: " + err);
         modal.style.display = 'none';
-      }
-    }).catch(err => {
-      console.error("生成失败:", err);
-      alert("生成失败，请重试。\n错误信息: " + err);
-      modal.style.display = 'none';
-    });
-
-  }, 1000); // ⏳ 这里改成了 1000ms
+      });
+    }, 100);
+  });
 }
 
 function closePosterModal() {
