@@ -1,77 +1,209 @@
-/* assets/scss/custom.scss */
+/* 设定手机端断点 */
+$bp-mobile-max: 768px;
 
-/* ... 你原本的其他样式保留 ... */
+@media (max-width: $bp-mobile-max) {
 
-/* --- 📱 移动端首页：强制紧凑布局 (修正版) --- */
-@media only screen and (max-width: 768px) {
+  /* ============================================
+     1. 🏠 首页列表 (Home) - 极致紧凑、120px图、单行文字
+     ============================================ */
+  body.home {
+    
+    .wrapper__main .post {
+      margin-bottom: 12px !important;
+      padding-bottom: 10px !important;
+      border-bottom: 1px dashed #e0e0e0;
+      
+      /* --- [1] 图片容器：锁死 120px --- */
+      .post__thumbnail-wrapper {
+        display: block;
+        margin-top: 0;
+        margin-bottom: 6px;
+        
+        /* 🚨 强制高度，解决图片过高问题 */
+        height: 120px !important;
+        min-height: 120px !important;
+        
+        overflow: hidden;
+        border-radius: 6px;
+        padding: 0;
 
-  /* 1. 卡片整体 */
-  body.home .wrapper__main .post {
-    margin-bottom: 20px !important;
-    padding-bottom: 15px !important;
-    border-bottom: 1px dashed #e0e0e0 !important;
+        /* 确保链接也撑满 */
+        a {
+          display: block;
+          height: 100%;
+          width: 100%;
+        }
+
+        /* 图片本身：裁切填满 */
+        img {
+          width: 100% !important;
+          height: 100% !important;
+          object-fit: cover !important; /* 关键：裁切 */
+          object-position: center 20%;  /* 稍微偏上一点 */
+          margin: 0;
+          border: none;
+        }
+      }
+
+      /* --- [2] 标题：紧凑 --- */
+      .post__title {
+        font-size: 16px !important;
+        font-weight: 700;
+        line-height: 1.3;
+        margin: 0 0 4px 0 !important;
+      }
+
+      /* --- [3] 简介 (post-line)：锁死单行 --- */
+      .post__content {
+        margin: 0 !important;
+        padding: 0 !important;
+        
+        /* 解决上下间距过大问题 */
+        p, .post-line {
+          font-size: 13px !important;
+          color: #666;
+          
+          /* 🚨 强制高度 = 行高，多 1px 都不给 */
+          line-height: 20px !important;
+          height: 20px !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          
+          /* 单行省略三件套 */
+          display: block;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+
+      /* --- [4] 底部标签 (footer)：锁死单行 --- */
+      .post__footer {
+        /* 解决上下间距过大问题 */
+        margin-top: 4px !important; 
+        padding: 0 !important;
+        
+        font-size: 11px !important;
+        line-height: 20px !important;
+        height: 20px !important;
+        color: #999;
+        
+        /* 变成 Flex 方便对齐，且不换行 */
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap; /* 禁止换行 */
+        overflow: hidden;  /* 超出隐藏 */
+
+        a, span {
+          white-space: nowrap;
+          margin-right: 5px;
+        }
+      }
+    }
   }
 
-  /* 2. 图片容器：锁死高度 */
-  body.home .wrapper__main .post .post__thumbnail-wrapper {
-    display: block !important;
-    margin-top: 0 !important;
-    margin-bottom: 8px !important;
-    height: 160px !important;      /* 关键 */
-    max-height: 160px !important;
-    overflow: hidden !important;
-    border-radius: 6px !important;
+
+  /* ============================================
+     2. 📄 文章详情页 (Article) - 你的原版代码
+     只对非首页生效，保持舒适阅读体验
+     ============================================ */
+  body:not(.home) {
+
+    /* 文章头部（标题 + meta + 封面图） */
+    .post__header {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 20px;
+
+      /* 标题 */
+      .post__title { 
+        order: 1; 
+        font-size: 1.6rem !important; 
+        font-weight: 600;
+        margin: 0.3em 0 0.5em 0; 
+        line-height: 1.3;
+      }
+
+      /* 元信息 */
+      .post__meta { 
+        order: 2; 
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 4px;
+        font-size: 12px;
+        margin-bottom: 0.5em;
+
+        &-category a {  
+          background-color: #f0f0f0;
+          color: #444;
+          font-size: 11px;
+          padding: 0 5px;
+          border-radius: 3px;
+          line-height: 1.4;
+          text-decoration: none;
+        }
+
+        &-tag a {
+          color: #007bff;
+          font-size: 11px;
+          text-decoration: none;
+          padding: 0 4px;
+          line-height: 1.4;
+        }
+
+        .post__meta-icon {
+          font-size: 11px;
+          color: #999;
+        }
+      }
+
+      /* 封面图容器 (这里保持你的最大高度限制) */
+      .post__thumbnail-wrapper { 
+        order: 3; 
+        width: 100%; 
+        margin-top: 0.6em; 
+        
+        /* 文章页也限制一下，不然竖图太高了 */
+        max-height: 250px;   
+        overflow: hidden;    
+        border-radius: 6px;  
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+    }
   }
 
-  /* 3. 图片本身 */
-  body.home .wrapper__main .post .post__thumbnail-wrapper img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-    display: block !important;
+
+  /* ============================================
+     3. 📱 侧边栏整体优化 (通用)
+     ============================================ */
+  .wrapper__sidebar {
+    padding-top: 10px !important;   
+    padding-bottom: 10px !important;
+    margin-bottom: 10px !important;
+    min-height: auto; 
+    
+    /* 头像稍微缩小，节省空间 */
+    .sidebar__introduction-profileimage {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 5px;
+    }
   }
 
-  /* 4. 标题 */
-  body.home .wrapper__main .post .post__title {
-    font-size: 17px !important;
-    font-weight: 700 !important;
-    line-height: 1.3 !important;
-    margin-top: 4px !important;
-    margin-bottom: 4px !important;
-  }
+  .sidebar__list {
+    margin-top: 5px;
+    padding: 0;
+    line-height: 1.4;
 
-  /* 5. 摘要 */
-  body.home .wrapper__main .post .post__content p,
-  body.home .wrapper__main .post .post__content .post-line {
-    font-size: 13px !important;
-    line-height: 1.5 !important;
-    color: #666 !important;
-    margin-bottom: 8px !important;
-    margin-top: 0 !important;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    white-space: normal !important;
-  }
-
-  /* 6. 底部标签 */
-  body.home .wrapper__main .post .post__footer {
-    margin-top: 0 !important;
-    padding: 0 !important;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px !important;
-  }
-
-  /* 标签微调 */
-  body.home .wrapper__main .post .post__footer a {
-    font-size: 11px !important;
-    padding: 1px 6px !important;
-    background-color: #f0f0f0 !important;
-    border-radius: 3px !important;
-    line-height: 1.5 !important;
-    color: #666 !important;
-    text-decoration: none !important;
+    li {
+      margin-bottom: 0.5em;
+    }
   }
 }

@@ -103,14 +103,17 @@
 <!-- ⚡️ FontAwesome CDN 优化：直接引用公共库，速度快且不丢图标 -->
   <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
 
-  {{/* 自定义样式（放最后，方便覆盖） */}}
-  {{ $custom := resources.Get "scss/custom.scss" | toCSS (dict "transpiler" "dartsass") }}
-  {{ if hugo.IsProduction }}
-    {{ $custom = $custom | minify | fingerprint }}
-    <link rel="stylesheet" href="{{ $custom.RelPermalink }}" integrity="{{ $custom.Data.Integrity }}" crossorigin="anonymous">
-  {{ else }}
-    <link rel="stylesheet" href="{{ $custom.RelPermalink }}">
+<!-- ⚡️ 自定义样式 (SCSS 编译模式) -->
+  <!-- 注意：这段代码会自动寻找 assets/scss/custom.scss -->
+  {{ with resources.Get "scss/custom.scss" | toCSS (dict "transpiler" "dartsass") }}
+    {{ if hugo.IsProduction }}
+      {{ $custom := . | minify | fingerprint }}
+      <link rel="stylesheet" href="{{ $custom.RelPermalink }}" integrity="{{ $custom.Data.Integrity }}" crossorigin="anonymous">
+    {{ else }}
+      <link rel="stylesheet" href="{{ .RelPermalink }}">
+    {{ end }}
   {{ end }}
+
 
 {{ if .Params.redirectUrl }}
     {{ $style := resources.Get "css/spinner.css" | resources.Minify | resources.Fingerprint }}
