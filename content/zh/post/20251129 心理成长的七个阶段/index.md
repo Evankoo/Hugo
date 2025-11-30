@@ -1,5 +1,5 @@
 ---
-title: "心理成长的七个阶段"
+title: "心理成长的七个阶段｜《个人形成论》"
 date: 2025-11-29T14:34:01+08:00
 summary: "《个人形成论》读书笔记 作者：罗杰斯"
 slug: The-seven-stages-of-psychotherapy
