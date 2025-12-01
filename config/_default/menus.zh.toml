@@ -17,16 +17,22 @@ url = "/post/"
 #url = "/portfolio/"
 
 [[main]]
+name = "知识库"
+identifier = "wiki"
+weight = 300
+url = "https://x7jfxcag19.feishu.cn/wiki/DbezwAWakiIehYkrhedc65TSnag?from=from_copylink"
+
+[[main]]
 name = "个人介绍"
 identifier = "about"
 weight = 400
 url = "/about/"
 
-[[main]]
-name = "标签"
-identifier = "tags"
-weight = 500
-url = "/tags/"
+#[[main]]
+#name = "标签"
+#identifier = "tags"
+#weight = 500
+#url = "/tags/"
 
 [[main]]
 name = "联系我"
