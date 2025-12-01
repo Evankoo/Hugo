@@ -1,290 +1,222 @@
-/* assets/scss/custom.scss */
-
 $bp-mobile-max: 768px;
 
 @media (max-width: $bp-mobile-max) {
 
-  /* ==========================================================================
-     1. 🏠 首页列表 (Home) - 暴力修正版
-     说明：针对你反馈的“图片高”、“间距大”、“换行”问题进行物理锁死
-     ========================================================================== */
+  /* ==========================================================
+     1. 📱 首页列表 (Home)
+     ========================================================== */
   body.home {
     
     .wrapper__main .post {
-      margin-bottom: 12px !important;
-      padding-bottom: 10px !important;
-      border-bottom: 1px dashed #e0e0e0 !important;
+      margin-bottom: 6px !important;
+      padding-bottom: 0 !important;
+      border-bottom: none !important;
       display: block !important;
     }
 
-    /* --- [1] 图片容器：锁死 120px (解决图片过高) --- */
+    /* 图片容器 */
     .post__thumbnail-wrapper {
-      display: block !important;
       margin-top: 0 !important;
-      margin-bottom: 4px !important; /* 紧贴标题 */
-      
-      /* 🚨 核心：三重锁死高度 */
+      margin-bottom: 4px !important;
       height: 120px !important;
       min-height: 120px !important;
-      max-height: 120px !important;
-      
       overflow: hidden !important;
       border-radius: 6px !important;
       padding: 0 !important;
 
-      /* 链接撑满 */
-      a { 
-        display: block !important; 
-        width: 100% !important; 
-        height: 100% !important; 
-      }
-
-      /* 图片填满+裁切 */
       img {
         width: 100% !important;
         height: 100% !important;
         object-fit: cover !important;
-        object-position: center 20% !important;
         margin: 0 !important;
-        border: none !important;
       }
     }
 
-    /* --- [2] 标题：紧凑 --- */
-    .post__title {
+    /* 标题 */
+    .post__content h3 {
       font-size: 16px !important;
-      font-weight: 700 !important;
-      line-height: 1.3 !important;
       margin: 0 0 2px 0 !important;
-      padding: 0 !important;
+      line-height: 1.3 !important;
     }
 
-    /* --- [3] 简介：锁死单行 & 清除间距 (解决post-line间距大) --- */
-    .post__content {
-      margin: 0 !important;
+    /* 简介 */
+    .post__content .post-line {
+      margin: 0 0 8px 0 !important; 
       padding: 0 !important;
-      height: 24px !important; /* 固定给一行的高度 */
+      margin-block-start: 0 !important;
+      margin-block-end: 0 !important;
+      height: 20px !important;
+      line-height: 20px !important;
+      font-size: 13px !important;
+      color: #666 !important;
+      display: block !important;
+      white-space: nowrap !important;
       overflow: hidden !important;
-      
-      /* 🚨 暴力选中 p, div, .post-line 等所有子元素 */
-      > * {
-        font-size: 13px !important;
-        color: #666 !important;
-        
-        /* 强制归零，消灭浏览器默认的 1em 间距 */
-        margin-block-start: 0 !important;
-        margin-block-end: 0 !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        
-        /* 强制行高一致 */
-        line-height: 24px !important;
-        height: 24px !important;
-        
-        /* 强制不换行 */
-        display: block !important;
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-      }
+      text-overflow: ellipsis !important;
+      width: 100% !important;
     }
 
-    /* --- [4] 底部标签：锁死单行 & 清除 Padding (解决footer间距大+换行) --- */
+    /* 底部标签栏 */
     .post__footer {
-      /* 间距归零 */
-      margin-top: 0 !important;
       padding: 0 !important;
-      
+      margin-top: 4px !important; 
       height: 24px !important;
       line-height: 24px !important;
       font-size: 11px !important;
       color: #999 !important;
       
-      /* 🚨 必须用 Block 才能完美截断不换行 */
       display: block !important;
       white-space: nowrap !important;
       overflow: hidden !important;
       text-overflow: ellipsis !important;
       width: 100% !important;
 
-      /* 内部元素变为行内，乖乖排队 */
-      a, span {
-        display: inline !important;
-        float: none !important;
-        margin-right: 8px !important;
-        padding: 0 !important;
-        background: none !important; /* 首页保持干净无背景 */
+      /* 通用重置 */
+      a, span, em {
+        display: inline-block !important;
+        vertical-align: middle !important;
         border: none !important;
-        vertical-align: baseline !important;
+        line-height: 1.4 !important;
+      }
+
+      /* 1. 日期：右边距保持 10px */
+      span, em {
+        margin-right: 10px !important; 
+      }
+
+      /* 2. 🚨 分类 (Category)：字体缩小 + 间距缩小 */
+      a.category {
+        background-color: #f0f0f0 !important;
+        color: #333 !important;
+        
+        /* 字体改小 1 号，抵消背景框带来的视觉膨胀 */
+        font-size: 10px !important;   
+        
+        /* 内边距微调，让框更精致 */
+        padding: 1px 5px !important;  
+        border-radius: 4px !important;
+        
+        /* 间距缩小：12px -> 8px */
+        margin-right: 8px !important; 
+        
+        text-decoration: none !important;
+        position: relative;
+        top: -1px; /* 稍微上提 1px 以便和纯文本标签垂直居中 */
+      }
+
+      /* 3. 标签 (Tag)：保持原样 */
+      a.tag {
+        background: none !important;
+        color: #007bff !important;
+        font-size: 11px !important; /* 标签字体保持 11px */
+        padding: 0 !important;
+        margin-right: 4px !important;
+        text-decoration: none !important;
       }
     }
   }
 
 
-  /* ==========================================================================
-     2. 📄 文章详情页 (Article) - 保持你满意的原版设置
-     (这里完全是你发给我的代码，我只字未改，只加了 scope 防止污染首页)
-     ========================================================================== */
+  /* ==========================================================
+     2. 📄 文章详情页 (Article)
+     ========================================================== */
   body:not(.home) {
+    .post__title { 
+      font-size: 2.0rem !important; 
+      margin: 0.3em 0 0.5em 0 !important; 
+    }
 
-    .post__header {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      margin-bottom: 20px;
+    .post__content .post-line, 
+    .post__content p {
+      white-space: normal !important;
+      height: auto !important;
+      margin-bottom: 1em !important;
+      display: block !important;
+    }
 
-      /* 标题 */
-      .post__title { 
-        order: 1; 
-        font-size: 1.6rem !important; 
-        font-weight: 600;
-        margin: 0.3em 0 0.5em 0; 
-        line-height: 1.3;
+    /* Meta 信息 */
+    .post__footer, .post__meta {
+      height: auto !important;
+      padding: 0 !important;
+      white-space: normal !important;
+      display: flex !important;
+      flex-wrap: wrap !important;
+      align-items: center !important;
+      margin-bottom: 15px !important;
+      
+      /* 间距控制 */
+      gap: 4px !important; 
+
+      .post__meta-icon, span {
+        margin-right: 8px !important;
       }
 
-      /* 元信息（带颜色的标签） */
-      .post__meta { 
-        order: 2; 
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 4px;
-        font-size: 12px;
-        margin-bottom: 0.5em;
-
-        /* 分类样式 (保留你的灰色背景) */
-        &-category a {  
-          background-color: #f0f0f0;
-          color: #444;
-          font-size: 11px;
-          padding: 0 5px;
-          border-radius: 3px;
-          line-height: 1.4;
-          text-decoration: none;
-        }
-
-        /* 标签样式 (保留你的蓝色文字) */
-        &-tag a {
-          color: #007bff;
-          font-size: 11px;
-          text-decoration: none;
-          padding: 0 4px;
-          line-height: 1.4;
-        }
-
-        .post__meta-icon {
-          font-size: 11px;
-          color: #999;
-        }
+      /* 🚨 文章页里的分类：同步缩小 */
+      &-category a, a.category { 
+        background-color: #f0f0f0 !important; 
+        color: #333 !important;
+        
+        /* 字体缩小 */
+        font-size: 11px !important; 
+        padding: 2px 5px !important; 
+        
+        border-radius: 3px !important; 
+        text-decoration: none !important;
+        
+        /* 间距缩小 */
+        margin-right: 0px !important;
       }
-
-      /* 封面图容器 */
-      .post__thumbnail-wrapper { 
-        order: 3; 
-        width: 100%; 
-        margin-top: 0.6em; 
-        max-height: 200px;   /* 控制最大高度 */
-        overflow: hidden;    
-        border-radius: 6px;  
-
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;  
-        }
+      
+      /* 文章页里的标签 */
+      &-tag a, a.tag { 
+        color: #007bff !important; 
+        font-size: 12px !important; /* 标签字体稍大 */
+        padding: 0 2px !important; 
+        margin-right: 0px !important;
+        text-decoration: none !important;
       }
     }
-    
-    /* 文章正文行高 */
-    .post__content {
-        line-height: 1.8;
+
+    .post__thumbnail-wrapper { 
+      height: auto !important;
+      max-height: 250px !important;   
+      overflow: hidden !important;
+      img {
+        height: 100% !important;
+        object-fit: cover !important;
+      }
     }
   }
 
+  /* 3. 侧边栏保持不变 */
+  .wrapper__sidebar { padding: 10px 0 !important; margin-bottom: 10px !important; .sidebar__introduction-profileimage { width: 80px; height: 80px; margin-bottom: 5px; } }
+  .sidebar__list { margin-top: 5px; li { margin-bottom: 0.5em; } }
+  
+  /* 4. 列表页保持不变 */
+  .archive__list-item { display: flex !important; justify-content: space-between !important; align-items: center !important; width: 100% !important; margin-left: 5px !important; padding-right: 0 !important; margin-bottom: 8px !important; }
+  .archive__list-title { flex: 1 !important; min-width: 0 !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; text-align: left !important; margin-right: 15px !important; display: block !important; font-size: 15px !important; }
+  .archive__list-date { flex-shrink: 0 !important; white-space: nowrap !important; text-align: right !important; font-size: 13px !important; color: #999 !important; }
+}
 
-  /* ==========================================================================
-     3. 📱 侧边栏整体优化 (通用)
-     ========================================================================== */
-  .wrapper__sidebar {
-    padding-top: 0.5em;   
-    padding-bottom: 0.5em;
-    margin: 0;
-    min-height: auto; 
-    
-    .sidebar__introduction-profileimage {
-        /* 如果侧边栏头像也太大，可以在这里加 width: 80px; */
+/* PC端归档样式 */
+.archive__subheading { font-size: 1.4rem; font-weight: 600; color: #666; margin-top: 25px; margin-bottom: 10px; padding-left: 10px; border-left: 4px solid #B9375D; }
+.archive__list-item { margin-left: 15px; }
+
+/* 🌑 黑白模式适配 */
+html[data-theme="dark"] {
+  @media (max-width: 768px) {
+    .post__footer a.category,
+    .post__meta-category a,
+    body:not(.home) .post__meta a.category {
+      background-color: #333 !important;
+      color: #e0e0e0 !important;
     }
-  }
-
-  .sidebar__list {
-    margin: 0;
-    padding: 0;
-    line-height: 1.4;
-
-    li {
-      margin-bottom: 0.5em;
+    .post__footer a.tag,
+    .post__meta-tag a,
+    body:not(.home) .post__meta a.tag {
+      color: #66b0ff !important;
     }
-  }
-}
-/* 月份标题样式 */
-.archive__subheading {
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: #666;
-  margin-top: 25px;    /* 离上面的文章远一点 */
-  margin-bottom: 10px; /* 离下面的文章近一点 */
-  padding-left: 10px;
-  border-left: 4px solid #B9375D; /* 左侧竖线 */
-}
-
-/* 稍微缩进文章列表，体现层级 */
-.archive__list-item {
-  margin-left: 15px !important;
-}
-/* ============================================================
-   🗂️ 移动端文章列表页 (Archive/List) - 列表项优化
-   (只改文章标题和日期，不动月份样式)
-   ============================================================ */
-@media (max-width: 768px) {
-
-  /* 1. 列表项容器：Flex 布局，两端对齐 */
-  .archive__list-item {
-    display: flex !important;
-    justify-content: space-between !important; /* 左标题，右日期 */
-    align-items: center !important;            /* 垂直居中 */
-    width: 100% !important;
-    margin-left: 5px !important;               /* 稍微缩进一点点即可 */
-    padding-right: 0 !important;
-    margin-bottom: 8px !important;             /* 行间距 */
-  }
-
-  /* 2. 文章标题：左对齐 + 单行省略 */
-  .archive__list-title {
-    /* 核心：占满剩余空间，但允许压缩 */
-    flex: 1 !important;
-    min-width: 0 !important; 
-    
-    /* 强制单行省略 */
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    
-    /* 样式 */
-    text-align: left !important;
-    margin-right: 15px !important; /* 给右边的日期留出安全距离 */
-    display: block !important;
-    font-size: 15px !important;    /* 字体大小适中 */
-  }
-
-  /* 3. 文章日期：右对齐 + 固定不换行 */
-  .archive__list-date {
-    /* 核心：禁止被压缩，保证日期完整显示 */
-    flex-shrink: 0 !important; 
-    
-    /* 样式 */
-    white-space: nowrap !important;
-    text-align: right !important;
-    font-size: 13px !important;
-    color: #999 !important;
+    .post__content .post-line { color: #aaa !important; }
+    .post__footer, .post__meta { color: #888 !important; }
   }
 }
