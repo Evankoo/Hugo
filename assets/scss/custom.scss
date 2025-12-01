@@ -226,3 +226,65 @@ $bp-mobile-max: 768px;
     }
   }
 }
+/* 月份标题样式 */
+.archive__subheading {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #666;
+  margin-top: 25px;    /* 离上面的文章远一点 */
+  margin-bottom: 10px; /* 离下面的文章近一点 */
+  padding-left: 10px;
+  border-left: 4px solid #B9375D; /* 左侧竖线 */
+}
+
+/* 稍微缩进文章列表，体现层级 */
+.archive__list-item {
+  margin-left: 15px !important;
+}
+/* ============================================================
+   🗂️ 移动端文章列表页 (Archive/List) - 列表项优化
+   (只改文章标题和日期，不动月份样式)
+   ============================================================ */
+@media (max-width: 768px) {
+
+  /* 1. 列表项容器：Flex 布局，两端对齐 */
+  .archive__list-item {
+    display: flex !important;
+    justify-content: space-between !important; /* 左标题，右日期 */
+    align-items: center !important;            /* 垂直居中 */
+    width: 100% !important;
+    margin-left: 5px !important;               /* 稍微缩进一点点即可 */
+    padding-right: 0 !important;
+    margin-bottom: 8px !important;             /* 行间距 */
+  }
+
+  /* 2. 文章标题：左对齐 + 单行省略 */
+  .archive__list-title {
+    /* 核心：占满剩余空间，但允许压缩 */
+    flex: 1 !important;
+    min-width: 0 !important; 
+    
+    /* 强制单行省略 */
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    
+    /* 样式 */
+    text-align: left !important;
+    margin-right: 15px !important; /* 给右边的日期留出安全距离 */
+    display: block !important;
+    font-size: 15px !important;    /* 字体大小适中 */
+  }
+
+  /* 3. 文章日期：右对齐 + 固定不换行 */
+  .archive__list-date {
+    /* 核心：禁止被压缩，保证日期完整显示 */
+    flex-shrink: 0 !important; 
+    
+    /* 样式 */
+    white-space: nowrap !important;
+    text-align: right !important;
+    font-size: 13px !important;
+    color: #999 !important;
+  }
+}
