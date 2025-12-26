@@ -1,3 +1,29 @@
+/* ==========================================================
+   0. 🅰️ 全局字体设置 (Global Fonts) - 新增部分放在最前面
+   ========================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&display=swap');
+
+/* 应用于全站文字 */
+body, h1, h2, h3, h4, h5, h6, p, a, li, span {
+    font-family: 'Noto Serif', 'Songti SC', 'STSongti-SC-Regular', 'SimSun', 'Times New Roman', serif !important;
+}
+
+/* 针对正文做阅读体验优化 */
+p, li {
+    line-height: 1.8;
+    font-weight: 400;
+    color: #2c2c2c;
+}
+
+/* 针对标题稍微加粗 */
+h1, h2, h3 {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* ==========================================================
+   以下是你原来的代码 (手机端样式)，完全保留不动
+   ========================================================== */
 $bp-mobile-max: 768px;
 
 @media (max-width: $bp-mobile-max) {

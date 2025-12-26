@@ -1,4 +1,4 @@
-module github.com/Evankoo/Hugo
+module quickstart
 
 go 1.25.3
 
