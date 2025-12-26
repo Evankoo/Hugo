@@ -1,5 +1,5 @@
 /* ==========================================================
-   0. 🅰️ 全局字体设置 (Global Fonts) - 新增部分放在最前面
+   0. 🅰️ 全局字体设置 (Global Fonts) - 放在最前面
    ========================================================== */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&display=swap');
 
@@ -8,29 +8,27 @@ body, h1, h2, h3, h4, h5, h6, p, a, li, span {
     font-family: 'Noto Serif', 'Songti SC', 'STSongti-SC-Regular', 'SimSun', 'Times New Roman', serif !important;
 }
 
-/* 针对正文做阅读体验优化 */
+/* 正文阅读优化 */
 p, li {
     line-height: 1.8;
     font-weight: 400;
     color: #2c2c2c;
 }
 
-/* 针对标题稍微加粗 */
+/* 标题加粗 */
 h1, h2, h3 {
     font-weight: 700;
     letter-spacing: 0.5px;
 }
 
 /* ==========================================================
-   以下是你原来的代码 (手机端样式)，完全保留不动
+   以下是你之前的手机端修复代码
    ========================================================== */
 $bp-mobile-max: 768px;
 
 @media (max-width: $bp-mobile-max) {
 
-  /* ==========================================================
-     1. 📱 首页列表 (Home)
-     ========================================================== */
+  /* 1. 📱 首页列表 (Home) */
   body.home {
     
     .wrapper__main .post {
@@ -40,7 +38,6 @@ $bp-mobile-max: 768px;
       display: block !important;
     }
 
-    /* 图片容器 */
     .post__thumbnail-wrapper {
       margin-top: 0 !important;
       margin-bottom: 4px !important;
@@ -58,19 +55,15 @@ $bp-mobile-max: 768px;
       }
     }
 
-    /* 标题 */
     .post__content h3 {
       font-size: 16px !important;
       margin: 0 0 2px 0 !important;
       line-height: 1.3 !important;
     }
 
-    /* 简介 */
     .post__content .post-line {
       margin: 0 0 8px 0 !important; 
       padding: 0 !important;
-      margin-block-start: 0 !important;
-      margin-block-end: 0 !important;
       height: 20px !important;
       line-height: 20px !important;
       font-size: 13px !important;
@@ -82,7 +75,6 @@ $bp-mobile-max: 768px;
       width: 100% !important;
     }
 
-    /* 底部标签栏 */
     .post__footer {
       padding: 0 !important;
       margin-top: 4px !important; 
@@ -90,14 +82,12 @@ $bp-mobile-max: 768px;
       line-height: 24px !important;
       font-size: 11px !important;
       color: #999 !important;
-      
       display: block !important;
       white-space: nowrap !important;
       overflow: hidden !important;
       text-overflow: ellipsis !important;
       width: 100% !important;
 
-      /* 通用重置 */
       a, span, em {
         display: inline-block !important;
         vertical-align: middle !important;
@@ -105,36 +95,24 @@ $bp-mobile-max: 768px;
         line-height: 1.4 !important;
       }
 
-      /* 1. 日期：右边距保持 10px */
-      span, em {
-        margin-right: 10px !important; 
-      }
+      span, em { margin-right: 10px !important; }
 
-      /* 2. 🚨 分类 (Category)：字体缩小 + 间距缩小 */
       a.category {
         background-color: #f0f0f0 !important;
         color: #333 !important;
-        
-        /* 字体改小 1 号，抵消背景框带来的视觉膨胀 */
         font-size: 10px !important;   
-        
-        /* 内边距微调，让框更精致 */
         padding: 1px 5px !important;  
         border-radius: 4px !important;
-        
-        /* 间距缩小：12px -> 8px */
         margin-right: 8px !important; 
-        
         text-decoration: none !important;
         position: relative;
-        top: -1px; /* 稍微上提 1px 以便和纯文本标签垂直居中 */
+        top: -1px; 
       }
 
-      /* 3. 标签 (Tag)：保持原样 */
       a.tag {
         background: none !important;
         color: #007bff !important;
-        font-size: 11px !important; /* 标签字体保持 11px */
+        font-size: 11px !important; 
         padding: 0 !important;
         margin-right: 4px !important;
         text-decoration: none !important;
@@ -142,16 +120,12 @@ $bp-mobile-max: 768px;
     }
   }
 
-
-  /* ==========================================================
-     2. 📄 文章详情页 (Article)
-     ========================================================== */
+  /* 2. 📄 文章详情页 (Article) */
   body:not(.home) {
     .post__title { 
       font-size: 2.0rem !important; 
       margin: 0.3em 0 0.5em 0 !important; 
     }
-
     .post__content .post-line, 
     .post__content p {
       white-space: normal !important;
@@ -159,8 +133,6 @@ $bp-mobile-max: 768px;
       margin-bottom: 1em !important;
       display: block !important;
     }
-
-    /* Meta 信息 */
     .post__footer, .post__meta {
       height: auto !important;
       padding: 0 !important;
@@ -169,144 +141,51 @@ $bp-mobile-max: 768px;
       flex-wrap: wrap !important;
       align-items: center !important;
       margin-bottom: 15px !important;
-      
-      /* 间距控制 */
       gap: 4px !important; 
-
-      .post__meta-icon, span {
-        margin-right: 8px !important;
-      }
-
-      /* 🚨 文章页里的分类：同步缩小 */
+      .post__meta-icon, span { margin-right: 8px !important; }
       &-category a, a.category { 
         background-color: #f0f0f0 !important; 
         color: #333 !important;
-        
-        /* 字体缩小 */
         font-size: 11px !important; 
         padding: 2px 5px !important; 
-        
         border-radius: 3px !important; 
         text-decoration: none !important;
-        
-        /* 间距缩小 */
         margin-right: 0px !important;
       }
-      
-      /* 文章页里的标签 */
       &-tag a, a.tag { 
         color: #007bff !important; 
-        font-size: 12px !important; /* 标签字体稍大 */
+        font-size: 12px !important; 
         padding: 0 2px !important; 
         margin-right: 0px !important;
         text-decoration: none !important;
       }
     }
-
     .post__thumbnail-wrapper { 
       height: auto !important;
       max-height: 250px !important;   
       overflow: hidden !important;
-      img {
-        height: 100% !important;
-        object-fit: cover !important;
-      }
+      img { height: 100% !important; object-fit: cover !important; }
     }
   }
 
-  /* 3. 侧边栏保持不变 */
+  /* 3. 其他保持不变 */
   .wrapper__sidebar { padding: 10px 0 !important; margin-bottom: 10px !important; .sidebar__introduction-profileimage { width: 80px; height: 80px; margin-bottom: 5px; } }
   .sidebar__list { margin-top: 5px; li { margin-bottom: 0.5em; } }
-  
-  /* 4. 列表页保持不变 */
   .archive__list-item { display: flex !important; justify-content: space-between !important; align-items: center !important; width: 100% !important; margin-left: 5px !important; padding-right: 0 !important; margin-bottom: 8px !important; }
   .archive__list-title { flex: 1 !important; min-width: 0 !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; text-align: left !important; margin-right: 15px !important; display: block !important; font-size: 15px !important; }
   .archive__list-date { flex-shrink: 0 !important; white-space: nowrap !important; text-align: right !important; font-size: 13px !important; color: #999 !important; }
 }
 
-/* PC端归档样式 */
+/* 4. PC端归档 */
 .archive__subheading { font-size: 1.4rem; font-weight: 600; color: #666; margin-top: 25px; margin-bottom: 10px; padding-left: 10px; border-left: 4px solid #B9375D; }
 .archive__list-item { margin-left: 15px; }
 
 /* 🌑 黑白模式适配 */
 html[data-theme="dark"] {
   @media (max-width: 768px) {
-    .post__footer a.category,
-    .post__meta-category a,
-    body:not(.home) .post__meta a.category {
-      background-color: #333 !important;
-      color: #e0e0e0 !important;
-    }
-    .post__footer a.tag,
-    .post__meta-tag a,
-    body:not(.home) .post__meta a.tag {
-      color: #66b0ff !important;
-    }
+    .post__footer a.category, .post__meta-category a, body:not(.home) .post__meta a.category { background-color: #333 !important; color: #e0e0e0 !important; }
+    .post__footer a.tag, .post__meta-tag a, body:not(.home) .post__meta a.tag { color: #66b0ff !important; }
     .post__content .post-line { color: #aaa !important; }
     .post__footer, .post__meta { color: #888 !important; }
-  }
-}
-/* ==========================================================
-   🌙 深色模式专属优化 (高对比度版)
-   ========================================================== */
-html[data-theme="dark"] {
-
-  /* 1. 个人介绍页：三段式卡片优化 */
-  .identity-card {
-    /* 背景改亮：从 #2c2c2c 改为 #363636，让卡片浮在深色背景之上 */
-    background-color: #363636 !important;
-    
-    /* 增加边框：加一道微弱的亮边，让边缘更清晰 */
-    border: 1px solid #4a4a4a !important;
-    
-    /* 标题：改为纯白 */
-    h3 {
-      color: #ffffff !important;
-    }
-    
-    /* 正文：从 #aaa 提亮到 #d4d4d4，大大增加可读性 */
-    p {
-      color: #d4d4d4 !important;
-    }
-    
-    /* 图标：稍微增加一点亮度 */
-    .icon {
-      filter: brightness(1.1);
-    }
-
-    /* 悬停效果：背景再亮一点，模拟发光 */
-    &:hover {
-      background-color: #404040 !important;
-      border-color: #666 !important;
-    }
-  }
-
-  /* 2. 移动端首页列表优化 (防止之前的修改也看不清) */
-  @media (max-width: 768px) {
-    /* 分类标签：背景加深，文字变白 */
-    .post__footer a.category,
-    .post__meta-category a,
-    body:not(.home) .post__meta a.category {
-      background-color: #444 !important;
-      color: #f0f0f0 !important;
-      border: 1px solid #555 !important; /* 加个边框 */
-    }
-
-    /* 标签 Tag：加亮蓝色 */
-    .post__footer a.tag,
-    .post__meta-tag a,
-    body:not(.home) .post__meta a.tag {
-      color: #82caff !important; /* 更亮的蓝色 */
-    }
-
-    /* 文章简介：提亮灰色 */
-    .post__content .post-line {
-      color: #cccccc !important; /* 原来是 #aaa，改亮 */
-    }
-
-    /* 底部 Meta 信息：提亮 */
-    .post__footer, .post__meta {
-      color: #a0a0a0 !important; /* 原来是 #888，改亮 */
-    }
   }
 }
