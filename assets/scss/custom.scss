@@ -246,3 +246,67 @@ html[data-theme="dark"] {
     .post__footer, .post__meta { color: #888 !important; }
   }
 }
+/* ==========================================================
+   🌙 深色模式专属优化 (高对比度版)
+   ========================================================== */
+html[data-theme="dark"] {
+
+  /* 1. 个人介绍页：三段式卡片优化 */
+  .identity-card {
+    /* 背景改亮：从 #2c2c2c 改为 #363636，让卡片浮在深色背景之上 */
+    background-color: #363636 !important;
+    
+    /* 增加边框：加一道微弱的亮边，让边缘更清晰 */
+    border: 1px solid #4a4a4a !important;
+    
+    /* 标题：改为纯白 */
+    h3 {
+      color: #ffffff !important;
+    }
+    
+    /* 正文：从 #aaa 提亮到 #d4d4d4，大大增加可读性 */
+    p {
+      color: #d4d4d4 !important;
+    }
+    
+    /* 图标：稍微增加一点亮度 */
+    .icon {
+      filter: brightness(1.1);
+    }
+
+    /* 悬停效果：背景再亮一点，模拟发光 */
+    &:hover {
+      background-color: #404040 !important;
+      border-color: #666 !important;
+    }
+  }
+
+  /* 2. 移动端首页列表优化 (防止之前的修改也看不清) */
+  @media (max-width: 768px) {
+    /* 分类标签：背景加深，文字变白 */
+    .post__footer a.category,
+    .post__meta-category a,
+    body:not(.home) .post__meta a.category {
+      background-color: #444 !important;
+      color: #f0f0f0 !important;
+      border: 1px solid #555 !important; /* 加个边框 */
+    }
+
+    /* 标签 Tag：加亮蓝色 */
+    .post__footer a.tag,
+    .post__meta-tag a,
+    body:not(.home) .post__meta a.tag {
+      color: #82caff !important; /* 更亮的蓝色 */
+    }
+
+    /* 文章简介：提亮灰色 */
+    .post__content .post-line {
+      color: #cccccc !important; /* 原来是 #aaa，改亮 */
+    }
+
+    /* 底部 Meta 信息：提亮 */
+    .post__footer, .post__meta {
+      color: #a0a0a0 !important; /* 原来是 #888，改亮 */
+    }
+  }
+}
