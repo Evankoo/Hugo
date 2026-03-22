@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>分类1 on 伊万的个人主页</title>
+    <link>http://localhost:1313/categories/%E5%88%86%E7%B1%BB1/</link>
+    <description>Recent content in 分类1 on 伊万的个人主页</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Mon, 27 Oct 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/%E5%88%86%E7%B1%BB1/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>文章标题</title>
+      <link>http://localhost:1313/post/%E6%AF%8F%E4%B8%AA%E4%BA%BA%E9%83%BD%E6%9C%89%E5%93%AA%E4%BA%9B%E5%9F%BA%E6%9C%AC%E7%94%9F%E6%B4%BB%E5%9B%B0%E5%A2%83/</link>
+      <pubDate>Mon, 27 Oct 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/post/%E6%AF%8F%E4%B8%AA%E4%BA%BA%E9%83%BD%E6%9C%89%E5%93%AA%E4%BA%9B%E5%9F%BA%E6%9C%AC%E7%94%9F%E6%B4%BB%E5%9B%B0%E5%A2%83/</guid>
+      
+        <description>&lt;p&gt;这段是最后补充的，这本书里有大量的对各个存在主义大师的摘录和总结，知识点是非常密的。我认为这也是本书有意思的一点，它试图结一张网，连接存在主义的各个部分。&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>工具 on 伊万的个人主页</title>
+    <link>http://localhost:1313/categories/%E5%B7%A5%E5%85%B7/</link>
+    <description>Recent content in 工具 on 伊万的个人主页</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Mon, 27 Oct 2025 00:00:00 +0800</lastBuildDate><atom:link href="http://localhost:1313/categories/%E5%B7%A5%E5%85%B7/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>文章标题</title>
+      <link>http://localhost:1313/post/%E6%AF%8F%E4%B8%AA%E4%BA%BA%E9%83%BD%E6%9C%89%E5%93%AA%E4%BA%9B%E5%9F%BA%E6%9C%AC%E7%94%9F%E6%B4%BB%E5%9B%B0%E5%A2%83/</link>
+      <pubDate>Mon, 27 Oct 2025 00:00:00 +0800</pubDate>
+      
+      <guid>http://localhost:1313/post/%E6%AF%8F%E4%B8%AA%E4%BA%BA%E9%83%BD%E6%9C%89%E5%93%AA%E4%BA%9B%E5%9F%BA%E6%9C%AC%E7%94%9F%E6%B4%BB%E5%9B%B0%E5%A2%83/</guid>
+      
+        <description>dddd</description>
+      
+    </item>
+    
+  </channel>
+</rss>

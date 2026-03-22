@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Demo on My blog</title>
+    <link>http://localhost:1313/en/tags/demo/</link>
+    <description>Recent content in Demo on My blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 18 Mar 2022 21:47:41 +0000</lastBuildDate><atom:link href="http://localhost:1313/en/tags/demo/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The Notice Shortcode</title>
+      <link>http://localhost:1313/en/post/the-notice-shortcode/</link>
+      <pubDate>Fri, 18 Mar 2022 21:47:41 +0000</pubDate>
+      
+      <guid>http://localhost:1313/en/post/the-notice-shortcode/</guid>
+      
+        <description>&lt;p&gt;The notice shortcode supports three different types of disclaimers. These are as following:&lt;/p&gt;
+&lt;h2 id=&#34;info-notice&#34;&gt;Info Notice&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;{{% notice info %}}
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Lorem Impsum..
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;{{% /notice %}}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div
+  class=&#34;notice&#34;
+&gt;
+  &lt;span
+    class=&#34;notice__title&#34;
+  &gt;Info&lt;/span&gt;&lt;div class=&#34;notice__content&#34;&gt;
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&#34;update-notice&#34;&gt;Update Notice&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;{{% notice update %}}
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Lorem Impsum..
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;{{% /notice %}}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div
+  class=&#34;notice
+    notice--update
+  &#34;
+&gt;
+  &lt;span
+    class=&#34;notice__title
+      notice__title--update
+    &#34;
+  &gt;Update&lt;/span&gt;&lt;div class=&#34;notice__content&#34;&gt;
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&#34;warning-notice&#34;&gt;Warning Notice&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;{{% notice warning %}}
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Lorem Impsum..
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;{{% /notice %}}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div
+  class=&#34;notice
+    notice--warning
+  &#34;
+&gt;
+  &lt;span
+    class=&#34;notice__title
+      notice__title--warning
+    &#34;
+  &gt;Warning&lt;/span&gt;&lt;div class=&#34;notice__content&#34;&gt;
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+  &lt;/div&gt;
+&lt;/div&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>The Figure Shortcode</title>
+      <link>http://localhost:1313/en/post/the-figure-shortcode/</link>
+      <pubDate>Sat, 13 Mar 2021 21:47:41 +0000</pubDate>
+      
+      <guid>http://localhost:1313/en/post/the-figure-shortcode/</guid>
+      
+        <description>&lt;p&gt;Hugo has &lt;code&gt;figure&lt;/code&gt; shortcode built-in, so you can easily add figure captions or hyperlink rel attributes to images. Documentations can be found here:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://gohugo.io/content-management/shortcodes/#figure&#34;&gt;https://gohugo.io/content-management/shortcodes/#figure&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;This theme has 3 CSS classes made for figure elements:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;big&lt;/code&gt;: images will break the width limit of main content area.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;left&lt;/code&gt;: images will float to the left.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;right&lt;/code&gt;: images will float to the right.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If a figure has no class set, the image will behave just like a normal markdown image: &lt;code&gt;![]()&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Here are some examples; please be aware that these styles only take effect when the page width is over 1300px.&lt;/p&gt;
+&lt;figure&gt;&lt;img src=&#34;https://via.placeholder.com/1600x800&#34;
+    alt=&#34;image&#34;&gt;&lt;figcaption&gt;
+      &lt;p&gt;figure-normal (without any classes)&lt;/p&gt;
+    &lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Pellentesque posuere sem nec nunc varius, id hendrerit arcu consequat. Maecenas commodo, sapien ut gravida porttitor, dolor risus facilisis enim, eget pharetra nibh nisl porttitor sapien. Proin finibus elementum ligula sit amet hendrerit. Praesent et erat sodales ante accumsan pharetra non eu nulla. Sed vehicula consequat lorem, a fermentum ante faucibus quis. Aliquam erat volutpat. In vitae tincidunt dui. Proin sit amet ligula sodales, elementum tortor et, venenatis sem. Maecenas non nisl erat. Curabitur nec velit eros. Ut cursus lacus nisi, non pretium libero euismod et. Fusce luctus in nisi quis sollicitudin. Aenean nec blandit ligula. Duis ac felis lorem. Proin tellus tellus, dictum nec tempus sit amet, venenatis ac felis. Sed in pharetra nulla, non mollis sem.&lt;/p&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>

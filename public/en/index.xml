@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>My blog</title>
+    <link>http://localhost:1313/en/</link>
+    <description>Recent content on My blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Mon, 27 Oct 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/en/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>伊万的使用说明</title>
+      <link>http://localhost:1313/en/about/</link>
+      <pubDate>Mon, 27 Oct 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/en/about/</guid>
+      
+        <description>你可以找伊万聊点什么</description>
+      
+    </item>
+    
+    <item>
+      <title>Guide to Mermaid Diagrams in Hugo</title>
+      <link>http://localhost:1313/en/post/guide-to-mermaid-diagrams-in-hugo/</link>
+      <pubDate>Mon, 11 Aug 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/en/post/guide-to-mermaid-diagrams-in-hugo/</guid>
+      
+        <description>Guide to Mermaid Diagrams in Hugo</description>
+      
+    </item>
+    
+    <item>
+      <title>Math Typesetting</title>
+      <link>http://localhost:1313/en/post/math-typesetting/</link>
+      <pubDate>Sun, 23 Feb 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/en/post/math-typesetting/</guid>
+      
+        <description>A brief guide to setup and use KaTeX</description>
+      
+    </item>
+    
+    <item>
+      <title>Awards</title>
+      <link>http://localhost:1313/en/awards/</link>
+      <pubDate>Sun, 10 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/en/awards/</guid>
+      
+        <description>Hugo Awards, an annual literary award for the best science fiction or fantasy works</description>
+      
+    </item>
+    
+    <item>
+      <title>Certifications</title>
+      <link>http://localhost:1313/en/certifications/</link>
+      <pubDate>Sun, 10 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/en/certifications/</guid>
+      
+        <description>Hugo Certifications</description>
+      
+    </item>
+    
+    <item>
+      <title>The Notice Shortcode</title>
+      <link>http://localhost:1313/en/post/the-notice-shortcode/</link>
+      <pubDate>Fri, 18 Mar 2022 21:47:41 +0000</pubDate>
+      
+      <guid>http://localhost:1313/en/post/the-notice-shortcode/</guid>
+      
+        <description>&lt;p&gt;The notice shortcode supports three different types of disclaimers. These are as following:&lt;/p&gt;
+&lt;h2 id=&#34;info-notice&#34;&gt;Info Notice&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;{{% notice info %}}
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Lorem Impsum..
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;{{% /notice %}}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div
+  class=&#34;notice&#34;
+&gt;
+  &lt;span
+    class=&#34;notice__title&#34;
+  &gt;Info&lt;/span&gt;&lt;div class=&#34;notice__content&#34;&gt;
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&#34;update-notice&#34;&gt;Update Notice&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;{{% notice update %}}
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Lorem Impsum..
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;{{% /notice %}}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div
+  class=&#34;notice
+    notice--update
+  &#34;
+&gt;
+  &lt;span
+    class=&#34;notice__title
+      notice__title--update
+    &#34;
+  &gt;Update&lt;/span&gt;&lt;div class=&#34;notice__content&#34;&gt;
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&#34;warning-notice&#34;&gt;Warning Notice&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;{{% notice warning %}}
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Lorem Impsum..
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;{{% /notice %}}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div
+  class=&#34;notice
+    notice--warning
+  &#34;
+&gt;
+  &lt;span
+    class=&#34;notice__title
+      notice__title--warning
+    &#34;
+  &gt;Warning&lt;/span&gt;&lt;div class=&#34;notice__content&#34;&gt;
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+  &lt;/div&gt;
+&lt;/div&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>Series Part 2</title>
+      <link>http://localhost:1313/en/post/series-part-2/</link>
+      <pubDate>Sun, 15 Aug 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/en/post/series-part-2/</guid>
+      
+        <description>A brief guide to how to setup series part 2</description>
+      
+    </item>
+    
+    <item>
+      <title>Series Part 1</title>
+      <link>http://localhost:1313/en/post/series-part-1/</link>
+      <pubDate>Sat, 14 Aug 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/en/post/series-part-1/</guid>
+      
+        <description>A brief guide to how to setup series part 1</description>
+      
+    </item>
+    
+    <item>
+      <title>Redirect</title>
+      <link>http://localhost:1313/en/post/redirect/</link>
+      <pubDate>Sun, 20 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/en/post/redirect/</guid>
+      
+        <description>Usage of redirectUrl</description>
+      
+    </item>
+    
+    <item>
+      <title>The Figure Shortcode</title>
+      <link>http://localhost:1313/en/post/the-figure-shortcode/</link>
+      <pubDate>Sat, 13 Mar 2021 21:47:41 +0000</pubDate>
+      
+      <guid>http://localhost:1313/en/post/the-figure-shortcode/</guid>
+      
+        <description>&lt;p&gt;Hugo has &lt;code&gt;figure&lt;/code&gt; shortcode built-in, so you can easily add figure captions or hyperlink rel attributes to images. Documentations can be found here:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://gohugo.io/content-management/shortcodes/#figure&#34;&gt;https://gohugo.io/content-management/shortcodes/#figure&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;This theme has 3 CSS classes made for figure elements:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;big&lt;/code&gt;: images will break the width limit of main content area.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;left&lt;/code&gt;: images will float to the left.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;right&lt;/code&gt;: images will float to the right.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If a figure has no class set, the image will behave just like a normal markdown image: &lt;code&gt;![]()&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Here are some examples; please be aware that these styles only take effect when the page width is over 1300px.&lt;/p&gt;
+&lt;figure&gt;&lt;img src=&#34;https://via.placeholder.com/1600x800&#34;
+    alt=&#34;image&#34;&gt;&lt;figcaption&gt;
+      &lt;p&gt;figure-normal (without any classes)&lt;/p&gt;
+    &lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Pellentesque posuere sem nec nunc varius, id hendrerit arcu consequat. Maecenas commodo, sapien ut gravida porttitor, dolor risus facilisis enim, eget pharetra nibh nisl porttitor sapien. Proin finibus elementum ligula sit amet hendrerit. Praesent et erat sodales ante accumsan pharetra non eu nulla. Sed vehicula consequat lorem, a fermentum ante faucibus quis. Aliquam erat volutpat. In vitae tincidunt dui. Proin sit amet ligula sodales, elementum tortor et, venenatis sem. Maecenas non nisl erat. Curabitur nec velit eros. Ut cursus lacus nisi, non pretium libero euismod et. Fusce luctus in nisi quis sollicitudin. Aenean nec blandit ligula. Duis ac felis lorem. Proin tellus tellus, dictum nec tempus sit amet, venenatis ac felis. Sed in pharetra nulla, non mollis sem.&lt;/p&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://localhost:1313/en/archives/</link>
+      <pubDate>Tue, 28 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/en/archives/</guid>
+      
+        <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Markdown Syntax Guide</title>
+      <link>http://localhost:1313/en/post/markdown-syntax-guide/</link>
+      <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/en/post/markdown-syntax-guide/</guid>
+      
+        <description>Sample article showcasing basic Markdown syntax and formatting for HTML elements.</description>
+      
+    </item>
+    
+    <item>
+      <title>Placeholder Text</title>
+      <link>http://localhost:1313/en/post/placeholder-text/</link>
+      <pubDate>Sat, 09 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/en/post/placeholder-text/</guid>
+      
+        <description>Lorem Ipsum Dolor Si Amet</description>
+      
+    </item>
+    
+    <item>
+      <title>Contact</title>
+      <link>http://localhost:1313/en/contact/</link>
+      <pubDate>Fri, 08 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/en/contact/</guid>
+      
+        <description>Contact Page</description>
+      
+    </item>
+    
+    <item>
+      <title>Emoji Support</title>
+      <link>http://localhost:1313/en/post/emoji-support/</link>
+      <pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/en/post/emoji-support/</guid>
+      
+        <description>Guide to emoji usage in Hugo</description>
+      
+    </item>
+    
+    <item>
+      <title>Guide to Thumbnails in Hugo</title>
+      <link>http://localhost:1313/en/post/guide-to-thumbnails-in-hugo/</link>
+      <pubDate>Mon, 04 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/en/post/guide-to-thumbnails-in-hugo/</guid>
+      
+        <description>Guide to Thumbnails in Hugo</description>
+      
+    </item>
+    
+    <item>
+      <title></title>
+      <link>http://localhost:1313/en/imprint/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/en/imprint/</guid>
+      
+        <description>&lt;h1 id=&#34;版权声明&#34;&gt;版权声明&lt;/h1&gt;
+&lt;p&gt;更新日期：2025-10-26&lt;/p&gt;
+&lt;p&gt;适用范围：本声明适用于本网站及所有子页面与相关服务。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;版权归属&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;除另有说明外，本网站所载之文字、图片、音视频、版式设计与程序代码等内容的著作权及/或其他相关权利，均归本网站域名归属人所有。&lt;/li&gt;
+&lt;li&gt;未经书面许可，任何单位或个人不得以任何形式（包括但不限于复制、转载、改编、汇编、镜像、抓取或将内容用于训练模型或商业用途）使用本站内容。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;授权与转载&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;非商业转载：在不作实质性改动、保留作者署名与来源链接的前提下，允许非商业转载。请注明来源：evan-manual.com。&lt;/li&gt;
+&lt;li&gt;商业使用：须事先取得书面授权，请联系网站域名归属人。&lt;/li&gt;
+&lt;li&gt;第三方内容：标注来源的第三方作品版权归原权利人所有，使用请遵循其授权规定；如需再使用，请直接联系原权利人。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;免责声明&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;本站信息仅供参考，不构成任何投资、医疗、法律或其他专业建议。因使用本站内容导致的直接或间接损失，本站不承担责任。&lt;/li&gt;
+&lt;li&gt;本站力求内容准确与及时，但不保证其完整性、及时性与适用性。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;侵权处理&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;如认为本站内容侵犯您的合法权益，请邮件至：gqj9071@gmail.com，并提供：
+&lt;ul&gt;
+&lt;li&gt;权利人身份证明（或授权证明）&lt;/li&gt;
+&lt;li&gt;作品权属证明与涉嫌侵权页面链接/截图&lt;/li&gt;
+&lt;li&gt;侵权情况说明与有效联系方式&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;我们将在收到合规材料后尽快核查并处理（通常于3-5个工作日内）。&lt;/li&gt;
+&lt;/ul&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>
