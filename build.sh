@@ -101,7 +101,7 @@ main() {
 
   # Build the site
   echo "Building the site..."
-  hugo --gc --minify
+  HUGO_MARKUP_GOLDMARK_RENDERER_UNSAFE=true hugo --gc --minify
 
 }
 
