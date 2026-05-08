@@ -215,7 +215,7 @@ html[data-theme="dark"] {
 .evan-about__kicker,
 .evan-about__section-heading p {
   color: var(--about-accent);
-  font-size: 0.78rem;
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0;
   line-height: 1.4;
@@ -232,7 +232,7 @@ html[data-theme="dark"] {
 
 .evan-about__hero p:not(.evan-about__kicker) {
   color: var(--about-muted);
-  font-size: 1.06rem;
+  font-size: 1.16rem;
   line-height: 1.9;
   margin: 22px 0 0;
   max-width: 700px;
@@ -240,7 +240,7 @@ html[data-theme="dark"] {
 
 .evan-about__hero .evan-about__hero-note {
   color: var(--about-ink);
-  font-size: 1.12rem;
+  font-size: 1.16rem;
   margin-top: 14px;
 }
 
@@ -305,6 +305,7 @@ html[data-theme="dark"] {
 .evan-about__business-copy p,
 .evan-about__thread p {
   color: var(--about-muted);
+  font-size: 1.16rem;
   line-height: 1.85;
   margin: 0;
 }
@@ -380,6 +381,7 @@ html[data-theme="dark"] {
 
 .evan-about__business-list p {
   color: var(--about-muted);
+  font-size: 1.16rem;
   line-height: 1.7;
   margin: 0;
 }
@@ -450,7 +452,7 @@ body[data-theme="dark"] .evan-about__business-list div {
   }
 
   .evan-about__hero .evan-about__hero-note {
-    font-size: 1rem;
+    font-size: 1.08rem;
   }
 
   .evan-about__program,
