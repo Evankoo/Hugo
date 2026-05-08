@@ -1,101 +1,119 @@
 +++
 title = "伊万的使用说明"
-description = "个体IP操盘手 · ACT心理博主 · 讲述从普通人到超级个体的故事"
-date = "2026-05-08"
+description = "企业 IP 账号运营、21 天 ACT 工作坊与心理茶话会"
+date = "2025-10-27"
 aliases = ["about-us", "about-Evan"]
 author = "伊万"
 +++
 
 <section class="evan-about" aria-label="伊万的使用说明">
+  <header class="evan-about__hero">
+    <p class="evan-about__kicker">About this site</p>
+    <h2>关于我正在做的事。</h2>
+    <p>
+      我希望用一页的篇幅简单介绍一下自己正在做的事，如果这些事和你相关，欢迎链接。
+    </p>
+    <p class="evan-about__hero-note">
+      目前主要做两件事：帮助企业做 IP 账号，也继续探索个体成长。
+    </p>
+  </header>
 
-<header class="evan-about__hero">
-  <p class="evan-about__kicker">About · 使用说明</p>
-  <h2>伊万的使用说明</h2>
-  <p class="evan-about__hero-note">请在使用前仔细阅读以下内容，以获得最佳体验。</p>
-</header>
+  <section class="evan-about__section" aria-labelledby="business-service">
+    <div class="evan-about__section-heading">
+      <p>01 / 企业服务</p>
+      <h3 id="business-service">帮企业搭建并运营企业 IP 账号</h3>
+    </div>
 
-<div class="evan-about__product-card">
+    <div class="evan-about__business">
+      <div class="evan-about__business-copy">
+        <p>
+          企业做线上宣传，不能只靠偶尔发几条动态。真正有用的企业 IP 账号，
+          需要让客户持续看见企业在做什么、擅长什么、相信什么。
+        </p>
+        <p>
+          我会帮企业从账号定位、内容策划到日常运营，把专业能力、真实案例和客户关心的问题，
+          变成可以长期发布的图文和视频内容。
+        </p>
+      </div>
 
-### Product · 伊万
+      <div class="evan-about__business-list" aria-label="企业 IP 服务内容">
+        <div>
+          <span>定位</span>
+          <p>明确账号角色、目标受众、专业标签与内容边界。</p>
+        </div>
+        <div>
+          <span>内容</span>
+          <p>完成图文和视频内容制作，包括选题、脚本、拍摄和剪辑。</p>
+        </div>
+        <div>
+          <span>运营</span>
+          <p>建立发布节奏、复盘机制、数据反馈和持续迭代流程。</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-**伊万 Evan** — 通用版 · 持续迭代中
+  <section class="evan-about__section" aria-labelledby="psych-service">
+    <div class="evan-about__section-heading">
+      <p>02 / 心理活动</p>
+      <h3 id="psych-service">目前正在进行的活动</h3>
+    </div>
 
-| 项目 | 内容 |
-|------|------|
-| **型号** | 个体IP操盘手 · ACT心理博主 |
-| **容量** | 讲述从普通人到超级个体的故事 |
-| **适用场景** | 想打造个人IP · 想把心理学变成内容 · 想知道普通人怎么走 |
-| **不适用** | 寻求心理咨询或心理治疗 · 希望一步到位 · 拒绝行动 |
-| **产地** | 中国 · ACT心理取向 · 多个IP从0到1实战经验 |
+    <div class="evan-about__program-grid">
+      <article class="evan-about__program evan-about__program--primary">
+        <div class="evan-about__program-topline">
+          <span>每月</span>
+          <small>线上工作坊</small>
+        </div>
+        <h4>21 天 ACT 工作坊</h4>
+        <p>
+          这是一个围绕 ACT 心理灵活性展开的 21 天练习。每天会有一个小练习，
+          帮你在真实生活里观察情绪、看见想法、靠近价值，并尝试做出一点具体行动。
+        </p>
+        <ul>
+          <li>适合长期内耗、拖延、焦虑、自我怀疑的人</li>
+          <li>练习入口：微信小程序搜索「内在之海」</li>
+        </ul>
+      </article>
 
-</div>
+      <article class="evan-about__program">
+        <div class="evan-about__program-topline">
+          <span>每周日</span>
+          <small>固定活动</small>
+        </div>
+        <h4>心理茶话会</h4>
+        <p>
+          一个更轻量的开放讨论场。我们会围绕亲密关系、自我成长、情绪困扰、人生选择等主题，
+          用心理学视角把问题聊得更清楚。
+        </p>
+        <ul>
+          <li>适合想被倾听，也想听见他人经验的人</li>
+          <li>不是诊断，不是说教，而是共同探索</li>
+          <li>想参与的话，可以联系伊万</li>
+        </ul>
+      </article>
+    </div>
+  </section>
 
-<div class="evan-about__section" aria-labelledby="features">
+  <section class="evan-about__section evan-about__section--quiet" aria-labelledby="writing">
+    <div class="evan-about__section-heading">
+      <p>03 / 内容脉络</p>
+      <h3 id="writing">这个网站会继续记录什么</h3>
+    </div>
 
-### 核心功能
-
-<div class="evan-about__program-grid">
-
-**IP定位与内容策略**
-帮你找到「你说的那些话」的结构。不套模板，帮你梳理出属于自己的内容框架。
-
-**ACT心理学内容化**
-把学了多年的ACT心理学变成可以传播的内容。不是学术科普，是有温度的实战输出。
-
-**个体IP操盘陪跑**
-从定位到交付，陪跑式做号。不卖课，只做真实的1v1和小组式深度陪伴。
-
-**超级个体路径规划**
-怎么从普通人到「一个人就是一家公司」。分享真实路径，不讲鸡汤，只讲可复用的方法。
-
-</div>
-</div>
-
-<div class="evan-about__section" aria-labelledby="usage">
-
-### 使用方法
-
-**1. 先刷内容**
-抖音、小红书、微信、Podcast 都有免费内容。先看合不合，不合适划走，合适就继续。
-
-**2. 对上了再说**
-如果你觉得我说的话对你有用，我们再聊要不要一起做事。不搞强行推销。
-
-**3. 一起走下去**
-IP操盘和内容陪跑都是长期的事。能走多远，取决于我们是否真的合拍。
-
-</div>
-
-<div class="evan-about__section" aria-labelledby="faq">
-
-### 常见问题
-
-**你和心理咨询师有什么区别？**
-我不做诊疗，不开药，不做心理咨询。心理咨询师帮人治病，我帮有内容能力的人放大影响力。我做的是IP操盘，不是心理治疗。
-
-**你是不是在卖课？**
-不卖课。我做的是咨询+陪跑，1v1或者小群。没有高单价课，不做分销，不搞训练营。
-
-**你的背景是什么？**
-ACT心理取向，持续学习。做过多个IP从0到1，有实战经验。不讲虚的，只讲可复用的路径。
-
-**我能免费获得什么？**
-抖音、小红书、微信、Podcast 都有免费内容。先看再说，不合适划走，不浪费你的时间。
-
-</div>
-
-<div class="evan-about__quote">
-
-> 「我不是老师，也不是导师。
-> 我只是一个在路上，同时愿意把自己的路写下来给你看的人。」
-> — 伊万
-
-</div>
-
-<div class="evan-about__disclaimer">
-
-本产品已通过真人测试，但效果因人而异。阅读前请确认你不是在找捷径。
-
-</div>
-
+    <div class="evan-about__threads">
+      <div class="evan-about__thread">
+        <span>读书笔记</span>
+        <p>主要记录心理学、个人成长、系统思考相关的阅读，也会写下我自己的理解和使用方式。</p>
+      </div>
+      <div class="evan-about__thread">
+        <span>咨询师访谈</span>
+        <p>和不同取向、不同经验的咨询师聊一聊，看看心理咨询在真实工作里是怎么发生的。</p>
+      </div>
+      <div class="evan-about__thread">
+        <span>知识库</span>
+        <p>把读过的书、用过的方法、整理过的资料放在一起，方便自己回看，也方便别人检索。</p>
+      </div>
+    </div>
+  </section>
 </section>
