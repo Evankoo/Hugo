@@ -215,7 +215,7 @@ html[data-theme="dark"] {
 .evan-about__kicker,
 .evan-about__section-heading p {
   color: var(--about-accent);
-  font-size: 1rem;
+  font-size: 1.15rem;
   font-weight: 700;
   letter-spacing: 0;
   line-height: 1.4;
@@ -228,11 +228,12 @@ html[data-theme="dark"] {
   line-height: 1.08;
   margin: 0;
   max-width: 760px;
+  color: #252525;
 }
 
 .evan-about__hero p:not(.evan-about__kicker) {
   color: var(--about-muted);
-  font-size: 1.16rem;
+  font-size: 1.2rem;
   line-height: 1.9;
   margin: 22px 0 0;
   max-width: 700px;
@@ -240,7 +241,7 @@ html[data-theme="dark"] {
 
 .evan-about__hero .evan-about__hero-note {
   color: var(--about-ink);
-  font-size: 1.16rem;
+  font-size: 1.2rem;
   margin-top: 14px;
 }
 
@@ -305,7 +306,7 @@ html[data-theme="dark"] {
 .evan-about__business-copy p,
 .evan-about__thread p {
   color: var(--about-muted);
-  font-size: 1.16rem;
+  font-size: 1.2rem;
   line-height: 1.85;
   margin: 0;
 }
@@ -373,7 +374,7 @@ html[data-theme="dark"] {
 .evan-about__business-list span,
 .evan-about__thread span {
   display: block;
-  font-size: 1.05rem;
+  font-size: 1.2rem;
   font-weight: 700;
   line-height: 1.4;
   margin-bottom: 6px;
@@ -381,7 +382,7 @@ html[data-theme="dark"] {
 
 .evan-about__business-list p {
   color: var(--about-muted);
-  font-size: 1.16rem;
+  font-size: 1.2rem;
   line-height: 1.7;
   margin: 0;
 }
@@ -402,29 +403,118 @@ html[data-theme="dark"] {
   padding: 18px 0;
 }
 
-html[data-theme="dark"] .evan-about,
-body[data-theme="dark"] .evan-about {
-  --about-ink: #e8e4dc;
-  --about-muted: #aaa49a;
-  --about-soft: #242321;
-  --about-line: rgba(232, 228, 220, 0.14);
-  --about-accent: #d76b8a;
-  --about-green: #82a08e;
-  --about-blue: #7f9bb4;
+.theme--dark .evan-about,
+.theme--dark .evan-about {
+  --about-ink: #e8e4dc !important;
+  --about-muted: #c0b8aa !important;
+  --about-soft: #242321 !important;
+  --about-line: rgba(232, 228, 220, 0.14) !important;
+  --about-accent: #d76b8a !important;
+  --about-green: #82a08e !important;
+  --about-blue: #7f9bb4 !important;
+  color: var(--about-ink) !important;
+  background-color: var(--about-soft) !important;
 }
 
-html[data-theme="dark"] .evan-about__program,
-body[data-theme="dark"] .evan-about__program,
-html[data-theme="dark"] .evan-about__business-copy,
-body[data-theme="dark"] .evan-about__business-copy {
-  background: #1b1b1a;
+.theme--dark .evan-about__program,
+.theme--dark .evan-about__program,
+.theme--dark .evan-about__business-copy,
+.theme--dark .evan-about__business-copy {
+  background: #1b1b1a !important;
 }
 
-html[data-theme="dark"] .evan-about__program--primary,
-body[data-theme="dark"] .evan-about__program--primary,
-html[data-theme="dark"] .evan-about__business-list div,
-body[data-theme="dark"] .evan-about__business-list div {
-  background: #242321;
+.theme--dark .evan-about__program--primary,
+.theme--dark .evan-about__program--primary,
+.theme--dark .evan-about__business-list div,
+.theme--dark .evan-about__business-list div {
+  background: #242321 !important;
+}
+
+.theme--dark .evan-about__hero h2 {
+  color: #e8e4dc !important;
+}
+
+.theme--dark .evan-about__hero p:not(.evan-about__kicker) {
+  color: #c0b8aa !important;
+}
+
+.theme--dark .evan-about__hero .evan-about__hero-note {
+  color: #e8e4dc !important;
+}
+
+.theme--dark .evan-about__section-heading h3 {
+  color: #e8e4dc !important;
+}
+
+.theme--dark .evan-about__kicker,
+.theme--dark .evan-about__section-heading > p {
+  color: #d76b8a !important;
+}
+
+.theme--dark .evan-about__thread > span {
+  color: #e8e4dc !important;
+}
+
+.theme--dark .evan-about__thread > p {
+  color: #c0b8aa !important;
+}
+
+.theme--dark .evan-about__hero p:not(.evan-about__kicker),
+.theme--dark .evan-about__hero p:not(.evan-about__kicker) {
+  color: #c0b8aa !important;
+}
+
+.theme--dark .evan-about__hero .evan-about__hero-note,
+.theme--dark .evan-about__hero .evan-about__hero-note {
+  color: #e8e4dc !important;
+}
+
+.theme--dark .evan-about__section-heading h3,
+.theme--dark .evan-about__section-heading h3 {
+  color: #e8e4dc !important;
+}
+
+.theme--dark .evan-about__kicker,
+.theme--dark .evan-about__section-heading p,
+.theme--dark .evan-about__kicker,
+.theme--dark .evan-about__section-heading p {
+  color: #d76b8a !important;
+}
+
+.theme--dark .evan-about__business-copy,
+.theme--dark .evan-about__business-copy {
+  background: #1b1b1a !important;
+  border-color: rgba(232, 228, 220, 0.14) !important;
+}
+
+.theme--dark .evan-about__business-list div,
+.theme--dark .evan-about__business-list div {
+  border-left-color: #7f9bb4 !important;
+}
+
+.theme--dark .evan-about__business-list div:nth-child(2),
+.theme--dark .evan-about__business-list div:nth-child(2) {
+  border-left-color: #82a08e !important;
+}
+
+.theme--dark .evan-about__business-list div:nth-child(3),
+.theme--dark .evan-about__business-list div:nth-child(3) {
+  border-left-color: #d76b8a !important;
+}
+
+.theme--dark .evan-about__thread,
+.theme--dark .evan-about__thread {
+  border-bottom-color: rgba(232, 228, 220, 0.14) !important;
+}
+
+.theme--dark .evan-about__thread span,
+.theme--dark .evan-about__thread span {
+  color: #e8e4dc !important;
+}
+
+.theme--dark .evan-about__thread p,
+.theme--dark .evan-about__thread p {
+  color: #c0b8aa !important;
 }
 
 @media (max-width: 900px) {
