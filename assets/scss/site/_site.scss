@@ -1326,7 +1326,16 @@ html.theme--dark .topic-article-item {
 
   /* 文章标题区：标题 / 日期与阅读时间 / 话题 */
   .post--single {
-    margin: 16px 14px 22px;
+    margin: 16px 22px 28px;
+  }
+
+  .post--single .post__content {
+    line-height: 1.85;
+  }
+
+  body:not(.home) .post--single .post__content > p {
+    line-height: 1.85;
+    margin-bottom: 1.35em !important;
   }
 
   .post--single .post__title {
