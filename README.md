@@ -38,6 +38,9 @@ PREVIEW_PORT=1414 ./preview.sh
 ```
 
 Use a remote preview only when review is needed from another device or network.
+Documentation, maintenance tooling, CI, and other repository-only changes do
+not need a browser preview when they do not alter the generated site; they
+still require the relevant automated checks before merging.
 
 ## Two-computer maintenance
 
