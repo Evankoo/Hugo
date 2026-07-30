@@ -1,7 +1,7 @@
 {{ define "main" }}
   {{ $paginator := .Paginate (where .Site.RegularPages "Type" "in" .Site.Params.mainSections) }}
 
-  <div class="gallery-grid">
+  <div class="gallery-grid {{ if not .Site.Params.doNotLoadAnimations }}animated fadeInDown{{ end }}">
     {{ range $paginator.Pages }}
       {{ $thumb := .Resources.GetMatch "cover*" }}
       <a class="gallery-card" href="{{ .RelPermalink }}">

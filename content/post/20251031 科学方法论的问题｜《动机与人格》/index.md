@@ -8,7 +8,6 @@ image: "cover.jpg"
 thumbnail: "cover.jpg"
 categories: 
 - 读书笔记
-toc: true
 tags:
 - 马斯洛
 - 人本主义
