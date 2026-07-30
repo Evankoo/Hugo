@@ -1,12 +1,10 @@
 title = "我是伊万"
 author = "伊万"
-copyright = "2021-2025"
+copyright = "2021-2026"
 description = "个体/项目/老板IP操盘手<br>ACT心理博主<br>讲述从普通人到超级个体的故事<br>咨询+vx：Egan89757"
 profilePicture = "images/profile.png"
 keywords = "一人公司, IP打造, 心理成长"
 favicon = "favicons/"
-# example ["css/custom.css"]
-customCSS = ["css/custom.css"]
 # example ["js/custom.js"]
 customJs = ["js/custom.js"] 
 mainSections = ["post"]

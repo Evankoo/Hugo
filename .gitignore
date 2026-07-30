@@ -1,0 +1,19 @@
+# Hugo output and caches
+/public/
+/resources/
+/.hugo_build.lock
+
+# Cloudflare and local build tools
+/.wrangler/
+/.build-tools/
+
+# Local environment and editor files
+.DS_Store
+.env
+.env.*
+!.env.example
+*.swp
+*.swo
+*~
+__pycache__/
+*.py[cod]
