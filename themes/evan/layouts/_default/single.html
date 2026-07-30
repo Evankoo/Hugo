@@ -27,7 +27,7 @@
       {{ with .Params.Tags }}
       <div class="post__meta-tag">
         {{ range . }}
-          <a href="{{ "/tags/" | relURL }}{{ . | urlize }}">#{{ . }}</a>
+          <a href="{{ "/tags/" | relURL }}{{ . | urlize }}"><span class="post__meta-tag-prefix" aria-hidden="true">#</span>{{ . }}</a>
         {{ end }}
       </div>
       {{ end }}
