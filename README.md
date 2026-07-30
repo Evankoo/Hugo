@@ -17,6 +17,37 @@ hugo server
 
 Generated output belongs in `public/` and is never committed.
 
+## Preview before pushing
+
+Every user-visible change is reviewed through Hugo's local development server
+before it is pushed to GitHub:
+
+```bash
+./preview.sh
+```
+
+The command builds and checks the site, then serves it at
+`http://127.0.0.1:1313/`. It uploads nothing and keeps running while Evan
+reviews the pages. Stop it with `Ctrl-C` after review. Only after Evan approves
+the local preview should the current `codex/` branch be pushed.
+
+The port can be changed if another local service already uses `1313`:
+
+```bash
+PREVIEW_PORT=1414 ./preview.sh
+```
+
+Use a remote preview only when review is needed from another device or network.
+
+## Two-computer maintenance
+
+The MacBook Pro and Mac mini each keep a local clone; GitHub is the shared
+source of truth. Before starting a change, fetch the remote and create a
+task-specific `codex/` branch from the current `origin/main`. Do not work on the
+same branch from both computers at once. After an approved push, the other Mac
+may fast-forward only when its worktree is clean; dirty or divergent state
+requires explicit reconciliation.
+
 ## Structure
 
 ```text
