@@ -24,22 +24,33 @@ small, reproducible, and safe for long-term AI maintenance.
 
 ## Repository map
 
-- `content/`: Evan's pages and articles. Article bundles keep their cover image
-  beside `index.md`.
-- `layouts/`: site-specific Hugo templates. These override the base theme.
-- `assets/scss/site/_site.scss`: current site-specific visual rules.
-- `assets/scss/custom.scss`: the stable SCSS entry point; keep it small.
-- `assets/js/`: site-specific browser behavior.
-- `themes/evan/`: the lightweight local base theme derived from Anatole 1.18.0.
-- `static/`: files copied to the site without processing.
-- `config/_default/`: navigation and site parameters.
-- `scripts/check_site.py`: generated-site internal link and asset validation.
+Keep the single repository divided by ownership:
+
+- Website content layer: `content/` and article-bundle media beside `index.md`.
+- Website presentation layer: `layouts/`, `assets/`, `themes/evan/`, `static/`,
+  `config/`, `hugo.toml`, and any future `data/` or `i18n/` directories.
+- Project runtime layer: `scripts/`, `.github/`, `build.sh`, `preview.sh`,
+  `wrangler.toml`, `.gitignore`, `AGENTS.md`, and `README.md`.
+
+Do not move GStudio task cards, task inputs, delivery artifacts, local caches,
+or credentials into this repository.
+
+`scripts/classify_changes.py` is the executable change classifier. Run it
+before deciding whether visual review is required:
+
+```bash
+python3 scripts/classify_changes.py
+```
+
+Unknown paths require explicit classification before push; do not silently
+treat them as runtime-only changes.
 
 ## Required verification
 
 Run both commands before reporting a change as ready:
 
 ```bash
+python3 scripts/test_classify_changes.py
 ./build.sh
 python3 scripts/check_site.py public
 ```
@@ -68,7 +79,8 @@ from another device or network. Do not run `wrangler deploy` or
 belong in local Cloudflare authentication, GitHub secrets, or Cloudflare
 settings, never in this repository.
 
-Repository-only changes such as documentation, ignore rules, maintenance
-scripts, CI configuration, and non-rendered deployment metadata do not require
-a browser preview when the generated site is unchanged. Run the checks relevant
-to the change, then push and merge through the protected `main` workflow.
+Project-runtime-only changes do not require a browser preview when the generated
+site is unchanged. Run the relevant technical checks, then push and merge
+through the protected `main` workflow. Deployment settings such as routes and
+domains require an explicit impact statement even though Hugo preview cannot
+validate them.

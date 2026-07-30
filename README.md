@@ -42,6 +42,28 @@ Documentation, maintenance tooling, CI, and other repository-only changes do
 not need a browser preview when they do not alter the generated site; they
 still require the relevant automated checks before merging.
 
+## Change classification
+
+The repository stays unified but has three ownership layers:
+
+```text
+Website content       content/ and article-bundle media
+Website presentation  layouts/, assets/, themes/, static/, config/, hugo.toml
+Project runtime       scripts/, .github/, build.sh, preview.sh, wrangler.toml,
+                      .gitignore, AGENTS.md, README.md
+```
+
+Classify the current working-tree changes before review:
+
+```bash
+python3 scripts/classify_changes.py
+```
+
+Content or presentation changes require local Hugo preview and Evan's approval.
+Runtime-only changes require the relevant automated checks but no visual
+preview. Unknown paths must be classified explicitly before push. `AGENTS.md`
+is the authoritative maintenance contract.
+
 ## Two-computer maintenance
 
 The MacBook Pro and Mac mini each keep a local clone; GitHub is the shared
@@ -61,7 +83,7 @@ assets/js/            Site-specific scripts
 themes/evan/          Lightweight local base theme
 static/               Pass-through static files
 config/_default/      Menus and site parameters
-scripts/              Build verification
+scripts/              Change classification and build verification
 ```
 
 See `AGENTS.md` before making automated changes.
