@@ -8,7 +8,6 @@ image: "cover-faca9c0a-508b-408b-9dd2-646ba4bb5225.jpg"
 thumbnail: "cover-faca9c0a-508b-408b-9dd2-646ba4bb5225.jpg"
 categories:
 - 读书笔记
-toc: true
 tags:
 - 罗杰斯
 - 人本主义

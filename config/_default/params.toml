@@ -41,7 +41,7 @@ reversepagetitle = true # When set to 'true', the Window Title will be reversed 
 # hidesidebar = true
 
 # Sidebar/Content Ratio
-# contentratio = 0.6
+contentratio = 0.58
 
 [simpleAnalytics]
 # enable = true

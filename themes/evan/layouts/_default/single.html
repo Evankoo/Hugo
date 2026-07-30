@@ -39,11 +39,6 @@
   <div class="post__content">
     {{- partial "expirationnote.html" . -}}
 
-    {{- $tocHeadings := findRE "<h[2-4][ >]" .Content -}}
-    {{- if and (eq .Params.toc true) (ge (len $tocHeadings) 2) -}}
-      {{- partial "toc.html" . -}}
-    {{- end -}}
-
     {{ .Content }}
 
     {{- if isset .Params "series" -}}

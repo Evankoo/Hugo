@@ -591,42 +591,6 @@ html[data-theme="dark"] {
   }
 }
 
-/* ==========================================================
-   8. 🧭 文章目录 (Table of Contents)
-   ========================================================== */
-
-.post__content > h3:first-child {
-  margin-top: 0;
-  font-size: 1.05em;
-}
-
-/* 隐形目录：无底色无边框，只留一条细分隔线 */
-#TableOfContents {
-  background: transparent;
-  border-left: 2px solid rgba(0, 0, 0, 0.12);
-  padding: 2px 0 2px 18px;
-  margin: 0 0 2em;
-  font-size: 15px;
-}
-
-#TableOfContents ul {
-  line-height: 1.9;
-}
-
-#TableOfContents li a {
-  color: var(--reading-muted, #7a7a7a);
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-#TableOfContents li a:hover {
-  color: var(--reading-ink, #34373c);
-}
-
-.theme--dark #TableOfContents {
-  border-left-color: rgba(255, 255, 255, 0.14);
-}
-
 .theme--dark .post__content > blockquote {
   color: #a5a5ad;
 }
@@ -660,16 +624,6 @@ html[data-theme="dark"] {
     word-break: normal;
   }
 
-  #TableOfContents {
-    padding: 2px 0 2px 14px;
-    font-size: 14px;
-    margin-bottom: 1.6em;
-  }
-
-  #TableOfContents ul {
-    line-height: 1.8;
-  }
-
   .post-cta {
     padding: 14px 16px;
     font-size: 14.5px;
@@ -681,12 +635,26 @@ html[data-theme="dark"] {
    11. 🖼️ 侧栏翻页画廊 (Sidebar Flip Gallery)
    ========================================================== */
 
+:root {
+  --evan-gallery-surface: #f2efe9;
+}
+
+html.theme--dark {
+  --evan-gallery-surface: #101a22;
+}
+
 /* 会话内已是画廊态：首帧前隐藏侧栏，由 JS 恢复后移除，避免头像页闪跳 */
 html.evan-gallery .sidebar {
   visibility: hidden;
 }
 
+html.evan-gallery .wrapper__sidebar {
+  background: var(--evan-gallery-surface);
+}
+
 .sidebar {
+  border-left: 0 !important;
+  border-right: 0 !important;
   perspective: 1600px;
 }
 
@@ -725,12 +693,12 @@ html.evan-gallery .sidebar {
   transform: rotateY(180deg);
   display: grid;
   place-items: center;
-  background: #f2efe9;
+  background: var(--evan-gallery-surface);
   overflow: hidden;
 }
 
 .theme--dark .sidebar__face--back {
-  background: #101a22;
+  background: var(--evan-gallery-surface);
 }
 
 .sidebar__gallery-img {
@@ -783,18 +751,13 @@ html.evan-gallery .sidebar {
 }
 
 /* ==========================================================
-   12. 🏷️ 文章信息行分隔 + 相关文章轻量化
+   12. 🏷️ 文章信息行留白 + 相关文章轻量化
    ========================================================== */
 
-/* 信息行与正文拉开：下方留白 + 细分隔线 */
+/* 信息行与正文只用留白拉开，避免标题区形成框线 */
 .post--single .post__header {
-  padding-bottom: 0.8em;
+  padding-bottom: 0;
   margin-bottom: 2.2em;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.theme--dark .post--single .post__header {
-  border-bottom-color: rgba(255, 255, 255, 0.1);
 }
 
 .post--single .post__meta {
@@ -837,15 +800,10 @@ html.evan-gallery .sidebar {
   }
 }
 
-/* 相关文章：安静列表，和隐形目录同一语言 */
+/* 相关文章：安静的纯文字列表 */
 .post-related {
   margin-top: 3em;
-  padding-top: 1.4em;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.theme--dark .post-related {
-  border-top-color: rgba(255, 255, 255, 0.1);
+  padding-top: 0;
 }
 
 .post-related__heading {
@@ -904,35 +862,32 @@ html.theme--dark body {
 .gallery-grid {
   columns: 2;
   column-gap: 22px;
-  margin: 8px 30px 0;
+  margin: 20px 30px 0;
 }
 
 .gallery-card {
   display: block;
   break-inside: avoid;
-  margin-bottom: 22px;
-  border-radius: 8px;
-  overflow: hidden;
+  margin-bottom: 26px;
+  overflow: visible;
   text-decoration: none;
-  background: #f5f3ef;
-  box-shadow: 0 2px 10px rgba(20, 20, 20, 0.06);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  background: transparent;
 }
 
 .gallery-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 28px rgba(20, 20, 20, 0.14);
+  transform: none;
 }
 
 .gallery-card__image {
   display: block;
   width: 100%;
   height: auto;
+  border-radius: 4px;
 }
 
 .gallery-card__body {
   display: block;
-  padding: 12px 16px 14px;
+  padding: 10px 2px 2px;
 }
 
 .gallery-card__title {
@@ -949,15 +904,6 @@ html.theme--dark body {
   font-size: 12.5px;
   margin-top: 4px;
   font-variant-numeric: tabular-nums;
-}
-
-.theme--dark .gallery-card {
-  background: #1a2731;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-}
-
-.theme--dark .gallery-card:hover {
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
 }
 
 @media (max-width: 768px) {
@@ -1231,6 +1177,7 @@ html.theme--dark .topic-article-item {
 
 /* 桌面端保持原布局，只提高层级 */
 .header {
+  border-bottom: 0 !important;
   z-index: 50;
 }
 
@@ -1243,9 +1190,9 @@ html.theme--dark .topic-article-item {
     --mobile-hero-height: clamp(340px, 76vw, 400px);
   }
 
-  /* 56px 完整头部行：初始位于页面顶部，滚动后持续固定 */
+  /* 顶栏不再占位：头像/画廊背景直接延伸到屏幕顶部 */
   .wrapper {
-    padding-top: 56px;
+    padding-top: 0;
   }
 
   /* 清掉主题遗留的 40px + 16px 空白，并固定画廊/介绍区域高度 */
@@ -1264,6 +1211,12 @@ html.theme--dark .topic-article-item {
     height: 100%;
   }
 
+  /* 个人介绍保留少量顶部呼吸空间；画廊背面仍然贴顶铺满 */
+  .sidebar__face--front .sidebar__content {
+    box-sizing: border-box;
+    padding-top: 12px;
+  }
+
   .header {
     position: fixed;
     top: 0;
@@ -1271,15 +1224,14 @@ html.theme--dark .topic-article-item {
     right: 0;
     width: 100%;
     height: 56px;
-    background: #f8f8f6;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    background: transparent !important;
     box-sizing: border-box;
+    pointer-events: none;
     z-index: 80;
   }
 
   html.theme--dark .header {
-    background: #152028;
-    border-bottom-color: rgba(255, 255, 255, 0.1);
+    background: transparent !important;
   }
 
   .header > div {
@@ -1294,15 +1246,18 @@ html.theme--dark .topic-article-item {
     height: 42px;
     margin: 0;
     padding: 6px;
-    background: transparent;
+    background: transparent !important;
+    border: 0;
     border-radius: 0;
+    box-shadow: none;
+    pointer-events: auto;
     z-index: 100;
   }
 
-  /* 菜单只覆盖画廊/个人介绍头部，不覆盖整页正文 */
+  /* 菜单覆盖完整头像/画廊区域；透明汉堡按钮继续浮在右上角 */
   .nav.nav--active {
     position: fixed;
-    top: 56px;
+    top: 0;
     left: 0;
     right: 0;
     height: var(--mobile-hero-height, 440px);
@@ -1312,10 +1267,10 @@ html.theme--dark .topic-article-item {
     align-content: center;
     justify-content: center;
     gap: 0;
-    padding: 20px 28px;
+    padding: 56px 28px 20px;
     background: #f8f8f6;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
     box-sizing: border-box;
+    pointer-events: auto;
   }
 
   html.theme--light .nav.nav--active {
@@ -1324,7 +1279,6 @@ html.theme--dark .topic-article-item {
 
   html.theme--dark .nav.nav--active {
     background: #152028;
-    border-bottom-color: rgba(255, 255, 255, 0.1);
   }
 
   .nav.nav--active .nav__list {
@@ -1437,7 +1391,7 @@ html.theme--dark .topic-article-item {
   }
 
   .post--single .post__header {
-    padding-bottom: 10px;
+    padding-bottom: 0;
     margin-bottom: 16px;
   }
 }
