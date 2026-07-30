@@ -1,4 +1,5 @@
 <head>
+  <script>try{if(sessionStorage.getItem('evanGallery')==='1'){document.documentElement.classList.add('evan-gallery')}}catch(e){}</script>
   <meta charset="utf-8" />
   <title>
     {{ if (eq .Site.Params.reversepagetitle true) }}
@@ -154,24 +155,6 @@
 
 
   <!-- JavaScript -->
-  {{ $anatoleHeader := resources.Get "js/anatole-header.js" }}
-  {{ $secureHeaderJS := $anatoleHeader |  resources.Minify | resources.Fingerprint }}
-  <script
-    type="text/javascript"
-    src="{{ $secureHeaderJS.RelPermalink }}"
-    integrity="{{ $secureHeaderJS.Data.Integrity }}"
-    crossorigin="anonymous"
-  ></script>
-
-  {{ $animatedJS := resources.Get "js/main-animated.js" | resources.Minify | resources.Fingerprint }}
-  <script
-    type="text/javascript"
-    src="{{ $animatedJS.RelPermalink }}"
-    integrity="{{ $animatedJS.Data.Integrity }}"
-    crossorigin="anonymous"
-    defer
-  ></script>
-
   {{ if not .Site.Params.disableThemeSwitcher }}
     {{ $anatoleThemeSwitcher := resources.Get "js/anatole-theme-switcher.js" }}
     {{ $secureThemeSwitcherJS := $anatoleThemeSwitcher |  resources.Minify | resources.Fingerprint }}

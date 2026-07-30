@@ -1,11 +1,18 @@
 /* ==========================================================
    0. 🅰️ 全局字体设置 (Global Fonts) - 放在最前面
    ========================================================== */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&display=swap');
+/* 全站统一系统黑体栈，不依赖外部字体服务 */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang SC', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+}
 
-/* 应用于全站文字 */
-body, h1, h2, h3, h4, h5, h6, p, a, li, span {
-    font-family: 'Noto Serif', 'Songti SC', 'STSongti-SC-Regular', 'SimSun', 'Times New Roman', serif !important;
+h1, h2, h3, h4, h5, h6, p, a, li, span, blockquote, td, th {
+    font-family: inherit;
+}
+
+/* 代码保持等宽，不被宋体覆盖 */
+code, pre, kbd, samp {
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 }
 
 /* 正文阅读优化 */
@@ -191,74 +198,89 @@ html[data-theme="dark"] {
 
 /* About page */
 .evan-about {
-  --about-ink: #252525;
-  --about-muted: #6f6f6f;
-  --about-soft: #f7f4ef;
-  --about-line: rgba(37, 37, 37, 0.12);
+  --about-ink: #2b2b2b;
+  --about-muted: #757575;
+  --about-card: #ffffff;
+  --about-soft: #f7f5f2;
+  --about-line: rgba(43, 43, 43, 0.1);
   --about-accent: #B9375D;
-  --about-green: #486255;
-  --about-blue: #38546e;
 
   color: var(--about-ink);
   margin-top: 8px;
+}
+
+.theme--dark .evan-about {
+  --about-ink: #e6e3dc;
+  --about-muted: #9aa4ac;
+  --about-card: #1a2731;
+  --about-soft: #1f2d38;
+  --about-line: rgba(230, 227, 220, 0.12);
+  --about-accent: #d7708f;
 }
 
 .evan-about * {
   box-sizing: border-box;
 }
 
+/* ---------- Hero ---------- */
+
 .evan-about__hero {
-  border-bottom: 1px solid var(--about-line);
-  padding: 10px 0 30px;
+  padding: 8px 0 40px;
 }
 
 .evan-about__kicker,
 .evan-about__section-heading p {
-  color: var(--about-accent);
-  font-size: 1.15rem;
-  font-weight: 700;
-  letter-spacing: 0;
+  color: var(--about-muted);
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
   line-height: 1.4;
   margin: 0 0 10px;
-  text-transform: uppercase;
 }
 
 .evan-about__hero h2 {
-  font-size: 2.75rem;
-  line-height: 1.08;
-  margin: 0;
-  max-width: 760px;
-  color: #252525;
+  font-size: 3.2rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0 0 20px;
+  max-width: 720px;
+  color: var(--about-ink);
+  text-wrap: balance;
 }
 
 .evan-about__hero p:not(.evan-about__kicker) {
   color: var(--about-muted);
-  font-size: 1.2rem;
+  font-size: 1.7rem;
   line-height: 1.9;
-  margin: 22px 0 0;
-  max-width: 700px;
+  margin: 0 0 14px;
+  text-wrap: pretty;
 }
 
 .evan-about__hero .evan-about__hero-note {
   color: var(--about-ink);
-  font-size: 1.2rem;
-  margin-top: 14px;
+  font-weight: 600;
 }
+
+/* ---------- Section ---------- */
 
 .evan-about__section {
   border-top: 1px solid var(--about-line);
-  padding: 42px 0 4px;
+  padding: 44px 0 12px;
 }
 
 .evan-about__section-heading {
-  margin-bottom: 22px;
+  margin-bottom: 24px;
 }
 
 .evan-about__section-heading h3 {
-  font-size: 2rem;
-  line-height: 1.25;
+  font-size: 2.2rem;
+  font-weight: 600;
+  line-height: 1.35;
   margin: 0;
+  color: var(--about-ink);
 }
+
+/* ---------- 活动卡片 ---------- */
 
 .evan-about__program-grid {
   display: grid;
@@ -266,63 +288,68 @@ html[data-theme="dark"] {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.evan-about__program {
-  background: #fff;
-  border: 1px solid var(--about-line);
-  border-radius: 8px;
-  padding: 24px;
+.evan-about__program-grid:has(> article:only-child) {
+  grid-template-columns: minmax(0, 1fr);
 }
 
-.evan-about__program--primary {
+.evan-about__program {
   background: var(--about-soft);
+  border: 1px solid var(--about-line);
+  border-radius: 12px;
+  padding: 28px 28px 24px;
 }
 
 .evan-about__program-topline {
-  align-items: center;
+  align-items: baseline;
   display: flex;
   gap: 10px;
   justify-content: space-between;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 
 .evan-about__program-topline span {
   color: var(--about-accent);
-  font-size: 1.3rem;
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
 }
 
 .evan-about__program-topline small {
   color: var(--about-muted);
-  font-size: 0.78rem;
+  font-size: 1.2rem;
+  letter-spacing: 0.08em;
 }
 
 .evan-about__program h4 {
-  font-size: 1.35rem;
-  line-height: 1.35;
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.4;
   margin: 0 0 12px;
+  color: var(--about-ink);
 }
 
 .evan-about__program p,
 .evan-about__business-copy p,
 .evan-about__thread p {
   color: var(--about-muted);
-  font-size: 1.2rem;
-  line-height: 1.85;
+  font-size: 1.6rem;
+  line-height: 1.9;
   margin: 0;
 }
 
 .evan-about__program ul {
   border-top: 1px solid var(--about-line);
   list-style: none;
-  margin: 20px 0 0;
-  padding: 16px 0 0;
+  margin: 18px 0 0;
+  padding: 14px 0 0;
 }
 
 .evan-about__program li {
   color: var(--about-ink);
-  line-height: 1.65;
+  font-size: 1.5rem;
+  line-height: 1.75;
   margin: 8px 0;
-  padding-left: 18px;
+  padding-left: 16px;
   position: relative;
 }
 
@@ -333,59 +360,53 @@ html[data-theme="dark"] {
   height: 5px;
   left: 0;
   position: absolute;
-  top: 0.82em;
+  top: 0.8em;
   width: 5px;
 }
 
+/* ---------- 企业服务 ---------- */
+
 .evan-about__business {
   display: grid;
-  gap: 24px;
-  grid-template-columns: minmax(0, 1fr) minmax(240px, 0.72fr);
+  gap: 30px;
+  grid-template-columns: 1fr;
 }
 
 .evan-about__business-copy {
-  background: #fbfbfb;
-  border: 1px solid var(--about-line);
-  border-radius: 8px;
   display: grid;
-  gap: 18px;
-  padding: 26px;
+  gap: 14px;
 }
 
 .evan-about__business-list {
   display: grid;
-  gap: 12px;
+  gap: 24px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-content: start;
 }
 
 .evan-about__business-list div {
-  border-left: 4px solid var(--about-blue);
-  background: #f4f7f8;
-  padding: 18px 20px;
-}
-
-.evan-about__business-list div:nth-child(2) {
-  border-left-color: var(--about-green);
-}
-
-.evan-about__business-list div:nth-child(3) {
-  border-left-color: var(--about-accent);
+  border-top: 2px solid var(--about-line);
+  padding: 16px 0 0;
 }
 
 .evan-about__business-list span,
 .evan-about__thread span {
   display: block;
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: 1.65rem;
+  font-weight: 600;
   line-height: 1.4;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
+  color: var(--about-ink);
 }
 
 .evan-about__business-list p {
   color: var(--about-muted);
-  font-size: 1.2rem;
-  line-height: 1.7;
+  font-size: 1.5rem;
+  line-height: 1.75;
   margin: 0;
 }
+
+/* ---------- 内容脉络 ---------- */
 
 .evan-about__section--quiet {
   padding-bottom: 20px;
@@ -393,134 +414,39 @@ html[data-theme="dark"] {
 
 .evan-about__threads {
   display: grid;
-  gap: 14px;
+  gap: 0;
+  border-top: 1px solid var(--about-line);
 }
 
 .evan-about__thread {
   border-bottom: 1px solid var(--about-line);
   color: var(--about-ink);
-  display: block;
+  display: grid;
+  gap: 4px;
+  grid-template-columns: 140px minmax(0, 1fr);
   padding: 18px 0;
+  align-items: baseline;
 }
 
-.theme--dark .evan-about,
-.theme--dark .evan-about {
-  --about-ink: #e8e4dc !important;
-  --about-muted: #c0b8aa !important;
-  --about-soft: #242321 !important;
-  --about-line: rgba(232, 228, 220, 0.14) !important;
-  --about-accent: #d76b8a !important;
-  --about-green: #82a08e !important;
-  --about-blue: #7f9bb4 !important;
-  color: var(--about-ink) !important;
-  background-color: var(--about-soft) !important;
+.evan-about__thread span {
+  margin-bottom: 0;
 }
 
-.theme--dark .evan-about__program,
-.theme--dark .evan-about__program,
-.theme--dark .evan-about__business-copy,
-.theme--dark .evan-about__business-copy {
-  background: #1b1b1a !important;
-}
-
-.theme--dark .evan-about__program--primary,
-.theme--dark .evan-about__program--primary,
-.theme--dark .evan-about__business-list div,
-.theme--dark .evan-about__business-list div {
-  background: #242321 !important;
-}
-
-.theme--dark .evan-about__hero h2 {
-  color: #e8e4dc !important;
-}
-
-.theme--dark .evan-about__hero p:not(.evan-about__kicker) {
-  color: #c0b8aa !important;
-}
-
-.theme--dark .evan-about__hero .evan-about__hero-note {
-  color: #e8e4dc !important;
-}
-
-.theme--dark .evan-about__section-heading h3 {
-  color: #e8e4dc !important;
-}
-
-.theme--dark .evan-about__kicker,
-.theme--dark .evan-about__section-heading > p {
-  color: #d76b8a !important;
-}
-
-.theme--dark .evan-about__thread > span {
-  color: #e8e4dc !important;
-}
-
-.theme--dark .evan-about__thread > p {
-  color: #c0b8aa !important;
-}
-
-.theme--dark .evan-about__hero p:not(.evan-about__kicker),
-.theme--dark .evan-about__hero p:not(.evan-about__kicker) {
-  color: #c0b8aa !important;
-}
-
-.theme--dark .evan-about__hero .evan-about__hero-note,
-.theme--dark .evan-about__hero .evan-about__hero-note {
-  color: #e8e4dc !important;
-}
-
-.theme--dark .evan-about__section-heading h3,
-.theme--dark .evan-about__section-heading h3 {
-  color: #e8e4dc !important;
-}
-
-.theme--dark .evan-about__kicker,
-.theme--dark .evan-about__section-heading p,
-.theme--dark .evan-about__kicker,
-.theme--dark .evan-about__section-heading p {
-  color: #d76b8a !important;
-}
-
-.theme--dark .evan-about__business-copy,
-.theme--dark .evan-about__business-copy {
-  background: #1b1b1a !important;
-  border-color: rgba(232, 228, 220, 0.14) !important;
-}
-
-.theme--dark .evan-about__business-list div,
-.theme--dark .evan-about__business-list div {
-  border-left-color: #7f9bb4 !important;
-}
-
-.theme--dark .evan-about__business-list div:nth-child(2),
-.theme--dark .evan-about__business-list div:nth-child(2) {
-  border-left-color: #82a08e !important;
-}
-
-.theme--dark .evan-about__business-list div:nth-child(3),
-.theme--dark .evan-about__business-list div:nth-child(3) {
-  border-left-color: #d76b8a !important;
-}
-
-.theme--dark .evan-about__thread,
-.theme--dark .evan-about__thread {
-  border-bottom-color: rgba(232, 228, 220, 0.14) !important;
-}
-
-.theme--dark .evan-about__thread span,
-.theme--dark .evan-about__thread span {
-  color: #e8e4dc !important;
-}
-
-.theme--dark .evan-about__thread p,
-.theme--dark .evan-about__thread p {
-  color: #c0b8aa !important;
-}
+/* ---------- 移动端 ---------- */
 
 @media (max-width: 900px) {
   .evan-about__program-grid,
-  .evan-about__business {
+  .evan-about__business-list {
     grid-template-columns: 1fr;
+  }
+
+  .evan-about__business-list {
+    gap: 0;
+  }
+
+  .evan-about__business-list div {
+    padding: 14px 0;
+    border-top-width: 1px;
   }
 }
 
@@ -530,23 +456,900 @@ html[data-theme="dark"] {
   }
 
   .evan-about__hero {
-    padding-top: 2px;
+    padding: 2px 0 30px;
   }
 
   .evan-about__hero h2 {
-    font-size: 2.05rem;
+    font-size: 2.5rem;
+    margin-bottom: 14px;
   }
 
-  .evan-about__section-heading h3 {
+  .evan-about__hero p:not(.evan-about__kicker) {
     font-size: 1.55rem;
   }
 
-  .evan-about__hero .evan-about__hero-note {
-    font-size: 1.08rem;
+  .evan-about__section {
+    padding: 34px 0 8px;
   }
 
-  .evan-about__program,
-  .evan-about__business-copy {
-    padding: 20px;
+  .evan-about__section-heading {
+    margin-bottom: 20px;
+  }
+
+  .evan-about__section-heading h3 {
+    font-size: 1.9rem;
+  }
+
+  .evan-about__program {
+    padding: 22px 20px 18px;
+  }
+
+  .evan-about__program-grid {
+    gap: 14px;
+  }
+
+  .evan-about__thread {
+    grid-template-columns: 1fr;
+    gap: 2px;
+    padding: 16px 0;
+  }
+}
+
+/* ==========================================================
+   7. 📖 中文长文阅读体验 (Reading Experience)
+   ========================================================== */
+
+/* Ulysses 式阅读：柔和墨色、从容行距、安静标题、标点悬挂 */
+.post__content {
+  --reading-ink: #34373c;
+  --reading-muted: #7a7a7a;
+  --reading-accent: #B9375D;
+
+  font-size: 17px;
+  line-height: 1.8;
+  letter-spacing: 0.01em;
+  color: var(--reading-ink);
+  hanging-punctuation: first allow-end;
+  text-wrap: pretty;
+
+  > p {
+    margin: 0 0 1.4em;
+    line-height: 1.8;
+  }
+
+  > ul, > ol {
+    margin: 0 0 1.4em;
+    padding-left: 1.4em;
+  }
+
+  > ul > li,
+  > ol > li {
+    line-height: 1.8;
+    margin-bottom: 0.35em;
+  }
+
+  > h2, > h3, > h4 {
+    font-weight: 600;
+    line-height: 1.5;
+    margin: 2.4em 0 1em;
+    color: var(--reading-ink);
+    text-wrap: balance;
+  }
+
+  > h2 { font-size: 1.4em; }
+  > h3 { font-size: 1.18em; }
+  > h4 { font-size: 1.05em; }
+
+  strong {
+    font-weight: 600;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: rgba(185, 55, 93, 0.45);
+    text-underline-offset: 4px;
+    transition: text-decoration-color 0.2s ease;
+  }
+
+  a:hover {
+    text-decoration-color: var(--reading-accent);
+  }
+
+  > blockquote {
+    margin: 1.8em 0;
+    padding: 0.1em 1.4em;
+    border-left: 2px solid #d8cfc0;
+    color: var(--reading-muted);
+    font-size: 0.97em;
+  }
+
+  > hr {
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    margin: 2.6em auto;
+    width: 42%;
+  }
+
+  img {
+    border-radius: 8px;
+    display: block;
+    margin: 1.8em auto;
+  }
+}
+
+.theme--dark .post__content {
+  --reading-ink: #c9ced4;
+  --reading-muted: #8b949c;
+
+  a {
+    text-decoration-color: rgba(215, 112, 143, 0.5);
+  }
+
+  > blockquote {
+    border-left-color: #3d4550;
+  }
+
+  > hr {
+    border-top-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* ==========================================================
+   8. 🧭 文章目录 (Table of Contents)
+   ========================================================== */
+
+.post__content > h3:first-child {
+  margin-top: 0;
+  font-size: 1.05em;
+}
+
+/* 隐形目录：无底色无边框，只留一条细分隔线 */
+#TableOfContents {
+  background: transparent;
+  border-left: 2px solid rgba(0, 0, 0, 0.12);
+  padding: 2px 0 2px 18px;
+  margin: 0 0 2em;
+  font-size: 15px;
+}
+
+#TableOfContents ul {
+  line-height: 1.9;
+}
+
+#TableOfContents li a {
+  color: var(--reading-muted, #7a7a7a);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+#TableOfContents li a:hover {
+  color: var(--reading-ink, #34373c);
+}
+
+.theme--dark #TableOfContents {
+  border-left-color: rgba(255, 255, 255, 0.14);
+}
+
+.theme--dark .post__content > blockquote {
+  color: #a5a5ad;
+}
+
+/* ==========================================================
+   10. 📱 手机端阅读适配 (Mobile Reading)
+   ========================================================== */
+
+@media (max-width: 768px) {
+  .post__content {
+    font-size: 16px;
+    line-height: 1.78;
+
+    > h2 { font-size: 1.35em; }
+    > h3 { font-size: 1.16em; }
+
+    > h2, > h3, > h4 {
+      margin: 2em 0 0.9em;
+    }
+  }
+
+  #TableOfContents {
+    padding: 2px 0 2px 14px;
+    font-size: 14px;
+    margin-bottom: 1.6em;
+  }
+
+  #TableOfContents ul {
+    line-height: 1.8;
+  }
+
+  .post-cta {
+    padding: 14px 16px;
+    font-size: 14.5px;
+    margin-top: 2em;
+  }
+}
+
+/* ==========================================================
+   11. 🖼️ 侧栏翻页画廊 (Sidebar Flip Gallery)
+   ========================================================== */
+
+/* 会话内已是画廊态：首帧前隐藏侧栏，由 JS 恢复后移除，避免头像页闪跳 */
+html.evan-gallery .sidebar {
+  visibility: hidden;
+}
+
+.sidebar {
+  perspective: 1600px;
+}
+
+.sidebar__flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  transform-style: preserve-3d;
+  transition: transform 0.72s cubic-bezier(0.35, 0.1, 0.2, 1);
+}
+
+.sidebar.is-flipped .sidebar__flip-inner {
+  transform: rotateY(180deg);
+}
+
+.sidebar__face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.sidebar__face--front {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar__face--front .sidebar__content {
+  flex-grow: 1;
+}
+
+.sidebar__face--back {
+  position: absolute;
+  inset: 0;
+  transform: rotateY(180deg);
+  display: grid;
+  place-items: center;
+  background: #f2efe9;
+  overflow: hidden;
+}
+
+.theme--dark .sidebar__face--back {
+  background: #101a22;
+}
+
+.sidebar__gallery-img {
+  max-width: 48%;
+  max-height: 48%;
+  width: auto;
+  height: auto;
+  margin: 0;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 24px 60px rgba(20, 20, 20, 0.3);
+  opacity: 0;
+  transform: scale(0.96);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.sidebar.is-flipped .sidebar__gallery-img {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* 轮播换图时的温和淡出 */
+.sidebar.is-flipped .sidebar__gallery-img.is-fading {
+  opacity: 0;
+  transform: scale(0.985);
+}
+
+/* 桌面端侧栏是 fixed 满高，翻转容器必须撑满 */
+@media (min-width: 961px) {
+  .sidebar {
+    display: block;
+  }
+
+  .sidebar__flip-inner {
+    height: 100%;
+  }
+}
+
+/* 手机端侧栏在顶部，区域较矮，图片再收敛一点 */
+@media (max-width: 960px) {
+  .sidebar__gallery-img {
+    max-width: 42%;
+    max-height: 42vw;
+  }
+}
+
+.sidebar.no-anim .sidebar__flip-inner,
+.sidebar.no-anim .sidebar__gallery-img {
+  transition: none;
+}
+
+/* ==========================================================
+   12. 🏷️ 文章信息行分隔 + 相关文章轻量化
+   ========================================================== */
+
+/* 信息行与正文拉开：下方留白 + 细分隔线 */
+.post--single .post__header {
+  padding-bottom: 0.8em;
+  margin-bottom: 2.2em;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.theme--dark .post--single .post__header {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.post--single .post__meta {
+  opacity: 0.72;
+  font-size: 0.85em;
+  margin: 0.8em 0 0;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.post__meta-summary,
+.post__meta-tag {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.8rem 1.25rem;
+}
+
+.post__meta-tag a {
+  color: var(--reading-muted);
+  text-decoration: none;
+}
+
+.post__meta-tag a:hover {
+  color: var(--reading-accent);
+}
+
+/* 相关文章：安静列表，和隐形目录同一语言 */
+.post-related {
+  margin-top: 3em;
+  padding-top: 1.4em;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.theme--dark .post-related {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.post-related__heading {
+  color: var(--reading-muted, #7a7a7a);
+  font-size: 0.85em;
+  letter-spacing: 0.08em;
+  margin: 0 0 0.8em;
+}
+
+.post-related ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-related li {
+  line-height: 2;
+  margin: 0;
+}
+
+.post-related li a {
+  color: var(--reading-muted, #7a7a7a);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.post-related li a:hover {
+  color: var(--reading-ink, #34373c);
+  text-decoration: none;
+}
+
+/* 手机端同步 */
+@media (max-width: 768px) {
+  .post--single .post__header {
+    padding-bottom: 0.7em;
+    margin-bottom: 1.6em;
+  }
+}
+
+/* ==========================================================
+   13. 🏞️ 首页瀑布流画廊 (Home Masonry Gallery)
+   ========================================================== */
+
+/* 阅读色系全局默认值（.post__content 内另有局部定义，优先级更高） */
+body {
+  --reading-ink: #34373c;
+  --reading-muted: #7a7a7a;
+  --reading-accent: #B9375D;
+}
+
+html.theme--dark body {
+  --reading-ink: #c9ced4;
+  --reading-muted: #8b949c;
+}
+
+.gallery-grid {
+  columns: 2;
+  column-gap: 22px;
+  margin: 8px 30px 0;
+}
+
+.gallery-card {
+  display: block;
+  break-inside: avoid;
+  margin-bottom: 22px;
+  border-radius: 8px;
+  overflow: hidden;
+  text-decoration: none;
+  background: #f5f3ef;
+  box-shadow: 0 2px 10px rgba(20, 20, 20, 0.06);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.gallery-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(20, 20, 20, 0.14);
+}
+
+.gallery-card__image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.gallery-card__body {
+  display: block;
+  padding: 12px 16px 14px;
+}
+
+.gallery-card__title {
+  display: block;
+  color: var(--reading-ink, #34373c);
+  font-size: 15.5px;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.gallery-card__date {
+  display: block;
+  color: var(--reading-muted, #7a7a7a);
+  font-size: 12.5px;
+  margin-top: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.theme--dark .gallery-card {
+  background: #1a2731;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.theme--dark .gallery-card:hover {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+}
+
+@media (max-width: 768px) {
+  .gallery-grid {
+    columns: 1;
+    margin: 8px 16px 0;
+  }
+
+  .gallery-card__title {
+    font-size: 15px;
+  }
+}
+
+/* ==========================================================
+   14. 🗂️ 归档/文章列表页精修 (Archive Polish)
+   ========================================================== */
+
+.archive {
+  margin: 30px;
+}
+
+.archive__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.archive__heading {
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  line-height: 1.4;
+  margin: 0 0 18px;
+  color: var(--reading-muted);
+}
+
+.archive__subheading {
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  margin: 26px 0 6px;
+  color: var(--reading-muted);
+  border-left: 2px solid var(--reading-accent);
+  padding-left: 8px;
+  line-height: 1.4;
+}
+
+.archive__list-item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.theme--dark .archive__list-item {
+  border-bottom-color: rgba(255, 255, 255, 0.07);
+}
+
+.archive__list-title {
+  color: var(--reading-ink);
+  text-decoration: none;
+  line-height: 1.7;
+}
+
+.archive__list-title:hover {
+  color: var(--reading-accent);
+}
+
+.archive__list-date {
+  color: var(--reading-muted);
+  font-size: 0.9em;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+/* ==========================================================
+   15. 🔖 话题索引页 (Topics / Tags)
+   ========================================================== */
+
+/* 统一框距：与 .post 的 30px 对齐 */
+.topics-page {
+  margin: 30px;
+}
+
+.topics-page__eyebrow {
+  color: var(--reading-muted);
+  font-size: 1.2rem;
+  letter-spacing: 0.14em;
+  margin: 0 0 10px;
+}
+
+.topics-page__title {
+  font-size: 2.6rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0 0 8px;
+  color: var(--reading-ink);
+}
+
+.topics-page__intro {
+  color: var(--reading-muted);
+  font-size: 1.35rem;
+  margin: 0 0 30px;
+}
+
+.topics-page__empty {
+  color: var(--reading-muted);
+  font-size: 1.35rem;
+}
+
+/* ---- 索引页：话题分块 ---- */
+
+.topic-block {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 20px 0 22px;
+}
+
+html.theme--dark .topic-block {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.topic-block__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 6px;
+}
+
+.topic-block__name {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.topic-block__name a {
+  color: var(--reading-ink);
+  text-decoration: none;
+}
+
+.topic-block__name a:hover {
+  color: var(--reading-accent);
+}
+
+.topic-block__count {
+  color: var(--reading-muted);
+  font-size: 0.72em;
+  font-weight: 400;
+  margin-left: 8px;
+}
+
+.topic-block__more {
+  color: var(--reading-muted);
+  font-size: 1.15rem;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.topic-block__more:hover {
+  color: var(--reading-accent);
+}
+
+.topic-block__articles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.topic-block__article {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+  line-height: 2;
+}
+
+.topic-block__article a {
+  color: var(--reading-muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.topic-block__article a:hover {
+  color: var(--reading-ink);
+}
+
+.topic-block__date {
+  color: var(--reading-muted);
+  font-size: 1.1rem;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+  opacity: 0.75;
+}
+
+/* ---- 单话题页：文章行 ---- */
+
+.topic-article-list {
+  list-style: none;
+  margin: 22px 0 0;
+  padding: 0;
+}
+
+.topic-article-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 18px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+html.theme--dark .topic-article-item {
+  border-bottom-color: rgba(255, 255, 255, 0.07);
+}
+
+.topic-article-link {
+  color: var(--reading-ink);
+  font-size: 1.5rem;
+  line-height: 1.7;
+  text-decoration: none;
+}
+
+.topic-article-link:hover {
+  color: var(--reading-accent);
+}
+
+.topic-article-date {
+  color: var(--reading-muted);
+  font-size: 1.2rem;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.topics-page__back {
+  margin-top: 30px;
+}
+
+.topics-page__back a {
+  color: var(--reading-muted);
+  font-size: 1.25rem;
+  text-decoration: none;
+}
+
+.topics-page__back a:hover {
+  color: var(--reading-accent);
+}
+
+@media (max-width: 768px) {
+  .archive {
+    margin: 20px 16px;
+  }
+
+  .topics-page {
+    margin: 20px 16px;
+  }
+
+  .topics-page__title {
+    font-size: 2.1rem;
+  }
+
+  .topic-block__article {
+    line-height: 1.9;
+  }
+}
+
+/* ==========================================================
+   16. 📱 手机端汉堡菜单遮罩与层级
+   ========================================================== */
+
+/* 桌面端保持原布局，只提高层级 */
+.header {
+  z-index: 50;
+}
+
+.navbar-burger {
+  z-index: 60;
+}
+
+@media (max-width: 960px) {
+  :root {
+    --mobile-hero-height: clamp(340px, 76vw, 400px);
+  }
+
+  /* 56px 完整头部行：初始位于页面顶部，滚动后持续固定 */
+  .wrapper {
+    padding-top: 56px;
+  }
+
+  /* 清掉主题遗留的 40px + 16px 空白，并固定画廊/介绍区域高度 */
+  .wrapper__sidebar {
+    height: var(--mobile-hero-height);
+    padding: 0;
+  }
+
+  .sidebar {
+    height: 100%;
+    margin-top: 0;
+  }
+
+  .sidebar__flip-inner,
+  .sidebar__face--front {
+    height: 100%;
+  }
+
+  .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 56px;
+    background: #f8f8f6;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    z-index: 80;
+  }
+
+  html.theme--dark .header {
+    background: #152028;
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .header > div {
+    height: 56px;
+  }
+
+  .navbar-burger {
+    position: absolute;
+    top: 7px;
+    right: 12px;
+    width: 42px;
+    height: 42px;
+    margin: 0;
+    padding: 6px;
+    background: transparent;
+    border-radius: 0;
+    z-index: 100;
+  }
+
+  /* 菜单只覆盖画廊/个人介绍头部，不覆盖整页正文 */
+  .nav.nav--active {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    right: 0;
+    height: var(--mobile-hero-height, 440px);
+    z-index: 90;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f8f6;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  html.theme--light .nav.nav--active {
+    background: #f8f8f6;
+  }
+
+  html.theme--dark .nav.nav--active {
+    background: #152028;
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .nav.nav--active .nav__list {
+    width: min(82vw, 360px);
+    background: transparent;
+  }
+
+  /* 文章标题区：标题 / 日期与阅读时间 / 话题 */
+  .post--single {
+    margin: 18px 18px 22px;
+  }
+
+  .post--single .post__title {
+    color: var(--reading-ink);
+    font-size: clamp(1.95rem, 4.8vw, 2.15rem);
+    font-weight: 600;
+    line-height: 1.32;
+    margin: 0 0 0.65rem;
+    text-wrap: balance;
+  }
+
+  .post--single .post__meta {
+    display: block;
+    margin-top: 0;
+    opacity: 1;
+    font-size: 1.2rem;
+  }
+
+  .post--single .post__meta-summary {
+    color: var(--reading-muted);
+    gap: 0.35rem;
+    line-height: 1.5;
+  }
+
+  .post--single .post__meta-summary .post__meta-item {
+    margin: 0;
+  }
+
+  .post--single .post__meta-tag {
+    gap: 0.5rem 1.1rem;
+    margin-top: 0.45rem;
+    line-height: 1.5;
+    width: 100%;
+    flex-basis: 100%;
+  }
+
+  .post--single .post__meta-tag a {
+    color: var(--reading-accent);
+    opacity: 0.85;
+  }
+
+  .post--single .post__header {
+    padding-bottom: 1rem;
+    margin-bottom: 1.8rem;
   }
 }

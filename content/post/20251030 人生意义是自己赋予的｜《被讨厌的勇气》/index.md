@@ -8,7 +8,8 @@ image: "cover.jpg"
 thumbnail: "cover.jpg"
 categories: 
 - 读书笔记
-tags: 
+toc: true
+tags:
 - 阿德勒
 - 个体心理学
 ---

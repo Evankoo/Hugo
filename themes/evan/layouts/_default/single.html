@@ -1,20 +1,8 @@
 {{ define "main" }}
-<div class="post animated fadeInDown">
+<div class="post post--single animated fadeInDown">
 
-  {{/* 缩略图：优先页面资源 cover*，否则用 params.image 或 params.thumbnail */}}
-  {{ $res := .Resources.GetMatch "cover*" }}
-  {{ $thumbURL := "" }}
-  {{ if $res }}
-    {{ $thumbURL = $res.RelPermalink }}
-  {{ else if .Params.image }}
-    {{ $thumbURL = (.Params.image | relURL) }}
-  {{ else if .Params.thumbnail }}
-    {{ $thumbURL = (.Params.thumbnail | relURL) }}
-  {{ end }}
-
-  {{/* 文章头部：标题 + 缩略图 + Meta */}}
+  {{/* 文章头部：标题 + Meta（封面仅用于首页画廊，详情页不重复展示） */}}
   <div class="post__header">
-    {{/* 标题 */}}
     <h1 class="post__title">
       {{ if eq .Site.Params.disableTitleCapitalization true }}
         {{ .Title }}
@@ -23,57 +11,27 @@
       {{ end }}
     </h1>
 
-    {{/* 缩略图 */}}
-    {{ if $thumbURL }}
-    <div class="post__thumbnail-wrapper">
-      <img class="post__thumbnail" src="{{ $thumbURL }}" alt="{{ .Title }}" />
-    </div>
-    {{ end }}
-
     {{/* Meta 信息 */}}
     {{ if or (eq .Type "post") (eq .Type .Site.Params.postSectionName) }}
-    <ul class="post__meta">
-      <!-- 发布日期 -->
-      <li class="post__meta-item">
-        <em class="fas fa-calendar-day post__meta-icon"></em>
-        <span class="post__meta-text">
-          {{ $fmt := cond (isset .Site.Params "singleDateFormat") .Site.Params.singleDateFormat "Mon, Jan 2, 2006" }}
-          {{ $t := .Date }}
-          {{ if .Site.Params.localizedDates }}
-            {{ time.Format $fmt $t }}
-          {{ else }}
-            {{ $t.Format $fmt }}
-          {{ end }}
-        </span>
-      </li>
+    <div class="post__meta">
+      <div class="post__meta-summary">
+      <span class="post__meta-item">
+        <span class="post__meta-text">{{ .Date.Format "2006-01-02" }}</span>
+      </span>
+      <span class="post__meta-separator" aria-hidden="true">·</span>
+      <span class="post__meta-item">
+        <span class="post__meta-text">阅读时间 {{ .ReadingTime }} 分钟</span>
+      </span>
+      </div>
 
-      <!-- 阅读时间 -->
-      {{ $wc := countwords .Content }}
-      {{ $rt := div $wc 265 }}
-      {{ if lt $rt 1 }}{{ $rt = 1 }}{{ end }}
-      <li class="post__meta-item">
-        <em class="fas fa-stopwatch post__meta-icon"></em>
-        <span class="post__meta-text">阅读时间 {{ $rt }} 分钟</span>
-      </li>
-
-      <!-- 分类 -->
-      {{ with .Params.Categories }}
-      <li class="post__meta-item post__meta-category">
-        {{ range . }}
-          <a href="{{ "/categories/" | relURL }}{{ . | urlize }}">{{ . }}</a>
-        {{ end }}
-      </li>
-      {{ end }}
-
-      <!-- 标签 -->
       {{ with .Params.Tags }}
-      <li class="post__meta-item post__meta-tag">
+      <div class="post__meta-tag">
         {{ range . }}
           <a href="{{ "/tags/" | relURL }}{{ . | urlize }}">#{{ . }}</a>
         {{ end }}
-      </li>
+      </div>
       {{ end }}
-    </ul>
+    </div>
     {{ end }}
   </div>
 
@@ -81,7 +39,8 @@
   <div class="post__content">
     {{- partial "expirationnote.html" . -}}
 
-    {{- if eq .Params.toc true -}}
+    {{- $tocHeadings := findRE "<h[2-4][ >]" .Content -}}
+    {{- if and (eq .Params.toc true) (ge (len $tocHeadings) 2) -}}
       {{- partial "toc.html" . -}}
     {{- end -}}
 
@@ -104,27 +63,6 @@
     {{- end -}}
   </div>
 
-  {{/* Footer 分类/标签 */}}
-  <div class="post__footer">
-    {{ with .Page.Params.Categories }}
-      {{ partial "taxonomy/categories.html" . }}
-    {{ end }}
-
-    {{ with .Page.Params.Tags }}
-      {{ partial "taxonomy/tags.html" . }}
-    {{ end }}
-  </div>
-
-  {{/* 评论 */}}
-  {{ if and (or (eq .Type "post") (eq .Type .Site.Params.postSectionName)) (ne .Site.Params.disableComments true) }}
-  <div id="comment">
-    <h2>{{ i18n "comments" }}</h2>
-    {{ template "_internal/disqus.html" . }}
-  </div>
-  {{ end }}
-
 </div>
 
-<!-- 分享按钮 -->
-{{ partial "share-button.html" . }}
 {{ end }}

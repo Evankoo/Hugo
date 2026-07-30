@@ -8,6 +8,7 @@ image: "cover-53d8dfef-da8b-425a-a5be-2dc5edf38d63.jpg"
 thumbnail: "cover-53d8dfef-da8b-425a-a5be-2dc5edf38d63.jpg"
 categories:
 - 读书笔记
+toc: true
 tags:
 - 个人成长
 - 古典

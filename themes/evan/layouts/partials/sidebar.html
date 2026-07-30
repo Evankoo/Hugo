@@ -4,44 +4,66 @@
   {{ else }}
     animated fadeInDown
   {{ end }}"
+  id="sidebar"
 >
-  <div class="sidebar__content">
-    <div class="sidebar__introduction">
-      <img
-        class="sidebar__introduction-profileimage"
-        src="{{ .Site.Params.profilePicture | relURL }}"
-        alt="profile picture"
-      />
-      {{ if .IsHome }}
-        <div class="sidebar__introduction-title">
-          <h1>
-            <a href="{{ .Site.BaseURL | relLangURL }}">{{ .Site.Params.Title }}</a>
-          </h1>
+  <div class="sidebar__flip-inner">
+    <div class="sidebar__face sidebar__face--front">
+      <div class="sidebar__content">
+        <div class="sidebar__introduction">
+          <img
+            class="sidebar__introduction-profileimage"
+            src="{{ .Site.Params.profilePicture | relURL }}"
+            alt="profile picture"
+          />
+          {{ if .IsHome }}
+            <div class="sidebar__introduction-title">
+              <h1>
+                <a href="{{ .Site.BaseURL | relLangURL }}">{{ .Site.Params.Title }}</a>
+              </h1>
+            </div>
+          {{ else }}
+            <div class="sidebar__introduction-title">
+              <a href="{{ .Site.BaseURL | relLangURL }}">{{ .Site.Params.Title }}</a>
+            </div>
+          {{ end }}
+          <div class="sidebar__introduction-description">
+            <p>{{ replace .Site.Params.description "\n" "<br />" | safeHTML }}</p>
+          </div>
         </div>
-      {{ else }}
-        <div class="sidebar__introduction-title">
-          <a href="{{ .Site.BaseURL | relLangURL }}">{{ .Site.Params.Title }}</a>
-        </div>
-      {{ end }}
-      <div class="sidebar__introduction-description">
-        <p>{{ replace .Site.Params.description "\n" "<br />" | safeHTML }}</p>
+        <ul class="sidebar__list">
+          {{ range $item := .Site.Params.socialIcons }}
+            <li class="sidebar__list-item">
+              <a
+                href="{{ $item.url }}"
+                target="_blank"
+                rel="noopener me"
+                aria-label="{{ $item.title }}"
+                title="{{ $item.title }}"
+              >
+                <i class="{{ $item.icon }} fa-2x" aria-hidden="true"></i>
+              </a>
+            </li>
+          {{ end }}
+        </ul>
       </div>
+      {{- partial "footer.html" (dict "context" . "footerClassModifier" "sidebar") -}}
     </div>
-    <ul class="sidebar__list">
-      {{ range $item := .Site.Params.socialIcons }}
-        <li class="sidebar__list-item">
-          <a
-            href="{{ $item.url }}"
-            target="_blank"
-            rel="noopener me"
-            aria-label="{{ $item.title }}"
-            title="{{ $item.title }}"
-          >
-            <i class="{{ $item.icon }} fa-2x" aria-hidden="true"></i>
-          </a>
-        </li>
-      {{ end }}
-    </ul>
+    <div class="sidebar__face sidebar__face--back" role="button" aria-label="返回个人介绍" title="点击返回">
+      <img class="sidebar__gallery-img" src="" alt="文章封面" />
+    </div>
   </div>
-  {{- partial "footer.html" (dict "context" . "footerClassModifier" "sidebar") -}}
 </div>
+<script>
+  window.EVAN_COVERS = [
+    {{- $covers := slice -}}
+    {{- range where .Site.RegularPages "Type" "post" -}}
+      {{- with .Resources.GetMatch "cover*" -}}
+        {{- $covers = $covers | append .RelPermalink -}}
+      {{- end -}}
+    {{- end -}}
+    {{- range $i, $c := $covers -}}
+      {{- if $i }}, {{ end -}}
+      {{- printf "%q" $c | safeJS -}}
+    {{- end -}}
+  ];
+</script>

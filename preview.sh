@@ -26,4 +26,5 @@ exec hugo server \
   --port "${PREVIEW_PORT}" \
   --baseURL "http://${PREVIEW_HOST}:${PREVIEW_PORT}/" \
   --disableFastRender \
+  --renderToMemory \
   --noBuildLock

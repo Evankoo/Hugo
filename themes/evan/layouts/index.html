@@ -1,110 +1,28 @@
 {{ define "main" }}
-  <div
-    class="post {{ with .Site.Params.doNotLoadAnimations }}
-      .
-    {{ else }}
-      animated fadeInDown
-    {{ end }}"
-  >
-    <div class="post__content">
-      {{ .Content }}
-    </div>
-
-    <!-- (Optional) Home
-          -- on top of `mainSections` content (aka posts) ;
-          -- as declared in content/_index.md
-
-          One can set `mainSections = [""]` and have the content/_index.md specified here
-      -->
-  </div>
-
-  {{ if .Params.mainSectionsTitle }}
-    <div
-      class="post {{ with .Site.Params.doNotLoadAnimations }}
-        .
-      {{ else }}
-        animated fadeInDown
-      {{ end }}"
-    >
-      <div class="post__content">
-        <h2>{{ .Params.mainSectionsTitle }}</h2>
-      </div>
-    </div>
-  {{ end }}
-
   {{ $paginator := .Paginate (where .Site.RegularPages "Type" "in" .Site.Params.mainSections) }}
-  {{ range $paginator.Pages }}
-    <div
-      class="post {{ with .Site.Params.doNotLoadAnimations }}
-        .
-      {{ else }}
-        animated fadeInDown
-      {{ end }}"
-    >
 
-{{ $thumb := .Resources.GetMatch "cover*" }}
-{{ if not $thumb }}
-  {{ $thumb = .Params.image }}
-{{ end }}
-
-{{ if $thumb }}
-  <div class="post__thumbnail-wrapper">
-      <img class="post__thumbnail" src="{{ $thumb.RelPermalink }}" alt="{{ .Title }}" loading="lazy" />
+  <div class="gallery-grid">
+    {{ range $paginator.Pages }}
+      {{ $thumb := .Resources.GetMatch "cover*" }}
+      <a class="gallery-card" href="{{ .RelPermalink }}">
+        {{ if $thumb }}
+          <img
+            class="gallery-card__image"
+            src="{{ $thumb.RelPermalink }}"
+            alt="{{ .Title }}"
+            width="{{ $thumb.Width }}"
+            height="{{ $thumb.Height }}"
+            loading="lazy"
+          />
+        {{ end }}
+        <span class="gallery-card__body">
+          <span class="gallery-card__title">{{ .Title }}</span>
+          <span class="gallery-card__date">{{ .Date.Format "2006-01-02" }}</span>
+        </span>
+      </a>
+    {{ end }}
   </div>
-{{ end }}
 
-      <div class="post__content">
-        {{ if (eq .Site.Params.disableTitleCapitalization true) }}
-          <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
-        {{ else }}
-          <h3><a href="{{ .RelPermalink }}">{{ upper .Title }}</a></h3>
-        {{ end }}
-
-        <!-- 改成一行显示 -->
-        <p class="post-line">
-          {{ if .Params.summary }}
-            {{ .Params.summary | safeHTML | plainify | truncate 100 }}
-          {{ else }}
-            {{ .Content | safeHTML | plainify | truncate 100 }}
-          {{ end }}
-        </p>
-
-        <!-- add read more -->
-        {{- if and (.Truncated) (.Site.Params.readMore) -}}
-          <a href="{{ .RelPermalink }}">{{ i18n "read_more" }}</a>
-        {{- end -}}
-      </div>
-
-      <!--  -->
-      <div class="post__footer">
-        <em class="fas fa-calendar-day"></em>
-        <span class="post__footer-date"
-          >{{ if isset .Site.Params "indexdateformat" }}
-            {{ if .Site.Params.localizedDates }}
-              {{ time.Format .Site.Params.indexDateFormat .Date }}
-            {{ else }}
-              {{ .Date.Format .Site.Params.indexDateFormat }}
-            {{ end }}
-
-          {{ else }}
-            {{ if .Site.Params.localizedDates }}
-              {{ time.Format "Mon, Jan 2, 2006" .Date }}
-            {{ else }}
-              {{ .Date.Format "Mon, Jan 2, 2006" }}
-            {{ end }}
-
-          {{ end }}</span
-        >
-        {{ with .Page.Params.Categories }}
-          {{ partial "taxonomy/categories.html" . }}
-        {{ end }}
-
-        {{ with .Page.Params.Tags }}
-          {{ partial "taxonomy/tags.html" . }}
-        {{ end }}
-      </div>
-    </div>
-  {{ end }}
   <div class="pagination">
     {{ partial "pagination.html" . }}
   </div>

@@ -9,6 +9,7 @@ theme = "evan"
 summaryLength = 140
 enableEmoji = true
 enableRobotsTXT = true
+hasCJKLanguage = true
 
 # 语法高亮
 pygmentsUseClasses = true
@@ -40,13 +41,11 @@ customJs = ["js/custom.js"]
           inline = [['\(', '\)']]
 
 [taxonomies]
-  category = "categories"
-  series = "series"
   tag = "tags"
 
 [related]
   includeNewer = true
-  threshold = 80
+  threshold = 50
   toLower = true
 [[related.indices]]
   name = "keywords"
