@@ -1,109 +1,89 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-#------------------------------------------------------------------------------
-# @file
-# Builds a Hugo site hosted on a Cloudflare Worker.
-#
-# Works both on Cloudflare's Linux builders and on local macOS Apple Silicon
-# machines used for manual deploys.
-#------------------------------------------------------------------------------
+readonly HUGO_VERSION="0.152.2"
+readonly DART_SASS_VERSION="1.93.2"
+readonly REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly TOOL_ROOT="${REPO_ROOT}/.build-tools"
+export PATH="${TOOL_ROOT}/hugo:${TOOL_ROOT}/dart-sass:${PATH}"
 
-main() {
+hugo_version_matches() {
+  command -v hugo >/dev/null 2>&1 &&
+    hugo version | grep -q "v${HUGO_VERSION}.*+extended"
+}
 
-  DART_SASS_VERSION=1.93.2
-  GO_VERSION=1.25.3
-  HUGO_VERSION=0.152.2
-  NODE_VERSION=22.20.0
+sass_version_matches() {
+  command -v sass >/dev/null 2>&1 &&
+    [[ "$(sass --version)" == "${DART_SASS_VERSION}" ]]
+}
 
-  export TZ=Europe/Oslo
+install_pinned_tools() {
+  local platform
+  local hugo_archive
+  local sass_archive
+  local download_dir
 
-  OS="$(uname -s)"
-  ARCH="$(uname -m)"
-  LOCAL_DIR="${HOME}/.local"
-
-  mkdir -p "${LOCAL_DIR}"
-
-  case "${OS}-${ARCH}" in
+  case "$(uname -s)-$(uname -m)" in
     Linux-x86_64)
-      DART_SASS_URL="https://github.com/sass/dart-sass/releases/download/${DART_SASS_VERSION}/dart-sass-${DART_SASS_VERSION}-linux-x64.tar.gz"
-      GO_URL="https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz"
-      HUGO_URL="https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz"
-      NODE_URL="https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz"
-      NODE_DIR_NAME="node-v${NODE_VERSION}-linux-x64"
+      platform="linux"
+      hugo_archive="hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz"
+      sass_archive="dart-sass-${DART_SASS_VERSION}-linux-x64.tar.gz"
       ;;
     Darwin-arm64)
-      DART_SASS_URL="https://github.com/sass/dart-sass/releases/download/${DART_SASS_VERSION}/dart-sass-${DART_SASS_VERSION}-macos-arm64.tar.gz"
-      GO_URL="https://go.dev/dl/go${GO_VERSION}.darwin-arm64.tar.gz"
-      HUGO_URL="https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_darwin-universal.tar.gz"
-      NODE_URL="https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-darwin-arm64.tar.xz"
-      NODE_DIR_NAME="node-v${NODE_VERSION}-darwin-arm64"
+      platform="macos"
+      hugo_archive="hugo_extended_${HUGO_VERSION}_darwin-universal.tar.gz"
+      sass_archive="dart-sass-${DART_SASS_VERSION}-macos-arm64.tar.gz"
       ;;
     Darwin-x86_64)
-      DART_SASS_URL="https://github.com/sass/dart-sass/releases/download/${DART_SASS_VERSION}/dart-sass-${DART_SASS_VERSION}-macos-x64.tar.gz"
-      GO_URL="https://go.dev/dl/go${GO_VERSION}.darwin-amd64.tar.gz"
-      HUGO_URL="https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_darwin-universal.tar.gz"
-      NODE_URL="https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-darwin-x64.tar.xz"
-      NODE_DIR_NAME="node-v${NODE_VERSION}-darwin-x64"
+      platform="macos"
+      hugo_archive="hugo_extended_${HUGO_VERSION}_darwin-universal.tar.gz"
+      sass_archive="dart-sass-${DART_SASS_VERSION}-macos-x64.tar.gz"
       ;;
     *)
-      echo "Unsupported platform: ${OS}-${ARCH}" >&2
+      echo "Unsupported platform: $(uname -s)-$(uname -m)" >&2
       exit 1
       ;;
   esac
 
-  echo "Platform detected: ${OS}-${ARCH}"
+  download_dir="$(mktemp -d "${TMPDIR:-/tmp}/evan-hugo-build.XXXXXX")"
+  trap "$(printf 'rm -rf -- %q' "${download_dir}")" EXIT
 
-  # Clean old tool dirs to avoid mixing architectures.
-  rm -rf "${LOCAL_DIR}/dart-sass" "${LOCAL_DIR}/go" "${LOCAL_DIR}/hugo" "${LOCAL_DIR}/${NODE_DIR_NAME}"
-
-  # Install Dart Sass
-  echo "Installing Dart Sass ${DART_SASS_VERSION}..."
-  curl -sLJO "${DART_SASS_URL}"
-  tar -C "${LOCAL_DIR}" -xf "$(basename "${DART_SASS_URL}")"
-  rm "$(basename "${DART_SASS_URL}")"
-  export PATH="${LOCAL_DIR}/dart-sass:${PATH}"
-
-  # Install Go
-  echo "Installing Go ${GO_VERSION}..."
-  curl -sLJO "${GO_URL}"
-  tar -C "${LOCAL_DIR}" -xf "$(basename "${GO_URL}")"
-  rm "$(basename "${GO_URL}")"
-  export PATH="${LOCAL_DIR}/go/bin:${PATH}"
-
-  # Install Hugo
-  echo "Installing Hugo ${HUGO_VERSION}..."
-  curl -sLJO "${HUGO_URL}"
-  mkdir -p "${LOCAL_DIR}/hugo"
-  tar -C "${LOCAL_DIR}/hugo" -xf "$(basename "${HUGO_URL}")"
-  rm "$(basename "${HUGO_URL}")"
-  export PATH="${LOCAL_DIR}/hugo:${PATH}"
-
-  # Install Node.js
-  echo "Installing Node.js ${NODE_VERSION}..."
-  curl -sLJO "${NODE_URL}"
-  tar -C "${LOCAL_DIR}" -xf "$(basename "${NODE_URL}")"
-  rm "$(basename "${NODE_URL}")"
-  export PATH="${LOCAL_DIR}/${NODE_DIR_NAME}/bin:${PATH}"
-
-  # Verify installations
-  echo "Verifying installations..."
-  echo Dart Sass: "$(sass --version)"
-  echo Go: "$(go version)"
-  echo Hugo: "$(hugo version)"
-  echo Node.js: "$(node --version)"
-
-  # Configure Git
-  echo "Configuring Git..."
-  git config core.quotepath false
-  if [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
-    git fetch --unshallow
+  if ! hugo_version_matches; then
+    echo "Downloading Hugo Extended ${HUGO_VERSION}..."
+    mkdir -p "${TOOL_ROOT}/hugo"
+    curl --fail --location --silent --show-error --retry 3 \
+      --connect-timeout 20 --max-time 180 \
+      "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/${hugo_archive}" \
+      -o "${download_dir}/${hugo_archive}"
+    tar -xzf "${download_dir}/${hugo_archive}" -C "${TOOL_ROOT}/hugo"
   fi
 
-  # Build the site
-  echo "Building the site..."
-  HUGO_MARKUP_GOLDMARK_RENDERER_UNSAFE=true hugo --gc --minify
+  if ! sass_version_matches; then
+    echo "Downloading Dart Sass ${DART_SASS_VERSION}..."
+    mkdir -p "${TOOL_ROOT}/dart-sass"
+    curl --fail --location --silent --show-error --retry 3 \
+      --connect-timeout 20 --max-time 180 \
+      "https://github.com/sass/dart-sass/releases/download/${DART_SASS_VERSION}/${sass_archive}" \
+      -o "${download_dir}/${sass_archive}"
+    tar -xzf "${download_dir}/${sass_archive}" -C "${download_dir}"
+    cp -R "${download_dir}/dart-sass/." "${TOOL_ROOT}/dart-sass/"
+  fi
 
+  echo "Installed pinned Hugo and Dart Sass tools for ${platform}."
+  rm -rf -- "${download_dir}"
+  trap - EXIT
 }
 
-set -euo pipefail
+main() {
+  cd "${REPO_ROOT}"
+
+  if ! hugo_version_matches || ! sass_version_matches; then
+    install_pinned_tools
+  fi
+
+  echo "Hugo: $(hugo version)"
+  echo "Dart Sass: $(sass --version)"
+  hugo --gc --minify --cleanDestinationDir --noBuildLock
+}
+
 main "$@"

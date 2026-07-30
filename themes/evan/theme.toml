@@ -1,0 +1,21 @@
+# theme.toml template for a Hugo theme
+# See https://github.com/gohugoio/hugoThemes#themetoml for an example
+
+name = "Evan"
+license = "MIT"
+licenselink = "https://github.com/lxndrblz/anatole/blob/master/LICENSE"
+description = "The lightweight local theme for evan-manual.com, derived from Anatole 1.18.0."
+homepage = "https://evan-manual.com/"
+tags = ["blog", "responsive", "clean", "minimalist", "minimal", "personal", "dark"]
+features = ["blog", "seo", "responsive", "mobile", "disqus", "fontawesome", "analytics", "math"]
+min_version = "0.128.0"
+
+[author]
+  name = "Evan"
+  homepage = "https://evan-manual.com/"
+
+# If porting an existing theme
+[original]
+  author = "Alexander Bilz and Anatole contributors"
+  homepage = "https://github.com/lxndrblz/anatole/"
+  repo = "https://github.com/lxndrblz/anatole"
