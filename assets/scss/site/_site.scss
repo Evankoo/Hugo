@@ -1308,10 +1308,10 @@ html.theme--dark .topic-article-item {
     height: var(--mobile-hero-height, 440px);
     z-index: 90;
     display: grid;
-    grid-template-columns: minmax(0, 240px);
+    grid-template-columns: minmax(0, 220px);
     align-content: center;
     justify-content: center;
-    gap: 4px;
+    gap: 0;
     padding: 20px 28px;
     background: #f8f8f6;
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
@@ -1335,25 +1335,24 @@ html.theme--dark .topic-article-item {
   .nav.nav--active .nav__list-item {
     min-width: 0;
     margin: 0;
-    padding: 0;
-    text-align: left;
+    padding: 6px 0;
+    text-align: center;
   }
 
   .nav.nav--active .nav__list-item > a,
   .nav.nav--active .nav__list-item > .themeswitch > a,
   .nav.nav--active .nav__list-item > .optionswitch > .optionswitch__label {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    min-height: 40px;
-    padding: 8px 12px;
-    border-radius: 8px;
-    box-sizing: border-box;
-    background: rgba(52, 55, 60, 0.045);
-    line-height: 1.35;
+    justify-content: center;
+    padding: 4px 12px;
+    background: transparent;
+    line-height: 1.45;
   }
 
   .nav.nav--active .nav__link--active {
     border-bottom: 0;
+    color: var(--reading-accent);
     font-weight: 600;
   }
 
@@ -1369,12 +1368,6 @@ html.theme--dark .topic-article-item {
 
   .nav.nav--active .themeswitch__text {
     display: inline;
-  }
-
-  html.theme--dark .nav.nav--active .nav__list-item > a,
-  html.theme--dark .nav.nav--active .nav__list-item > .themeswitch > a,
-  html.theme--dark .nav.nav--active .nav__list-item > .optionswitch > .optionswitch__label {
-    background: rgba(255, 255, 255, 0.055);
   }
 
   /* 文章标题区：标题 / 日期与阅读时间 / 话题 */
