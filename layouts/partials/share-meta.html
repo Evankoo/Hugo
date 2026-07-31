@@ -7,16 +7,32 @@
 {{- $shareDescription = $shareDescription | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace | truncate 140 -}}
 
 {{- $shareImage := "" -}}
+{{- $shareImageWidth := 0 -}}
+{{- $shareImageHeight := 0 -}}
+{{- $shareImageType := "" -}}
 {{- with .Site.Params.images -}}
   {{- with index . 0 -}}
     {{- $shareImage = . | absURL -}}
+    {{- $shareImageWidth = 400 -}}
+    {{- $shareImageHeight = 400 -}}
+    {{- $shareImageType = "image/jpeg" -}}
   {{- end -}}
 {{- end -}}
 {{- with .Params.image -}}
   {{- $imagePath := . -}}
   {{- with $page.Resources.GetMatch $imagePath -}}
     {{- if eq .ResourceType "image" -}}
-      {{- $shareImage = (.Fill "600x600 Center jpg q85").Permalink -}}
+      {{- $processedImage := .Fill "400x400 Center jpg q80" -}}
+      {{- $shareKey := $page.Slug -}}
+      {{- if not $shareKey -}}
+        {{- $shareKey = printf "article-%s" (substr (md5 $page.RelPermalink) 0 12) -}}
+      {{- end -}}
+      {{- $stablePath := printf "images/share/%s.jpg" ($shareKey | lower) -}}
+      {{- $stableImage := resources.Copy $stablePath $processedImage -}}
+      {{- $shareImage = $stableImage.Permalink -}}
+      {{- $shareImageWidth = 400 -}}
+      {{- $shareImageHeight = 400 -}}
+      {{- $shareImageType = "image/jpeg" -}}
     {{- end -}}
   {{- else -}}
     {{- $shareImage = $imagePath | absURL -}}
@@ -38,6 +54,15 @@
 {{- with $shareImage }}
 <meta property="og:image" content="{{ . }}" />
 <meta property="og:image:secure_url" content="{{ . }}" />
+{{- with $shareImageWidth }}
+<meta property="og:image:width" content="{{ . }}" />
+{{- end }}
+{{- with $shareImageHeight }}
+<meta property="og:image:height" content="{{ . }}" />
+{{- end }}
+{{- with $shareImageType }}
+<meta property="og:image:type" content="{{ . }}" />
+{{- end }}
 <link rel="image_src" href="{{ . }}" />
 <meta itemprop="image" content="{{ . }}" />
 {{- end }}

@@ -71,10 +71,55 @@ class SocialMetaParser(HTMLParser):
             self.metadata[key] = content
 
 
+def jpeg_dimensions(path: Path) -> tuple[int, int] | None:
+    data = path.read_bytes()
+    if not data.startswith(b"\xff\xd8"):
+        return None
+
+    offset = 2
+    start_of_frame = {
+        0xC0, 0xC1, 0xC2, 0xC3,
+        0xC5, 0xC6, 0xC7,
+        0xC9, 0xCA, 0xCB,
+        0xCD, 0xCE, 0xCF,
+    }
+    while offset + 4 <= len(data):
+        if data[offset] != 0xFF:
+            offset += 1
+            continue
+        while offset < len(data) and data[offset] == 0xFF:
+            offset += 1
+        if offset >= len(data):
+            break
+        marker = data[offset]
+        offset += 1
+        if marker in {0xD8, 0xD9}:
+            continue
+        if offset + 2 > len(data):
+            break
+        segment_length = int.from_bytes(data[offset : offset + 2], "big")
+        if segment_length < 2 or offset + segment_length > len(data):
+            break
+        if marker in start_of_frame and segment_length >= 7:
+            height = int.from_bytes(data[offset + 3 : offset + 5], "big")
+            width = int.from_bytes(data[offset + 5 : offset + 7], "big")
+            return width, height
+        offset += segment_length
+    return None
+
+
 def validate_social_previews(site: Path) -> list[str]:
     errors: list[str] = []
     article_pages = sorted((site / "post").glob("*/index.html"))
-    required = {"og:title", "og:description", "og:url", "og:image"}
+    required = {
+        "og:title",
+        "og:description",
+        "og:url",
+        "og:image",
+        "og:image:width",
+        "og:image:height",
+        "og:image:type",
+    }
 
     for page in article_pages:
         parser = SocialMetaParser()
@@ -100,6 +145,28 @@ def validate_social_previews(site: Path) -> list[str]:
         if not image_file.is_file():
             errors.append(
                 f"social image was not generated: {page.relative_to(site)} -> {image.path}"
+            )
+            continue
+
+        if "_hu_" in image.path:
+            errors.append(
+                f"social image URL is build-dependent: {page.relative_to(site)} -> {image.path}"
+            )
+
+        if parser.metadata.get("og:image:width") != "400" or parser.metadata.get(
+            "og:image:height"
+        ) != "400":
+            errors.append(f"social image metadata is not 400x400: {page.relative_to(site)}")
+
+        if parser.metadata.get("og:image:type") != "image/jpeg":
+            errors.append(f"social image metadata is not JPEG: {page.relative_to(site)}")
+
+        if jpeg_dimensions(image_file) != (400, 400):
+            errors.append(f"social image file is not 400x400 JPEG: {image_file.relative_to(site)}")
+
+        if image_file.stat().st_size > 80 * 1024:
+            errors.append(
+                f"social image exceeds 80KB: {image_file.relative_to(site)}"
             )
 
     return errors
