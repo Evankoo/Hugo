@@ -191,6 +191,17 @@ def validate_mobile_share_controls(site: Path) -> list[str]:
     return errors
 
 
+def validate_wechat_navigation(site: Path) -> list[str]:
+    scripts = sorted((site / "js").glob("custom*.js"))
+    if not scripts:
+        return ["missing generated custom JavaScript"]
+
+    source = "\n".join(script.read_text(encoding="utf-8") for script in scripts)
+    if "MicroMessenger" not in source:
+        return ["custom JavaScript does not disable partial navigation in WeChat"]
+    return []
+
+
 def validate_gallery_images(site: Path) -> list[str]:
     errors: list[str] = []
     paginated = [
@@ -308,6 +319,12 @@ def main() -> int:
     social_errors = validate_social_previews(site)
     if social_errors:
         for error in social_errors:
+            print(error)
+        return 1
+
+    wechat_errors = validate_wechat_navigation(site)
+    if wechat_errors:
+        for error in wechat_errors:
             print(error)
         return 1
 
