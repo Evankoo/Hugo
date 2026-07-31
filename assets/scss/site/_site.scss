@@ -1533,6 +1533,49 @@ html.theme--dark .topic-article-item {
   z-index: 60;
 }
 
+.navbar-share {
+  display: none;
+}
+
+.share-toast {
+  align-items: center;
+  background: rgba(20, 30, 39, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.24);
+  color: #f3f1ec;
+  display: flex;
+  font-size: 14px;
+  left: 50%;
+  line-height: 1.45;
+  max-width: calc(100vw - 40px);
+  opacity: 0;
+  padding: 10px 14px;
+  pointer-events: none;
+  position: fixed;
+  text-align: center;
+  top: 64px;
+  transform: translate(-50%, -8px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  z-index: 130;
+}
+
+.share-toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.share-toast--wechat {
+  left: auto;
+  right: 12px;
+  text-align: left;
+  transform: translateY(-8px);
+}
+
+.share-toast--wechat.is-visible {
+  transform: translateY(0);
+}
+
 @media (max-width: 960px) {
   :root {
     --mobile-hero-height: clamp(340px, 76vw, 400px);
@@ -1600,6 +1643,33 @@ html.theme--dark .topic-article-item {
     box-shadow: none;
     pointer-events: auto;
     z-index: 100;
+  }
+
+  .navbar-share {
+    align-items: center;
+    appearance: none;
+    background: transparent;
+    border: 0;
+    border-radius: 50%;
+    color: inherit;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 17px;
+    height: 42px;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    pointer-events: auto;
+    position: absolute;
+    right: 62px;
+    top: 7px;
+    width: 42px;
+    z-index: 100;
+  }
+
+  .navbar-share:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: -6px;
   }
 
   /* 菜单覆盖完整头像/画廊区域；透明汉堡按钮继续浮在右上角 */

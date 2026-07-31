@@ -1,0 +1,58 @@
+{{- $page := . -}}
+{{- $shareTitle := .Title | default .Site.Title -}}
+{{- $shareDescription := .Site.Params.description | default .Site.Title -}}
+{{- if .IsPage -}}
+  {{- $shareDescription = .Params.description | default .Params.summary | default .Summary | default $shareDescription -}}
+{{- end -}}
+{{- $shareDescription = $shareDescription | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace | truncate 140 -}}
+
+{{- $shareImage := "" -}}
+{{- with .Site.Params.images -}}
+  {{- with index . 0 -}}
+    {{- $shareImage = . | absURL -}}
+  {{- end -}}
+{{- end -}}
+{{- with .Params.image -}}
+  {{- $imagePath := . -}}
+  {{- with $page.Resources.GetMatch $imagePath -}}
+    {{- if eq .ResourceType "image" -}}
+      {{- $shareImage = (.Fill "600x600 Center jpg q85").Permalink -}}
+    {{- end -}}
+  {{- else -}}
+    {{- $shareImage = $imagePath | absURL -}}
+  {{- end -}}
+{{- else -}}
+  {{- with .Params.images -}}
+    {{- with index . 0 -}}
+      {{- $shareImage = . | absURL -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+<meta property="og:locale" content="zh_CN" />
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}" />
+<meta property="og:site_name" content="{{ .Site.Title }}" />
+<meta property="og:title" content="{{ $shareTitle }}" />
+<meta property="og:description" content="{{ $shareDescription }}" />
+<meta property="og:url" content="{{ .Permalink }}" />
+{{- with $shareImage }}
+<meta property="og:image" content="{{ . }}" />
+<meta property="og:image:secure_url" content="{{ . }}" />
+<link rel="image_src" href="{{ . }}" />
+<meta itemprop="image" content="{{ . }}" />
+{{- end }}
+{{- if and .IsPage .Date }}
+<meta property="article:published_time" content="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" />
+{{- end }}
+{{- if and .IsPage .Lastmod }}
+<meta property="article:modified_time" content="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}" />
+{{- end }}
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="{{ $shareTitle }}" />
+<meta name="twitter:description" content="{{ $shareDescription }}" />
+{{- with $shareImage }}
+<meta name="twitter:image" content="{{ . }}" />
+{{- end }}
+<meta itemprop="name" content="{{ $shareTitle }}" />
+<meta itemprop="description" content="{{ $shareDescription }}" />

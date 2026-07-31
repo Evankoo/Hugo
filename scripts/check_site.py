@@ -54,6 +54,71 @@ class GalleryImageParser(HTMLParser):
             self.images.append(attributes)
 
 
+class SocialMetaParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.metadata: dict[str, str] = {}
+
+    def handle_starttag(
+        self, tag: str, attrs: list[tuple[str, str | None]]
+    ) -> None:
+        if tag != "meta":
+            return
+        attributes = dict(attrs)
+        key = attributes.get("property") or attributes.get("name")
+        content = attributes.get("content")
+        if key and content:
+            self.metadata[key] = content
+
+
+def validate_social_previews(site: Path) -> list[str]:
+    errors: list[str] = []
+    article_pages = sorted((site / "post").glob("*/index.html"))
+    required = {"og:title", "og:description", "og:url", "og:image"}
+
+    for page in article_pages:
+        parser = SocialMetaParser()
+        parser.feed(page.read_text(encoding="utf-8"))
+        missing = sorted(required - parser.metadata.keys())
+        if missing:
+            errors.append(
+                f"missing social metadata: {page.relative_to(site)} -> {', '.join(missing)}"
+            )
+            continue
+
+        if parser.metadata.get("og:type") != "article":
+            errors.append(f"social type is not article: {page.relative_to(site)}")
+
+        image = urlsplit(parser.metadata["og:image"])
+        if image.scheme != "https" or not image.netloc:
+            errors.append(
+                f"social image is not an absolute HTTPS URL: {page.relative_to(site)}"
+            )
+            continue
+
+        image_file = site / unquote(image.path).lstrip("/")
+        if not image_file.is_file():
+            errors.append(
+                f"social image was not generated: {page.relative_to(site)} -> {image.path}"
+            )
+
+    return errors
+
+
+def validate_mobile_share_controls(site: Path) -> list[str]:
+    errors: list[str] = []
+    pages = [site / "index.html", site / "about/index.html", site / "contact/index.html"]
+
+    for page in pages:
+        html = page.read_text(encoding="utf-8")
+        if 'class="navbar-share"' not in html and "class=navbar-share" not in html:
+            errors.append(f"missing mobile share control: {page.relative_to(site)}")
+        if "data-share-title=" not in html or "data-share-description=" not in html:
+            errors.append(f"incomplete mobile share data: {page.relative_to(site)}")
+
+    return errors
+
+
 def validate_gallery_images(site: Path) -> list[str]:
     errors: list[str] = []
     paginated = [
@@ -165,6 +230,18 @@ def main() -> int:
     image_errors = validate_gallery_images(site)
     if image_errors:
         for error in image_errors:
+            print(error)
+        return 1
+
+    social_errors = validate_social_previews(site)
+    if social_errors:
+        for error in social_errors:
+            print(error)
+        return 1
+
+    share_control_errors = validate_mobile_share_controls(site)
+    if share_control_errors:
+        for error in share_control_errors:
             print(error)
         return 1
 

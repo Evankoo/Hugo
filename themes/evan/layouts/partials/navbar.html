@@ -5,6 +5,22 @@
     animated fadeInDown
   {{ end }}"
 >
+  {{- $shareTitle := .Title | default .Site.Title -}}
+  {{- $shareDescription := .Site.Params.description | default .Site.Title -}}
+  {{- if .IsPage -}}
+    {{- $shareDescription = .Params.description | default .Params.summary | default .Summary | default $shareDescription -}}
+  {{- end -}}
+  {{- $shareDescription = $shareDescription | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace | truncate 140 -}}
+  <button
+    type="button"
+    class="navbar-share"
+    aria-label="分享当前页面"
+    title="分享"
+    data-share-title="{{ $shareTitle }}"
+    data-share-description="{{ $shareDescription }}"
+  >
+    <i class="fa-solid fa-arrow-up-from-bracket" aria-hidden="true"></i>
+  </button>
   <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
     <span aria-hidden="true" class="navbar-burger__line"></span>
     <span aria-hidden="true" class="navbar-burger__line"></span>
