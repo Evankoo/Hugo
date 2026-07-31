@@ -71,6 +71,21 @@ class SocialMetaParser(HTMLParser):
             self.metadata[key] = content
 
 
+class ShareButtonParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.attributes: dict[str, str | None] = {}
+
+    def handle_starttag(
+        self, tag: str, attrs: list[tuple[str, str | None]]
+    ) -> None:
+        if tag != "button" or self.attributes:
+            return
+        attributes = dict(attrs)
+        if "navbar-share" in (attributes.get("class") or "").split():
+            self.attributes = attributes
+
+
 def jpeg_dimensions(path: Path) -> tuple[int, int] | None:
     data = path.read_bytes()
     if not data.startswith(b"\xff\xd8"):
@@ -180,13 +195,62 @@ def validate_social_previews(site: Path) -> list[str]:
 def validate_mobile_share_controls(site: Path) -> list[str]:
     errors: list[str] = []
     pages = [site / "index.html", site / "about/index.html", site / "contact/index.html"]
+    article_pages = sorted((site / "post").glob("*/index.html"))
+    pages.extend(article_pages)
 
     for page in pages:
         html = page.read_text(encoding="utf-8")
+        parser = ShareButtonParser()
+        parser.feed(html)
         if 'class="navbar-share"' not in html and "class=navbar-share" not in html:
             errors.append(f"missing mobile share control: {page.relative_to(site)}")
-        if "data-share-title=" not in html or "data-share-description=" not in html:
+        required_attributes = (
+            "data-share-title=",
+            "data-share-description=",
+            "data-share-kind=",
+            "data-share-image=",
+            "data-share-url=",
+            "data-share-copy=",
+        )
+        if any(attribute not in html for attribute in required_attributes):
             errors.append(f"incomplete mobile share data: {page.relative_to(site)}")
+        expected_kind = "page"
+        if page == site / "index.html":
+            expected_kind = "home"
+        elif page == site / "about/index.html":
+            expected_kind = "about"
+        elif page == site / "contact/index.html":
+            expected_kind = "contact"
+        elif page in article_pages:
+            expected_kind = "article"
+        quoted_kind = f'data-share-kind="{expected_kind}"'
+        compact_kind = f"data-share-kind={expected_kind}"
+        if quoted_kind not in html and compact_kind not in html:
+            errors.append(
+                f"wrong mobile share kind: {page.relative_to(site)} -> {expected_kind}"
+            )
+        image_source = parser.attributes.get("data-share-image") or ""
+        image_path = unquote(urlsplit(image_source).path).lstrip("/")
+        if not image_path or not (site / image_path).is_file():
+            errors.append(
+                f"mobile poster source image is missing: {page.relative_to(site)} -> {image_source}"
+            )
+        if expected_kind == "article" and not image_path.startswith(
+            f"post/{page.parent.name}/"
+        ):
+            errors.append(
+                f"article poster does not use its own cover: {page.relative_to(site)} -> {image_source}"
+            )
+
+    scripts = sorted((site / "js").glob("custom*.js"))
+    source = "\n".join(script.read_text(encoding="utf-8") for script in scripts)
+    source_assets = Path("assets/js/custom.js").read_text(encoding="utf-8")
+    for marker in ("drawArticlePoster", "drawAboutPoster"):
+        if marker not in source_assets:
+            errors.append(f"mobile poster source is missing {marker}")
+    for marker in ("__evanSyncShareButton", "qrcode", "正在生成分享图"):
+        if marker not in source:
+            errors.append(f"mobile poster JavaScript is missing {marker}")
 
     return errors
 

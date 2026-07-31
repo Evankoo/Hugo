@@ -30,7 +30,7 @@ post = "/post/:slug/"
 mermaidEnable = false
 profilePicture = "images/profile.png"
 favicon = "favicons/"   # 注意路径只到文件夹，不带文件名
-customJs = ["js/custom.js"]
+customJs = ["js/vendor/qrcode-generator.min.js", "js/custom.js"]
 
 [markup]
   [markup.goldmark]
