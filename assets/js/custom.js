@@ -402,6 +402,10 @@ document.addEventListener('DOMContentLoaded', function () {
    ========================================================== */
 document.addEventListener('DOMContentLoaded', function () {
   if (!window.history.pushState || !window.DOMParser) return;
+  // WeChat snapshots share metadata when a document loads. Its share menu can
+  // keep the entry page's description and image across our partial navigation,
+  // so use normal document loads there to refresh the complete <head>.
+  if (/MicroMessenger/i.test(navigator.userAgent)) return;
   let main = document.querySelector('.wrapper__main');
   if (!main) return;
 
