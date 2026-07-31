@@ -17,6 +17,26 @@ hugo server
 
 Generated output belongs in `public/` and is never committed.
 
+## Article image pipeline
+
+Each article bundle keeps one canonical cover image beside `index.md`. Use a
+unique, descriptive filename, set both `image` and `thumbnail` to that file in
+front matter, and keep the source image at no more than `1600px` on its longest
+edge. JPEG is preferred for paintings and photographs; aim for a source file
+below roughly `800KB` when it can be achieved without visible artifacts.
+
+Hugo generates the delivery files during the build:
+
+- Home gallery thumbnails: `480px` and `720px` wide WebP at quality 78, with
+  responsive `srcset`; only the first card is eager-loaded.
+- Sidebar gallery images: `720px` wide WebP at quality 82; JavaScript loads only
+  the current image.
+- Article pages: do not repeat the cover above the body. The canonical cover is
+  retained for metadata and future sharing integrations.
+
+Do not hand-maintain separate thumbnail or gallery files. The generated image
+cache belongs in `resources/` and must not be committed.
+
 ## Preview before pushing
 
 Every user-visible change is reviewed through Hugo's local development server

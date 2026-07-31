@@ -1641,6 +1641,11 @@ html.theme--dark .topic-article-item {
     text-align: center;
   }
 
+  /* 手机端不显示无效的日夜模式入口，也不保留菜单空位 */
+  .nav__list-item--theme {
+    display: none !important;
+  }
+
   .nav.nav--active .nav__list-item > a,
   .nav.nav--active .nav__list-item > .themeswitch > a,
   .nav.nav--active .nav__list-item > .optionswitch > .optionswitch__label {
