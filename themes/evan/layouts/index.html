@@ -2,22 +2,29 @@
   {{ $paginator := .Paginate (where .Site.RegularPages "Type" "in" .Site.Params.mainSections) }}
 
   <div class="gallery-grid {{ if not .Site.Params.doNotLoadAnimations }}animated fadeInDown{{ end }}">
-    {{ range $paginator.Pages }}
-      {{ $thumb := .Resources.GetMatch "cover*" }}
-      <a class="gallery-card" href="{{ .RelPermalink }}">
+    {{ range $index, $page := $paginator.Pages }}
+      {{ $thumbPattern := $page.Params.thumbnail | default "cover*" }}
+      {{ $thumb := $page.Resources.GetMatch $thumbPattern }}
+      <a class="gallery-card" href="{{ $page.RelPermalink }}">
         {{ if $thumb }}
+          {{ $thumb480 := $thumb.Resize "480x webp q78" }}
+          {{ $thumb720 := $thumb.Resize "720x webp q78" }}
           <img
             class="gallery-card__image"
-            src="{{ $thumb.RelPermalink }}"
-            alt="{{ .Title }}"
-            width="{{ $thumb.Width }}"
-            height="{{ $thumb.Height }}"
-            loading="lazy"
+            src="{{ $thumb720.RelPermalink }}"
+            srcset="{{ $thumb480.RelPermalink }} 480w, {{ $thumb720.RelPermalink }} 720w"
+            sizes="(max-width: 768px) calc(100vw - 32px), 420px"
+            alt="{{ $page.Title }}"
+            width="{{ $thumb720.Width }}"
+            height="{{ $thumb720.Height }}"
+            loading="{{ if eq $index 0 }}eager{{ else }}lazy{{ end }}"
+            decoding="async"
+            {{ if eq $index 0 }}fetchpriority="high"{{ end }}
           />
         {{ end }}
         <span class="gallery-card__body">
-          <span class="gallery-card__title">{{ .Title }}</span>
-          <span class="gallery-card__date">{{ .Date.Format "2006-01-02" }}</span>
+          <span class="gallery-card__title">{{ $page.Title }}</span>
+          <span class="gallery-card__date">{{ $page.Date.Format "2006-01-02" }}</span>
         </span>
       </a>
     {{ end }}

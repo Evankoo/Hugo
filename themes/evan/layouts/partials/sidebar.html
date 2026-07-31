@@ -56,9 +56,11 @@
 <script>
   window.EVAN_COVERS = [
     {{- $covers := slice -}}
-    {{- range where .Site.RegularPages "Type" "post" -}}
-      {{- with .Resources.GetMatch "cover*" -}}
-        {{- $covers = $covers | append .RelPermalink -}}
+    {{- range $page := where .Site.RegularPages "Type" "post" -}}
+      {{- $coverPattern := $page.Params.image | default "cover*" -}}
+      {{- with $page.Resources.GetMatch $coverPattern -}}
+        {{- $galleryImage := .Resize "720x webp q82" -}}
+        {{- $covers = $covers | append $galleryImage.RelPermalink -}}
       {{- end -}}
     {{- end -}}
     {{- range $i, $c := $covers -}}
