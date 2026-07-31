@@ -96,9 +96,8 @@
 })();
 
 /* ==========================================================
-   侧栏动态画廊：点击空白翻入画廊后不再翻回，
-   封面以温和淡入淡出自动轮播；同一会话内跨页面保持，
-   只有新开标签页（全新访问）才回到头像页。
+   侧栏动态画廊：点击空白翻入画廊，点击首页恢复头像；
+   封面以温和淡入淡出自动轮播；跨普通页面保持画廊状态。
    ========================================================== */
 document.addEventListener('DOMContentLoaded', function () {
   const sidebar = document.getElementById('sidebar');
@@ -164,6 +163,26 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  function resetGallery(animated) {
+    if (!animated) sidebar.classList.add('no-anim');
+    sidebar.classList.remove('is-flipped');
+    img.classList.remove('is-fading');
+    document.documentElement.classList.remove('evan-gallery');
+    try {
+      sessionStorage.removeItem(STORAGE_KEY);
+      sessionStorage.removeItem(SRC_KEY);
+    } catch (err) {}
+    if (!animated) {
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          sidebar.classList.remove('no-anim');
+        });
+      });
+    }
+  }
+
+  window.__evanResetGallery = resetGallery;
+
   sidebar.addEventListener('click', function (e) {
     if (sidebar.classList.contains('is-flipped')) {
       switchCover(); // 画廊态下点击：温和切换到下一张
@@ -174,6 +193,11 @@ document.addEventListener('DOMContentLoaded', function () {
     enterGallery(true);
   });
 
+  document.addEventListener('click', function (e) {
+    const homeLink = e.target.closest && e.target.closest('a[data-evan-home-link]');
+    if (homeLink) resetGallery(true);
+  });
+
   // 同一会话内已进入过画廊：页面加载后直接恢复（无动画）
   try {
     if (sessionStorage.getItem(STORAGE_KEY) === '1') enterGallery(false);
@@ -182,6 +206,119 @@ document.addEventListener('DOMContentLoaded', function () {
   // 支持 #gallery 直接打开画廊（也便于测试）；测试时跳过动画
   if (location.hash === '#gallery') enterGallery(false);
 });
+
+/* ==========================================================
+   首页渐进式瀑布流：首屏只渲染一页，接近底部时再加载下一页。
+   ========================================================== */
+(function () {
+  let activeObserver = null;
+
+  function setFeedState(feed, state, message) {
+    feed.dataset.state = state;
+    feed.setAttribute('aria-busy', state === 'loading' ? 'true' : 'false');
+    const status = feed.querySelector('.gallery-feed__status');
+    const retry = feed.querySelector('.gallery-feed__retry');
+    if (status) status.textContent = message;
+    if (retry) retry.hidden = state !== 'error' && state !== 'fallback';
+  }
+
+  async function loadNextPage(grid, feed) {
+    if (!grid || !feed) return;
+    if (feed.dataset.state === 'loading' || feed.dataset.state === 'complete') return;
+
+    const nextUrl = feed.dataset.nextUrl;
+    if (!nextUrl) {
+      setFeedState(feed, 'complete', '已经看完全部文章');
+      if (activeObserver) activeObserver.unobserve(feed);
+      return;
+    }
+
+    setFeedState(feed, 'loading', '正在加载更多文章');
+
+    try {
+      const nextPageUrl = new URL(nextUrl, location.href).href;
+      const response = await fetch(nextPageUrl, { credentials: 'same-origin' });
+      if (!response.ok) throw new Error('http ' + response.status);
+
+      const html = await response.text();
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const nextGrid = doc.querySelector('.gallery-grid');
+      const nextFeed = doc.querySelector('[data-gallery-feed]');
+      if (!nextGrid || !nextFeed) throw new Error('invalid gallery page');
+
+      const existing = new Set(
+        Array.from(grid.querySelectorAll('.gallery-card[href]')).map(function (card) {
+          return new URL(card.href, location.href).href;
+        })
+      );
+
+      Array.from(nextGrid.children).forEach(function (card) {
+        if (!card.matches('.gallery-card[href]')) return;
+        const href = new URL(card.getAttribute('href'), nextPageUrl).href;
+        if (existing.has(href)) return;
+        const fresh = document.importNode(card, true);
+        fresh.classList.add('gallery-card--revealed');
+        grid.appendChild(fresh);
+        existing.add(href);
+      });
+
+      const followingUrl = nextFeed.dataset.nextUrl;
+      if (followingUrl) {
+        feed.dataset.nextUrl = followingUrl;
+        setFeedState(feed, 'idle', '继续向下浏览');
+      } else {
+        feed.removeAttribute('data-next-url');
+        setFeedState(feed, 'complete', '已经看完全部文章');
+        if (activeObserver) activeObserver.unobserve(feed);
+      }
+    } catch (err) {
+      setFeedState(feed, 'error', '暂时没有加载成功');
+    }
+  }
+
+  function bindProgressiveGallery() {
+    if (activeObserver) {
+      activeObserver.disconnect();
+      activeObserver = null;
+    }
+
+    const main = document.querySelector('.wrapper__main');
+    const grid = main && main.querySelector('.gallery-grid');
+    const feed = main && main.querySelector('[data-gallery-feed]');
+    if (!grid || !feed || feed.dataset.galleryBound === 'true') return;
+
+    feed.dataset.galleryBound = 'true';
+    const retry = feed.querySelector('.gallery-feed__retry');
+    if (retry) {
+      retry.addEventListener('click', function () {
+        loadNextPage(grid, feed);
+      });
+    }
+
+    if (!feed.dataset.nextUrl) {
+      setFeedState(feed, 'complete', '已经看完全部文章');
+      return;
+    }
+
+    if (!('IntersectionObserver' in window)) {
+      setFeedState(feed, 'fallback', '继续浏览更多文章');
+      return;
+    }
+
+    activeObserver = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) loadNextPage(grid, feed);
+        });
+      },
+      { rootMargin: '420px 0px' }
+    );
+    activeObserver.observe(feed);
+  }
+
+  document.addEventListener('DOMContentLoaded', bindProgressiveGallery);
+  window.__evanBindProgressiveGallery = bindProgressiveGallery;
+})();
 
 /* ==========================================================
    局部导航路由：只替换右侧内容区，左侧栏保持静止
@@ -238,6 +375,7 @@ document.addEventListener('DOMContentLoaded', function () {
         main = fresh;
         window.scrollTo(0, 0);
         if (window.__evanBindNavbar) window.__evanBindNavbar();
+        if (window.__evanBindProgressiveGallery) window.__evanBindProgressiveGallery();
         requestAnimationFrame(function () {
           requestAnimationFrame(function () {
             fresh.style.opacity = '1';

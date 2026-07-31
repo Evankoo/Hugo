@@ -59,6 +59,9 @@
               {{ if $active }}
                 class="nav__link--active"
               {{ end }}
+              {{ if eq $menuItem.URL "/" }}
+                data-evan-home-link
+              {{ end }}
               href="{{ .URL }}"
               {{ if strings.HasPrefix .URL "http" }}
                 target="_blank" rel="noopener noreferrer"

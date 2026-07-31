@@ -1,0 +1,34 @@
+{{- $url := urls.Parse .Destination -}}
+{{- $src := $url.String -}}
+{{- if not $url.IsAbs -}}
+  {{- $path := strings.TrimPrefix "./" $url.Path -}}
+  {{- with or (.PageInner.Resources.Get $path) (resources.Get $path) -}}
+    {{- $src = .RelPermalink -}}
+    {{- with $url.RawQuery -}}
+      {{- $src = printf "%s?%s" $src . -}}
+    {{- end -}}
+    {{- with $url.Fragment -}}
+      {{- $src = printf "%s#%s" $src . -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if and .IsBlock .Title -}}
+  <figure class="markdown-figure">
+    <img
+      src="{{ $src | safeURL }}"
+      alt="{{ .PlainText }}"
+      loading="lazy"
+      decoding="async"
+    >
+    <figcaption>{{ .Title }}</figcaption>
+  </figure>
+{{- else -}}
+  <img
+    src="{{ $src | safeURL }}"
+    alt="{{ .PlainText }}"
+    loading="lazy"
+    decoding="async"
+    {{- with .Title }} title="{{ . }}"{{ end -}}
+  >
+{{- end -}}

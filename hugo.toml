@@ -11,6 +11,9 @@ enableEmoji = true
 enableRobotsTXT = true
 hasCJKLanguage = true
 
+[pagination]
+pagerSize = 6
+
 # 语法高亮
 pygmentsUseClasses = true
 pygmentsCodeFences = true
@@ -31,6 +34,8 @@ customJs = ["js/custom.js"]
 
 [markup]
   [markup.goldmark]
+    [markup.goldmark.parser]
+      wrapStandAloneImageWithinParagraph = false
     [markup.goldmark.renderer]
       unsafe = true
     [markup.goldmark.extensions]
