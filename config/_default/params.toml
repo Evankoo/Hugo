@@ -6,7 +6,7 @@ profilePicture = "images/profile.png"
 keywords = "一人公司, IP打造, 心理成长"
 favicon = "favicons/"
 # example ["js/custom.js"]
-customJs = ["js/custom.js"] 
+customJs = ["js/vendor/qrcode-generator.min.js", "js/custom.js"]
 mainSections = ["post"]
 images = ["images/share-default-400.jpg"]
 doNotLoadAnimations = false

@@ -96,13 +96,23 @@
 })();
 
 /* ==========================================================
-   手机端分享：系统分享面板 / 微信右上角提示 / 复制链接兜底
-   使用事件委托，局部导航替换页面后无需重新绑定
+   手机端分享海报：文章沿用封面比例，首页/联系页用统一视觉，
+   About 使用电子名片。所有二维码都在点击时读取当前页面地址。
    ========================================================== */
 (function () {
+  const MAX_ARTICLE_WIDTH = 1200;
+  const MAX_ARTICLE_HEIGHT = 1600;
+  let posterRoot = null;
+  let posterObjectUrl = null;
+  let currentPosterBlob = null;
+  let currentPosterFilename = 'evan-share.jpg';
   let toastTimer = null;
 
-  function showShareToast(message, wechat) {
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
+  function showShareToast(message) {
     let toast = document.querySelector('.share-toast');
     if (!toast) {
       toast = document.createElement('div');
@@ -111,21 +121,20 @@
       toast.setAttribute('aria-live', 'polite');
       document.body.appendChild(toast);
     }
-    toast.classList.toggle('share-toast--wechat', Boolean(wechat));
     toast.textContent = message;
     toast.classList.add('is-visible');
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function () {
       toast.classList.remove('is-visible');
-    }, wechat ? 3600 : 2200);
+    }, 2200);
   }
 
-  function copyCurrentUrl() {
+  function copyUrl(url) {
     if (navigator.clipboard && window.isSecureContext) {
-      return navigator.clipboard.writeText(location.href);
+      return navigator.clipboard.writeText(url);
     }
     const field = document.createElement('textarea');
-    field.value = location.href;
+    field.value = url;
     field.setAttribute('readonly', '');
     field.style.position = 'fixed';
     field.style.opacity = '0';
@@ -136,39 +145,393 @@
     return copied ? Promise.resolve() : Promise.reject(new Error('copy failed'));
   }
 
-  document.addEventListener('click', async function (event) {
+  function loadImage(source) {
+    return new Promise(function (resolve, reject) {
+      const image = new Image();
+      image.decoding = 'async';
+      image.onload = function () { resolve(image); };
+      image.onerror = function () { reject(new Error('image failed: ' + source)); };
+      image.src = source;
+    });
+  }
+
+  function fitCover(ctx, image, x, y, width, height) {
+    const scale = Math.max(width / image.naturalWidth, height / image.naturalHeight);
+    const sourceWidth = width / scale;
+    const sourceHeight = height / scale;
+    const sourceX = (image.naturalWidth - sourceWidth) / 2;
+    const sourceY = (image.naturalHeight - sourceHeight) / 2;
+    ctx.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, x, y, width, height);
+  }
+
+  function roundedRect(ctx, x, y, width, height, radius) {
+    const r = Math.min(radius, width / 2, height / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + width, y, x + width, y + height, r);
+    ctx.arcTo(x + width, y + height, x, y + height, r);
+    ctx.arcTo(x, y + height, x, y, r);
+    ctx.arcTo(x, y, x + width, y, r);
+    ctx.closePath();
+  }
+
+  function wrapText(ctx, text, maxWidth, maxLines) {
+    const characters = Array.from((text || '').trim());
+    const lines = [];
+    let line = '';
+    characters.forEach(function (character) {
+      const candidate = line + character;
+      if (line && ctx.measureText(candidate).width > maxWidth) {
+        lines.push(line);
+        line = character;
+      } else {
+        line = candidate;
+      }
+    });
+    if (line) lines.push(line);
+    if (lines.length > maxLines) {
+      lines.length = maxLines;
+      let finalLine = lines[maxLines - 1];
+      while (finalLine && ctx.measureText(finalLine + '…').width > maxWidth) {
+        finalLine = Array.from(finalLine).slice(0, -1).join('');
+      }
+      lines[maxLines - 1] = finalLine + '…';
+    }
+    return lines;
+  }
+
+  function drawQr(ctx, url, x, y, requestedSize, radius) {
+    if (typeof window.qrcode !== 'function') throw new Error('QR generator unavailable');
+    window.qrcode.stringToBytes = window.qrcode.stringToBytesFuncs['UTF-8'];
+    const qr = window.qrcode(0, 'M');
+    qr.addData(url);
+    qr.make();
+    const quietModules = 4;
+    const modules = qr.getModuleCount();
+    const cell = Math.max(2, Math.floor(requestedSize / (modules + quietModules * 2)));
+    const size = cell * (modules + quietModules * 2);
+    roundedRect(ctx, x, y, size, size, radius);
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+    ctx.fillStyle = '#111820';
+    for (let row = 0; row < modules; row += 1) {
+      for (let column = 0; column < modules; column += 1) {
+        if (!qr.isDark(row, column)) continue;
+        ctx.fillRect(
+          x + (column + quietModules) * cell,
+          y + (row + quietModules) * cell,
+          cell,
+          cell
+        );
+      }
+    }
+    return size;
+  }
+
+  function canvasToBlob(canvas) {
+    return new Promise(function (resolve, reject) {
+      canvas.toBlob(function (blob) {
+        if (blob) resolve(blob);
+        else reject(new Error('poster export failed'));
+      }, 'image/jpeg', 0.85);
+    });
+  }
+
+  async function drawArticlePoster(data) {
+    const image = await loadImage(data.image);
+    const scale = Math.min(
+      1,
+      MAX_ARTICLE_WIDTH / image.naturalWidth,
+      MAX_ARTICLE_HEIGHT / image.naturalHeight
+    );
+    const width = Math.max(1, Math.round(image.naturalWidth * scale));
+    const height = Math.max(1, Math.round(image.naturalHeight * scale));
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(image, 0, 0, width, height);
+
+    const padding = clamp(Math.round(width * 0.045), 22, 54);
+    const qrRequest = clamp(Math.round(Math.min(width, height) * 0.25), 128, 240);
+    const fontSize = clamp(Math.round(width * 0.045), 26, 54);
+    const lineHeight = Math.round(fontSize * 1.38);
+    const qrSpace = qrRequest + padding;
+    const textWidth = Math.max(width * 0.42, width - qrSpace - padding * 2);
+    ctx.font = '600 ' + fontSize + 'px "PingFang SC", "Noto Sans CJK SC", sans-serif';
+    const lines = wrapText(ctx, data.title, textWidth, 3);
+    const panelHeight = Math.min(
+      height * 0.58,
+      Math.max(qrRequest + padding * 2, lines.length * lineHeight + padding * 2)
+    );
+    const panelTop = height - panelHeight;
+    const gradient = ctx.createLinearGradient(0, panelTop - panelHeight * 0.24, 0, height);
+    gradient.addColorStop(0, 'rgba(9, 16, 22, 0)');
+    gradient.addColorStop(0.25, 'rgba(9, 16, 22, 0.72)');
+    gradient.addColorStop(1, 'rgba(9, 16, 22, 0.9)');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, panelTop - panelHeight * 0.24, width, panelHeight * 1.24);
+
+    ctx.fillStyle = '#f8f6f0';
+    ctx.textBaseline = 'top';
+    lines.forEach(function (line, index) {
+      ctx.fillText(line, padding, panelTop + padding + index * lineHeight);
+    });
+    const qrSize = drawQr(
+      ctx,
+      data.url,
+      width - padding - qrRequest,
+      height - padding - qrRequest,
+      qrRequest,
+      clamp(Math.round(width * 0.012), 7, 14)
+    );
+    if (qrSize !== qrRequest) {
+      // qrcode modules use whole pixels; align the resulting square to the same corner.
+      ctx.clearRect(width - padding - qrRequest, height - padding - qrRequest, qrRequest, qrRequest);
+      drawQr(ctx, data.url, width - padding - qrSize, height - padding - qrSize, qrRequest, 10);
+    }
+    return canvas;
+  }
+
+  async function drawStandardPoster(data) {
+    const image = await loadImage(data.image);
+    const canvas = document.createElement('canvas');
+    canvas.width = 1080;
+    canvas.height = 1350;
+    const ctx = canvas.getContext('2d');
+    const width = canvas.width;
+    const height = canvas.height;
+    const visualHeight = 990;
+    const panelTop = visualHeight;
+    const padding = 76;
+    const qrRequest = 252;
+
+    if (data.kind === 'contact') {
+      const background = ctx.createLinearGradient(0, 0, width, visualHeight);
+      background.addColorStop(0, '#172631');
+      background.addColorStop(0.55, '#101c25');
+      background.addColorStop(1, '#0b151d');
+      ctx.fillStyle = background;
+      ctx.fillRect(0, 0, width, visualHeight);
+      ctx.strokeStyle = 'rgba(216, 183, 117, 0.2)';
+      ctx.lineWidth = 2;
+      [150, 205, 830, 885].forEach(function (offset) {
+        ctx.beginPath();
+        ctx.arc(width / 2, visualHeight / 2, offset, 0, Math.PI * 2);
+        ctx.stroke();
+      });
+      ctx.fillStyle = '#f6f3ec';
+      ctx.font = '500 104px "PingFang SC", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('联系伊万', width / 2, 448);
+      ctx.fillStyle = '#d8b775';
+      ctx.fillRect(width / 2 - 96, 535, 192, 4);
+      ctx.fillStyle = 'rgba(246, 243, 236, 0.7)';
+      ctx.font = '400 30px "PingFang SC", sans-serif';
+      ctx.fillText('内容合作 · 项目咨询 · 交流联系', width / 2, 610);
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'top';
+    } else {
+      fitCover(ctx, image, 0, 0, width, visualHeight);
+    }
+
+    ctx.fillStyle = '#f5f1e8';
+    ctx.fillRect(0, panelTop, width, height - panelTop);
+    ctx.fillStyle = '#b49456';
+    ctx.fillRect(padding, panelTop + 54, 120, 3);
+    ctx.fillStyle = '#17222b';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.font = '600 43px "PingFang SC", sans-serif';
+    ctx.fillText(data.kind === 'contact' ? '扫码打开联系方式' : 'evan-manual.com', padding, panelTop + 84);
+    ctx.fillStyle = '#56616a';
+    ctx.font = '400 30px "PingFang SC", sans-serif';
+    ctx.fillText(data.kind === 'contact' ? '微信、内容平台与合作入口' : '文章 · 思考 · 个人记录', padding, panelTop + 151);
+    ctx.fillStyle = '#8b7650';
+    ctx.font = '400 24px "PingFang SC", sans-serif';
+    ctx.fillText(data.kind === 'contact' ? data.copy : '扫码访问网站', padding, panelTop + 236);
+    drawQr(ctx, data.url, width - padding - qrRequest, panelTop + 54, qrRequest, 16);
+    return canvas;
+  }
+
+  async function drawAboutPoster(data) {
+    const avatar = await loadImage(data.image);
+    const canvas = document.createElement('canvas');
+    canvas.width = 1080;
+    canvas.height = 1350;
+    const ctx = canvas.getContext('2d');
+    const width = canvas.width;
+    const height = canvas.height;
+    const background = ctx.createLinearGradient(0, 0, width, height);
+    background.addColorStop(0, '#f7f4ed');
+    background.addColorStop(1, '#ece6da');
+    ctx.fillStyle = background;
+    ctx.fillRect(0, 0, width, height);
+
+    const avatarSize = 264;
+    const avatarX = 80;
+    const avatarY = 104;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(avatarX + avatarSize / 2, avatarY + avatarSize / 2, avatarSize / 2, 0, Math.PI * 2);
+    ctx.clip();
+    fitCover(ctx, avatar, avatarX, avatarY, avatarSize, avatarSize);
+    ctx.restore();
+
+    ctx.fillStyle = '#16222b';
+    ctx.font = '600 96px "PingFang SC", sans-serif';
+    ctx.textBaseline = 'top';
+    ctx.fillText('伊万', 398, 120);
+    ctx.fillStyle = '#34414a';
+    ctx.font = '400 35px "PingFang SC", sans-serif';
+    ctx.fillText('个体 / 项目 / 老板 IP 操盘手', 402, 254);
+    ctx.fillText('ACT 心理博主', 402, 310);
+
+    ctx.fillStyle = '#c5a96d';
+    ctx.fillRect(80, 438, 150, 3);
+    ctx.fillStyle = '#16222b';
+    ctx.font = '500 46px "PingFang SC", sans-serif';
+    ctx.fillText('把专业能力变成长期内容，', 80, 510);
+    ctx.fillText('也持续记录个体成长与心理探索。', 80, 578);
+
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+    roundedRect(ctx, 64, 760, 952, 424, 28);
+    ctx.fill();
+    const qrRequest = 316;
+    drawQr(ctx, data.url, 100, 814, qrRequest, 18);
+    ctx.fillStyle = '#16222b';
+    ctx.font = '600 42px "PingFang SC", sans-serif';
+    ctx.fillText('扫码查看完整介绍', 470, 868);
+    ctx.fillStyle = '#667078';
+    ctx.font = '400 28px "PingFang SC", sans-serif';
+    ctx.fillText('evan-manual.com/about/', 470, 938);
+    ctx.fillStyle = '#8b7650';
+    ctx.font = '400 26px "PingFang SC", sans-serif';
+    ctx.fillText('个人经历 · 内容方向 · 联系方式', 470, 1020);
+    ctx.fillStyle = '#9b7e43';
+    ctx.font = '500 25px "PingFang SC", sans-serif';
+    ctx.fillText('伊万的个人主页', 80, 1252);
+    return canvas;
+  }
+
+  function ensurePosterRoot() {
+    if (posterRoot) return posterRoot;
+    posterRoot = document.createElement('div');
+    posterRoot.className = 'share-poster';
+    posterRoot.hidden = true;
+    posterRoot.setAttribute('role', 'dialog');
+    posterRoot.setAttribute('aria-modal', 'true');
+    posterRoot.setAttribute('aria-labelledby', 'share-poster-title');
+    posterRoot.innerHTML =
+      '<div class="share-poster__sheet">' +
+        '<div class="share-poster__header">' +
+          '<div><p class="share-poster__eyebrow">SHARE</p><h2 id="share-poster-title">分享当前页面</h2></div>' +
+          '<button type="button" class="share-poster__close" aria-label="关闭分享图">×</button>' +
+        '</div>' +
+        '<div class="share-poster__stage">' +
+          '<div class="share-poster__loading" role="status">正在生成分享图…</div>' +
+          '<img class="share-poster__image" alt="当前页面的二维码分享图" hidden />' +
+        '</div>' +
+        '<p class="share-poster__hint"></p>' +
+        '<div class="share-poster__actions">' +
+          '<a class="share-poster__save" href="#" download>保存图片</a>' +
+          '<button type="button" class="share-poster__copy">复制链接</button>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(posterRoot);
+    posterRoot.querySelector('.share-poster__close').addEventListener('click', closePoster);
+    posterRoot.addEventListener('click', function (event) {
+      if (event.target === posterRoot) closePoster();
+    });
+    posterRoot.querySelector('.share-poster__copy').addEventListener('click', async function () {
+      try {
+        await copyUrl(posterRoot.dataset.shareUrl || location.href);
+        showShareToast('链接已复制');
+      } catch (error) {
+        showShareToast('请复制浏览器地址栏中的链接');
+      }
+    });
+    return posterRoot;
+  }
+
+  function closePoster() {
+    if (!posterRoot) return;
+    posterRoot.hidden = true;
+    document.documentElement.classList.remove('share-poster-open');
+  }
+
+  async function openPoster(button) {
+    const root = ensurePosterRoot();
+    const imageElement = root.querySelector('.share-poster__image');
+    const loading = root.querySelector('.share-poster__loading');
+    const save = root.querySelector('.share-poster__save');
+    const hint = root.querySelector('.share-poster__hint');
+    const absoluteUrl = new URL(button.dataset.shareUrl || location.href, location.href).href;
+    const imageUrl = new URL(button.dataset.shareImage || '/images/share-default.jpg', location.href).href;
+    const data = {
+      kind: button.dataset.shareKind || 'page',
+      title: button.dataset.shareTitle || document.title,
+      copy: button.dataset.shareCopy || '扫码打开当前页面',
+      image: imageUrl,
+      url: absoluteUrl
+    };
+    root.dataset.shareUrl = absoluteUrl;
+    root.hidden = false;
+    document.documentElement.classList.add('share-poster-open');
+    imageElement.hidden = true;
+    loading.hidden = false;
+    loading.textContent = '正在生成分享图…';
+    save.classList.add('is-disabled');
+    save.removeAttribute('href');
+    hint.textContent = /MicroMessenger/i.test(navigator.userAgent)
+      ? '长按图片保存，再发送给朋友；对方扫码即可打开。'
+      : '保存图片后发送给朋友，对方扫码即可打开。';
+    try {
+      if (document.fonts && document.fonts.ready) await document.fonts.ready;
+      let canvas;
+      if (data.kind === 'article') canvas = await drawArticlePoster(data);
+      else if (data.kind === 'about') canvas = await drawAboutPoster(data);
+      else canvas = await drawStandardPoster(data);
+      currentPosterBlob = await canvasToBlob(canvas);
+      if (posterObjectUrl) URL.revokeObjectURL(posterObjectUrl);
+      posterObjectUrl = URL.createObjectURL(currentPosterBlob);
+      currentPosterFilename = data.kind === 'article'
+        ? '伊万-文章分享图.jpg'
+        : data.kind === 'about'
+          ? '伊万-电子名片.jpg'
+          : '伊万-分享图.jpg';
+      imageElement.src = posterObjectUrl;
+      imageElement.hidden = false;
+      loading.hidden = true;
+      save.href = posterObjectUrl;
+      save.download = currentPosterFilename;
+      save.classList.remove('is-disabled');
+    } catch (error) {
+      loading.textContent = '分享图生成失败，请稍后重试。';
+      console.error(error);
+    }
+  }
+
+  function syncShareButton(sourceDocument) {
+    const source = sourceDocument && sourceDocument.querySelector('.navbar-share');
+    const target = document.querySelector('.navbar-share');
+    if (!source || !target) return;
+    ['shareTitle', 'shareDescription', 'shareKind', 'shareImage', 'shareUrl', 'shareCopy'].forEach(function (key) {
+      target.dataset[key] = source.dataset[key] || '';
+    });
+  }
+
+  document.addEventListener('click', function (event) {
     const button = event.target.closest && event.target.closest('.navbar-share');
     if (!button) return;
     event.preventDefault();
-
-    const isWechat = /MicroMessenger/i.test(navigator.userAgent);
-    if (isWechat) {
-      showShareToast('请点击右上角 ···，选择“转发给朋友”', true);
-      return;
-    }
-
-    const shareData = {
-      title: button.dataset.shareTitle || document.title,
-      text: button.dataset.shareDescription || '',
-      url: location.href
-    };
-
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-        return;
-      } catch (error) {
-        if (error && error.name === 'AbortError') return;
-      }
-    }
-
-    try {
-      await copyCurrentUrl();
-      showShareToast('链接已复制');
-    } catch (error) {
-      showShareToast('请复制浏览器地址栏中的链接');
-    }
+    openPoster(button);
   });
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' && posterRoot && !posterRoot.hidden) closePoster();
+  });
+  window.__evanSyncShareButton = syncShareButton;
 })();
 
 /* ==========================================================
@@ -445,6 +808,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if (push) history.pushState({ evanNav: true }, '', url);
       document.title = doc.title;
+      if (window.__evanSyncShareButton) window.__evanSyncShareButton(doc);
 
       main.style.opacity = '0';
       setTimeout(function () {
