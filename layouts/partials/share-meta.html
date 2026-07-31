@@ -44,6 +44,9 @@
     {{- end -}}
   {{- end -}}
 {{- end -}}
+{{- if $shareImage -}}
+  {{- $shareImage = printf "%s?v=1" $shareImage -}}
+{{- end -}}
 
 <meta property="og:locale" content="zh_CN" />
 <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}" />

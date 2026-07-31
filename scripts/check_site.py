@@ -141,6 +141,11 @@ def validate_social_previews(site: Path) -> list[str]:
             )
             continue
 
+        if image.query != "v=1":
+            errors.append(
+                f"social image cache version is missing: {page.relative_to(site)}"
+            )
+
         image_file = site / unquote(image.path).lstrip("/")
         if not image_file.is_file():
             errors.append(
