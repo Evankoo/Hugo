@@ -96,6 +96,82 @@
 })();
 
 /* ==========================================================
+   手机端分享：系统分享面板 / 微信右上角提示 / 复制链接兜底
+   使用事件委托，局部导航替换页面后无需重新绑定
+   ========================================================== */
+(function () {
+  let toastTimer = null;
+
+  function showShareToast(message, wechat) {
+    let toast = document.querySelector('.share-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.className = 'share-toast';
+      toast.setAttribute('role', 'status');
+      toast.setAttribute('aria-live', 'polite');
+      document.body.appendChild(toast);
+    }
+    toast.classList.toggle('share-toast--wechat', Boolean(wechat));
+    toast.textContent = message;
+    toast.classList.add('is-visible');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () {
+      toast.classList.remove('is-visible');
+    }, wechat ? 3600 : 2200);
+  }
+
+  function copyCurrentUrl() {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(location.href);
+    }
+    const field = document.createElement('textarea');
+    field.value = location.href;
+    field.setAttribute('readonly', '');
+    field.style.position = 'fixed';
+    field.style.opacity = '0';
+    document.body.appendChild(field);
+    field.select();
+    const copied = document.execCommand('copy');
+    field.remove();
+    return copied ? Promise.resolve() : Promise.reject(new Error('copy failed'));
+  }
+
+  document.addEventListener('click', async function (event) {
+    const button = event.target.closest && event.target.closest('.navbar-share');
+    if (!button) return;
+    event.preventDefault();
+
+    const isWechat = /MicroMessenger/i.test(navigator.userAgent);
+    if (isWechat) {
+      showShareToast('请点击右上角 ···，选择“转发给朋友”', true);
+      return;
+    }
+
+    const shareData = {
+      title: button.dataset.shareTitle || document.title,
+      text: button.dataset.shareDescription || '',
+      url: location.href
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+        return;
+      } catch (error) {
+        if (error && error.name === 'AbortError') return;
+      }
+    }
+
+    try {
+      await copyCurrentUrl();
+      showShareToast('链接已复制');
+    } catch (error) {
+      showShareToast('请复制浏览器地址栏中的链接');
+    }
+  });
+})();
+
+/* ==========================================================
    侧栏动态画廊：点击空白翻入画廊，点击首页恢复头像；
    封面以温和淡入淡出自动轮播；跨普通页面保持画廊状态。
    ========================================================== */

@@ -22,14 +22,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="author" content="{{ .Site.Params.author }}" />
 
-<meta
-    name="description"
-    content="{{ if .Params.description }}
-      {{- .Params.description -}}
-    {{ else }}
-      {{- .Site.Params.description -}}
-    {{ end }}"
-  />
+  {{- $metaDescription := .Site.Params.description | default .Site.Title -}}
+  {{- if .IsPage -}}
+    {{- $metaDescription = .Params.description | default .Params.summary | default .Summary | default $metaDescription -}}
+  {{- end -}}
+  {{- $metaDescription = $metaDescription | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace | truncate 160 -}}
+  <meta name="description" content="{{ $metaDescription }}" />
 
   {{ if .Params.redirectUrl }}
     <meta http-equiv="refresh" content="1; url={{ .Params.redirectUrl }}" />
@@ -212,12 +210,8 @@
   {{ end }}
 
 
-  <!-- Twitter Cards -->
-  {{ template "_internal/twitter_cards.html" . }}
-
-
-  <!-- Open Graph -->
-  {{ template "_internal/opengraph.html" . }}
+  <!-- Link previews for WeChat and other social platforms -->
+  {{ partial "share-meta.html" . }}
 
 
   <!-- Schema.org-->

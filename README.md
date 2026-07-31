@@ -31,8 +31,12 @@ Hugo generates the delivery files during the build:
   responsive `srcset`; only the first card is eager-loaded.
 - Sidebar gallery images: `720px` wide WebP at quality 82; JavaScript loads only
   the current image.
-- Article pages: do not repeat the cover above the body. The canonical cover is
-  retained for metadata and future sharing integrations.
+- Article pages: do not repeat the cover above the body. Hugo crops the
+  canonical cover to a generated `600px` square JPEG for social sharing.
+- Non-article pages use `static/images/share-default.jpg` as the shared
+  brand thumbnail. The mobile header exposes one share control on every page;
+  it uses the system share sheet when available, shows WeChat forwarding
+  guidance inside WeChat, and falls back to copying the current URL.
 
 Do not hand-maintain separate thumbnail or gallery files. The generated image
 cache belongs in `resources/` and must not be committed.
