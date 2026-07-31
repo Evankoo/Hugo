@@ -1,0 +1,20 @@
+{{- $type := .Get "type" | default "note" -}}
+{{- $allowed := slice "key-point" "note" "warning" -}}
+{{- if not (in $allowed $type) -}}
+  {{- errorf "callout type %q is invalid; use key-point, note, or warning (%s)" $type .Position -}}
+{{- end -}}
+{{- $labels := dict
+  "key-point" "关键要点"
+  "note" "补充说明"
+  "warning" "注意"
+-}}
+<aside
+  class="markdown-callout markdown-callout--{{ $type }}"
+  role="note"
+  aria-label="{{ index $labels $type }}"
+>
+  <p class="markdown-callout__title">{{ index $labels $type }}</p>
+  <div class="markdown-callout__content">
+    {{- .Inner | markdownify -}}
+  </div>
+</aside>

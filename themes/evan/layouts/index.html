@@ -30,7 +30,29 @@
     {{ end }}
   </div>
 
-  <div class="pagination">
-    {{ partial "pagination.html" . }}
+  <div
+    class="gallery-feed"
+    data-gallery-feed
+    data-state="{{ if $paginator.HasNext }}idle{{ else }}complete{{ end }}"
+    {{ if $paginator.HasNext }}data-next-url="{{ $paginator.Next.URL }}"{{ end }}
+    aria-live="polite"
+  >
+    <span class="gallery-feed__indicator" aria-hidden="true"></span>
+    <span class="gallery-feed__status">
+      {{- if $paginator.HasNext -}}
+        继续向下浏览
+      {{- else -}}
+        已经看完全部文章
+      {{- end -}}
+    </span>
+    <button class="gallery-feed__retry" type="button" hidden>重新加载</button>
   </div>
+
+  {{ if $paginator.HasNext }}
+    <noscript>
+      <p class="gallery-feed__fallback">
+        <a href="{{ $paginator.Next.URL }}">继续浏览</a>
+      </p>
+    </noscript>
+  {{ end }}
 {{ end }}
