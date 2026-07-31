@@ -25,6 +25,15 @@ front matter, and keep the source image at no more than `1600px` on its longest
 edge. JPEG is preferred for paintings and photographs; aim for a source file
 below roughly `800KB` when it can be achieved without visible artifacts.
 
+The preferred source library for article paintings is the NAS mount at
+`/Volumes/名画`. `EVAN_COVER_LIBRARY` may point to the equivalent mount on
+another Mac. Every selected painting is recorded in `data/cover-usage.json`
+with its source filename and SHA-256 digest. `scripts/check_site.py` rejects
+duplicate canonical covers, repeated registry selections, missing bundle
+files, and a registry digest that no longer matches the selected cover. When
+the NAS library is mounted, it also verifies that the recorded source still
+exists and has the same digest.
+
 Hugo generates the delivery files during the build:
 
 - Home gallery thumbnails: `480px` and `720px` wide WebP at quality 78, with
@@ -35,9 +44,10 @@ Hugo generates the delivery files during the build:
   canonical cover to a `400px` square JPEG with a stable `/images/share/`
   URL for social sharing.
 - Non-article pages use `static/images/share-default-400.jpg` as the shared
-  brand thumbnail. The mobile header exposes one share control on every page;
-  it uses the system share sheet when available, shows WeChat forwarding
-  guidance inside WeChat, and falls back to copying the current URL.
+  brand thumbnail. On touch devices the mobile header can generate a JPEG
+  poster locally, with a QR code for the current page. Articles use their own
+  cover, About uses the profile card, and Home and Contact use their dedicated
+  poster layouts. No source image or page content is uploaded for generation.
 
 Do not hand-maintain separate thumbnail or gallery files. The generated image
 cache belongs in `resources/` and must not be committed.
