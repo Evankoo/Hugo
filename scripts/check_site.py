@@ -4,11 +4,16 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import os
 import re
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
 class ReferenceParser(HTMLParser):
@@ -121,6 +126,94 @@ def jpeg_dimensions(path: Path) -> tuple[int, int] | None:
             return width, height
         offset += segment_length
     return None
+
+
+def file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as source:
+        for chunk in iter(lambda: source.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def canonical_article_covers() -> list[tuple[Path, str]]:
+    covers: list[tuple[Path, str]] = []
+    for index in sorted((REPO_ROOT / "content/post").glob("*/index.md")):
+        source = index.read_text(encoding="utf-8")
+        front_matter = source.split("---", 2)
+        if len(front_matter) < 3:
+            continue
+        match = re.search(r"^image:\s*[\"']?([^\"'\n]+)", front_matter[1], re.MULTILINE)
+        if not match:
+            continue
+        cover = index.parent / match.group(1).strip()
+        if cover.is_file():
+            covers.append((cover, file_sha256(cover)))
+    return covers
+
+
+def validate_cover_usage() -> list[str]:
+    errors: list[str] = []
+    cover_hashes: dict[str, Path] = {}
+    for cover, digest in canonical_article_covers():
+        previous = cover_hashes.get(digest)
+        if previous:
+            errors.append(
+                f"duplicate canonical cover: {previous.relative_to(REPO_ROOT)} and "
+                f"{cover.relative_to(REPO_ROOT)}"
+            )
+        else:
+            cover_hashes[digest] = cover
+
+    registry_path = REPO_ROOT / "data/cover-usage.json"
+    if not registry_path.is_file():
+        return errors
+    try:
+        registry = json.loads(registry_path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError) as error:
+        return [*errors, f"invalid cover registry: {error}"]
+
+    library = Path(os.environ.get("EVAN_COVER_LIBRARY") or registry.get("library_root", ""))
+    seen_sources: dict[str, str] = {}
+    seen_articles: set[str] = set()
+    required = {
+        "article_slug",
+        "bundle_cover",
+        "selected_at",
+        "source_filename",
+        "source_sha256",
+    }
+    for position, selection in enumerate(registry.get("selections", []), start=1):
+        missing = sorted(required - selection.keys())
+        if missing:
+            errors.append(f"cover registry entry {position} missing: {', '.join(missing)}")
+            continue
+        article = selection["article_slug"]
+        digest = selection["source_sha256"]
+        if digest in seen_sources:
+            errors.append(
+                f"cover selected more than once: {seen_sources[digest]} and {article}"
+            )
+        else:
+            seen_sources[digest] = article
+        if article in seen_articles:
+            errors.append(f"article has multiple registered covers: {article}")
+        seen_articles.add(article)
+
+        bundle_cover = REPO_ROOT / selection["bundle_cover"]
+        if not bundle_cover.is_file():
+            errors.append(f"registered bundle cover is missing: {selection['bundle_cover']}")
+        elif file_sha256(bundle_cover) != digest:
+            errors.append(f"registered bundle cover digest changed: {selection['bundle_cover']}")
+
+        if library.is_dir():
+            source = library / selection["source_filename"]
+            if not source.is_file():
+                errors.append(f"registered NAS cover is missing: {source}")
+            elif file_sha256(source) != digest:
+                errors.append(f"registered NAS cover digest changed: {source}")
+
+    return errors
 
 
 def validate_social_previews(site: Path) -> list[str]:
@@ -377,6 +470,12 @@ def main() -> int:
     image_errors = validate_gallery_images(site)
     if image_errors:
         for error in image_errors:
+            print(error)
+        return 1
+
+    cover_usage_errors = validate_cover_usage()
+    if cover_usage_errors:
+        for error in cover_usage_errors:
             print(error)
         return 1
 
