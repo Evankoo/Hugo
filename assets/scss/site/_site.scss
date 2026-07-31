@@ -1653,7 +1653,6 @@ html.theme--dark .topic-article-item {
     border-radius: 50%;
     color: inherit;
     cursor: pointer;
-    display: inline-flex;
     font-size: 17px;
     height: 42px;
     justify-content: center;
@@ -1825,5 +1824,12 @@ html.theme--dark .topic-article-item {
   .post--single .post__header {
     padding-bottom: 0;
     margin-bottom: 16px;
+  }
+}
+
+/* 分享按钮只给触屏手机/平板显示，避免窄窗口的电脑端误出现。 */
+@media (max-width: 960px) and (hover: none) and (pointer: coarse) {
+  .navbar-share {
+    display: inline-flex;
   }
 }
