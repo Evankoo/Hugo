@@ -1029,30 +1029,24 @@ html.theme--dark .sidebar-portrait__artwork {
   line-height: 1.2;
 }
 
-html.evan-portrait-animate .sidebar-portrait__artwork {
+html.evan-portrait-loop .sidebar-portrait__artwork {
   animation: evan-portrait-reveal 0.68s cubic-bezier(0.2, 0.7, 0.25, 1) both;
 }
 
-html.evan-portrait-animate .sidebar-portrait__caption {
-  animation: evan-portrait-caption 0.34s ease 2.12s both;
+html.evan-portrait-loop .sidebar-portrait__caption {
+  animation: evan-portrait-caption-loop 8s ease-in-out infinite both;
 }
 
-html.evan-portrait-animate .sidebar-portrait__intro p {
-  animation: evan-portrait-line 1.8s ease both;
+html.evan-portrait-loop .sidebar-portrait__intro p {
+  animation: evan-portrait-line-1 8s ease-in-out infinite both;
 }
 
-html.evan-portrait-animate .sidebar-portrait__intro p[data-portrait-step='line-1'] {
-  animation-delay: 0.34s;
+html.evan-portrait-loop .sidebar-portrait__intro p[data-portrait-step='line-2'] {
+  animation-name: evan-portrait-line-2;
 }
 
-html.evan-portrait-animate .sidebar-portrait__intro p[data-portrait-step='line-2'] {
-  animation-delay: 0.64s;
-  animation-duration: 1.5s;
-}
-
-html.evan-portrait-animate .sidebar-portrait__intro p[data-portrait-step='line-3'] {
-  animation-delay: 0.94s;
-  animation-duration: 1.2s;
+html.evan-portrait-loop .sidebar-portrait__intro p[data-portrait-step='line-3'] {
+  animation-name: evan-portrait-line-3;
 }
 
 @keyframes evan-portrait-reveal {
@@ -1068,29 +1062,63 @@ html.evan-portrait-animate .sidebar-portrait__intro p[data-portrait-step='line-3
   }
 }
 
-@keyframes evan-portrait-line {
-  0%, 8% {
+@keyframes evan-portrait-line-1 {
+  0%, 3% {
     opacity: 0;
     transform: translateY(5px);
   }
-  18%, 72% {
+  7%, 25% {
     opacity: 1;
     transform: translateY(0);
   }
-  100% {
+  31%, 100% {
     opacity: 0;
     transform: translateY(-2px);
   }
 }
 
-@keyframes evan-portrait-caption {
-  from {
+@keyframes evan-portrait-line-2 {
+  0%, 8% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  12%, 25% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  31%, 100% {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes evan-portrait-line-3 {
+  0%, 13% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  17%, 25% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  31%, 100% {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes evan-portrait-caption-loop {
+  0%, 28% {
     opacity: 0;
     transform: translateY(4px);
   }
-  to {
+  33%, 82% {
     opacity: 1;
     transform: translateY(0);
+  }
+  88%, 100% {
+    opacity: 0;
+    transform: translateY(-2px);
   }
 }
 
@@ -1136,21 +1164,21 @@ html.evan-portrait-animate .sidebar-portrait__intro p[data-portrait-step='line-3
 
 @media (prefers-reduced-motion: reduce) {
   .sidebar-portrait,
-  html.evan-portrait-animate .sidebar-portrait__artwork,
-  html.evan-portrait-animate .sidebar-portrait__caption,
-  html.evan-portrait-animate .sidebar-portrait__intro p {
+  html.evan-portrait-loop .sidebar-portrait__artwork,
+  html.evan-portrait-loop .sidebar-portrait__caption,
+  html.evan-portrait-loop .sidebar-portrait__intro p {
     animation: none;
     transition: none;
   }
 
-  html.evan-portrait-animate .sidebar-portrait__artwork,
-  html.evan-portrait-animate .sidebar-portrait__caption {
+  html.evan-portrait-loop .sidebar-portrait__artwork,
+  html.evan-portrait-loop .sidebar-portrait__caption {
     filter: none;
     opacity: 1;
     transform: none;
   }
 
-  html.evan-portrait-animate .sidebar-portrait__intro p {
+  html.evan-portrait-loop .sidebar-portrait__intro p {
     opacity: 0;
   }
 }
