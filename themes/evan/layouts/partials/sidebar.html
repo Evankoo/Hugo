@@ -9,46 +9,42 @@
   <div class="sidebar__flip-inner">
     <div class="sidebar__face sidebar__face--front">
       <div class="sidebar__content">
-        <div class="sidebar__introduction">
-          <img
-            class="sidebar__introduction-profileimage"
-            src="{{ .Site.Params.profilePicture | relURL }}"
-            alt="profile picture"
-          />
-          {{ if .IsHome }}
-            <div class="sidebar__introduction-title">
-              <h1>
-                <a href="{{ .Site.BaseURL | relLangURL }}">{{ .Site.Params.Title }}</a>
-              </h1>
+        <section
+          class="sidebar__introduction sidebar-portrait"
+          data-sidebar-portrait
+          role="button"
+          tabindex="0"
+          aria-label="伊万。近些年在给企业做营销服务，也是 AI 深度用户、心理茶话会主持人。打开文章画廊"
+        >
+          <figure class="sidebar-portrait__figure">
+            <div class="sidebar-portrait__artwork" data-portrait-step="portrait">
+              <img
+                class="sidebar-portrait__image"
+                src="{{ .Site.Params.profilePicture | relURL }}"
+                alt="伊万的肖像"
+              />
             </div>
-          {{ else }}
-            <div class="sidebar__introduction-title">
-              <a href="{{ .Site.BaseURL | relLangURL }}">{{ .Site.Params.Title }}</a>
+            <div class="sidebar-portrait__copy">
+              <div class="sidebar-portrait__intro" aria-hidden="true">
+                {{ range $index, $line := .Site.Params.sidebarPortraitIntro }}
+                  <p data-portrait-step="line-{{ add $index 1 }}">{{ $line }}</p>
+                {{ end }}
+              </div>
+              <figcaption class="sidebar-portrait__caption" data-portrait-step="caption">
+                {{ if .IsHome }}
+                  <h1>{{ .Site.Params.sidebarPortraitCaption | default .Site.Params.Title }}</h1>
+                {{ else }}
+                  <span class="sidebar-portrait__name">{{ .Site.Params.sidebarPortraitCaption | default .Site.Params.Title }}</span>
+                {{ end }}
+                <span class="sidebar-portrait__handle">{{ .Site.Params.sidebarPortraitHandle | default "🌍 Egan89757" }}</span>
+              </figcaption>
             </div>
-          {{ end }}
-          <div class="sidebar__introduction-description">
-            <p>{{ replace .Site.Params.description "\n" "<br />" | safeHTML }}</p>
-          </div>
-        </div>
-        <ul class="sidebar__list">
-          {{ range $item := .Site.Params.socialIcons }}
-            <li class="sidebar__list-item">
-              <a
-                href="{{ $item.url }}"
-                target="_blank"
-                rel="noopener me"
-                aria-label="{{ $item.title }}"
-                title="{{ $item.title }}"
-              >
-                <i class="{{ $item.icon }} fa-2x" aria-hidden="true"></i>
-              </a>
-            </li>
-          {{ end }}
-        </ul>
+          </figure>
+        </section>
       </div>
       {{- partial "footer.html" (dict "context" . "footerClassModifier" "sidebar") -}}
     </div>
-    <div class="sidebar__face sidebar__face--back" role="button" aria-label="切换文章封面" title="点击换一张">
+    <div class="sidebar__face sidebar__face--back" role="button" tabindex="-1" aria-label="切换文章封面" title="点击换一张">
       <img class="sidebar__gallery-img" src="" alt="文章封面" />
     </div>
   </div>

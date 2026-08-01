@@ -535,6 +535,100 @@
 })();
 
 /* ==========================================================
+   侧栏肖像序章：每次会话首次进入首页时依次播放；
+   内页保持完成态，减少动态效果偏好下不播放。
+   ========================================================== */
+(function () {
+  const STORAGE_KEY = 'evanPortraitSeenV1';
+  const ROOT_CLASS = 'evan-portrait-animate';
+  const DURATION_MS = 2600;
+  let finishTimer = null;
+
+  function isHome(pathname) {
+    return (pathname || '/').replace(/\/+$/, '') === '';
+  }
+
+  function prefersReducedMotion() {
+    return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  function finishAnimation() {
+    clearTimeout(finishTimer);
+    finishTimer = null;
+    document.documentElement.classList.remove(ROOT_CLASS);
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) sidebar.removeAttribute('aria-busy');
+  }
+
+  function scheduleFinish() {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar) {
+      sidebar.setAttribute('aria-busy', 'true');
+      sidebar.dataset.portraitPlayed = 'true';
+    }
+    clearTimeout(finishTimer);
+    finishTimer = setTimeout(finishAnimation, DURATION_MS);
+  }
+
+  function syncPortraitHeading(pathname) {
+    const caption = document.querySelector('.sidebar-portrait__caption');
+    if (!caption) return;
+    const current = caption.querySelector('h1, .sidebar-portrait__name');
+    if (!current) return;
+    const shouldBeHeading = isHome(pathname);
+    if ((shouldBeHeading && current.tagName === 'H1') || (!shouldBeHeading && current.tagName !== 'H1')) return;
+
+    const replacement = document.createElement(shouldBeHeading ? 'h1' : 'span');
+    if (!shouldBeHeading) replacement.className = 'sidebar-portrait__name';
+    replacement.textContent = current.textContent;
+    current.replaceWith(replacement);
+  }
+
+  function syncPortraitIntro(pathname) {
+    const root = document.documentElement;
+    const sidebar = document.getElementById('sidebar');
+    if (!sidebar) return;
+    syncPortraitHeading(pathname);
+
+    if (!isHome(pathname)) {
+      finishAnimation();
+      return;
+    }
+    if (root.classList.contains(ROOT_CLASS)) {
+      scheduleFinish();
+      return;
+    }
+    if (
+      root.classList.contains('evan-gallery') ||
+      sidebar.classList.contains('is-flipped') ||
+      sidebar.classList.contains('is-resetting-gallery')
+    ) return;
+
+    let seen = false;
+    try { seen = sessionStorage.getItem(STORAGE_KEY) === '1'; } catch (err) {}
+    if (seen) return;
+    try { sessionStorage.setItem(STORAGE_KEY, '1'); } catch (err) {}
+    if (prefersReducedMotion()) return;
+
+    // Restart the CSS sequence after an SPA navigation without rebuilding the sidebar.
+    root.classList.remove(ROOT_CLASS);
+    void sidebar.offsetWidth;
+    root.classList.add(ROOT_CLASS);
+    scheduleFinish();
+  }
+
+  function cancelPortraitIntro() {
+    finishAnimation();
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    syncPortraitIntro(location.pathname);
+  });
+  window.__evanSyncPortraitIntro = syncPortraitIntro;
+  window.__evanCancelPortraitIntro = cancelPortraitIntro;
+})();
+
+/* ==========================================================
    侧栏动态画廊：点击空白翻入画廊，点击首页恢复头像；
    封面以温和淡入淡出自动轮播；跨普通页面保持画廊状态。
    ========================================================== */
@@ -543,11 +637,18 @@ document.addEventListener('DOMContentLoaded', function () {
   if (!sidebar) return;
 
   const img = sidebar.querySelector('.sidebar__gallery-img');
+  const portrait = sidebar.querySelector('[data-sidebar-portrait]');
+  const galleryFace = sidebar.querySelector('.sidebar__face--back');
   const covers = Array.isArray(window.EVAN_COVERS) ? window.EVAN_COVERS : [];
   const STORAGE_KEY = 'evanGallery';
   const SRC_KEY = 'evanGallerySrc';
   const FADE_MS = 800;
   let lastIndex = -1;
+
+  function setGalleryTabState(flipped) {
+    if (portrait) portrait.setAttribute('tabindex', flipped ? '-1' : '0');
+    if (galleryFace) galleryFace.setAttribute('tabindex', flipped ? '0' : '-1');
+  }
 
   function randomCover() {
     if (!covers.length) return null;
@@ -586,8 +687,10 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
     if (!animated) sidebar.classList.add('no-anim');
+    if (window.__evanCancelPortraitIntro) window.__evanCancelPortraitIntro();
     img.setAttribute('src', c);
     sidebar.classList.add('is-flipped');
+    setGalleryTabState(true);
     try {
       sessionStorage.setItem(STORAGE_KEY, '1');
       sessionStorage.setItem(SRC_KEY, c);
@@ -604,7 +707,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function resetGallery(animated) {
     if (!animated) sidebar.classList.add('no-anim');
+    if (animated) sidebar.classList.add('is-resetting-gallery');
     sidebar.classList.remove('is-flipped');
+    setGalleryTabState(false);
     img.classList.remove('is-fading');
     document.documentElement.classList.remove('evan-gallery');
     try {
@@ -617,6 +722,11 @@ document.addEventListener('DOMContentLoaded', function () {
           sidebar.classList.remove('no-anim');
         });
       });
+    } else {
+      setTimeout(function () {
+        sidebar.classList.remove('is-resetting-gallery');
+        if (window.__evanSyncPortraitIntro) window.__evanSyncPortraitIntro(location.pathname);
+      }, 760);
     }
   }
 
@@ -627,9 +737,29 @@ document.addEventListener('DOMContentLoaded', function () {
       switchCover(); // 画廊态下点击：温和切换到下一张
       return;
     }
+    if (e.target.closest('[data-sidebar-portrait]')) {
+      enterGallery(true);
+      return;
+    }
     // 只有点击真正的空白区域才翻页：链接、图标、图片、列表不触发
     if (e.target.closest('a, button, img, i, ul, h1')) return;
     enterGallery(true);
+  });
+
+  sidebar.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    if (!sidebar.classList.contains('is-flipped') && e.target.closest('[data-sidebar-portrait]')) {
+      e.preventDefault();
+      enterGallery(true);
+      setTimeout(function () {
+        if (galleryFace) galleryFace.focus({ preventScroll: true });
+      }, 760);
+      return;
+    }
+    if (sidebar.classList.contains('is-flipped') && e.target.closest('.sidebar__face--back')) {
+      e.preventDefault();
+      switchCover();
+    }
   });
 
   document.addEventListener('click', function (e) {
@@ -820,6 +950,9 @@ document.addEventListener('DOMContentLoaded', function () {
         window.scrollTo(0, 0);
         if (window.__evanBindNavbar) window.__evanBindNavbar();
         if (window.__evanBindProgressiveGallery) window.__evanBindProgressiveGallery();
+        if (window.__evanSyncPortraitIntro) {
+          window.__evanSyncPortraitIntro(new URL(url, location.href).pathname);
+        }
         requestAnimationFrame(function () {
           requestAnimationFrame(function () {
             fresh.style.opacity = '1';

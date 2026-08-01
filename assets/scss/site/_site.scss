@@ -879,7 +879,284 @@ html[data-theme="dark"] .post--single .post__content {
 }
 
 /* ==========================================================
-   11. 🖼️ 侧栏翻页画廊 (Sidebar Flip Gallery)
+   11. 🖼️ 画廊第一幅：伊万 (Sidebar Portrait Prologue)
+   ========================================================== */
+
+:root {
+  --evan-portrait-panel: #f1ede4;
+  --evan-portrait-mat: #faf7f0;
+  --evan-portrait-ink: #293331;
+  --evan-portrait-muted: #78817d;
+  --evan-portrait-line: rgba(54, 67, 63, 0.13);
+  --evan-portrait-shadow: 0 24px 60px rgba(49, 61, 57, 0.13), 0 2px 8px rgba(49, 61, 57, 0.07);
+}
+
+html.theme--dark {
+  --evan-portrait-panel: #222a28;
+  --evan-portrait-mat: #2b3431;
+  --evan-portrait-ink: #e8e4dc;
+  --evan-portrait-muted: #abb3af;
+  --evan-portrait-line: rgba(231, 226, 214, 0.13);
+  --evan-portrait-shadow: 0 24px 60px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+.sidebar-portrait {
+  align-self: center;
+  background: var(--evan-portrait-panel);
+  border: 1px solid var(--evan-portrait-line);
+  border-radius: 20px;
+  box-shadow: var(--evan-portrait-shadow);
+  box-sizing: border-box;
+  cursor: pointer;
+  height: 422px;
+  margin: 0 auto;
+  max-width: 368px;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+  top: auto;
+  transition: box-shadow 0.28s ease, transform 0.28s ease;
+  width: calc(100% - 48px);
+}
+
+.sidebar-portrait::before {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.28), transparent 44%);
+  content: '';
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 2;
+}
+
+html.theme--dark .sidebar-portrait::before {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.035), transparent 44%);
+}
+
+.sidebar-portrait:focus-visible {
+  outline: 3px solid rgba(80, 119, 109, 0.52);
+  outline-offset: 5px;
+}
+
+.sidebar-portrait__figure {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-rows: 294px 82px;
+  height: 100%;
+  margin: 0;
+  padding: 22px 24px 24px;
+}
+
+.sidebar-portrait__artwork {
+  align-self: start;
+  background: var(--evan-portrait-mat);
+  border: 1px solid var(--evan-portrait-line);
+  border-radius: 9px;
+  box-shadow: 0 8px 24px rgba(50, 62, 58, 0.09);
+  box-sizing: border-box;
+  height: 294px;
+  justify-self: center;
+  overflow: hidden;
+  position: relative;
+  width: 294px;
+}
+
+html.theme--dark .sidebar-portrait__artwork {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-portrait__image {
+  display: block;
+  height: 100%;
+  margin: 0;
+  object-fit: cover;
+  object-position: center center;
+  transform: scale(1);
+  width: 100%;
+}
+
+.sidebar-portrait__copy {
+  align-items: center;
+  display: grid;
+  min-height: 0;
+  position: relative;
+}
+
+.sidebar-portrait__intro,
+.sidebar-portrait__caption {
+  grid-area: 1 / 1;
+  margin: 0;
+  width: 100%;
+}
+
+.sidebar-portrait__intro {
+  color: var(--evan-portrait-ink);
+  display: grid;
+  font-size: 14px;
+  gap: 3px;
+  line-height: 1.35;
+}
+
+.sidebar-portrait__intro p {
+  margin: 0;
+  opacity: 0;
+}
+
+.sidebar-portrait__caption {
+  align-content: center;
+  color: var(--evan-portrait-ink);
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+  opacity: 1;
+}
+
+.sidebar-portrait__caption h1,
+.sidebar-portrait__name {
+  color: inherit;
+  display: block;
+  font-size: 17px;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.sidebar-portrait__handle {
+  color: var(--evan-portrait-muted);
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.035em;
+  line-height: 1.2;
+}
+
+html.evan-portrait-animate .sidebar-portrait__artwork {
+  animation: evan-portrait-reveal 0.68s cubic-bezier(0.2, 0.7, 0.25, 1) both;
+}
+
+html.evan-portrait-animate .sidebar-portrait__caption {
+  animation: evan-portrait-caption 0.34s ease 2.12s both;
+}
+
+html.evan-portrait-animate .sidebar-portrait__intro p {
+  animation: evan-portrait-line 1.8s ease both;
+}
+
+html.evan-portrait-animate .sidebar-portrait__intro p[data-portrait-step='line-1'] {
+  animation-delay: 0.34s;
+}
+
+html.evan-portrait-animate .sidebar-portrait__intro p[data-portrait-step='line-2'] {
+  animation-delay: 0.64s;
+  animation-duration: 1.5s;
+}
+
+html.evan-portrait-animate .sidebar-portrait__intro p[data-portrait-step='line-3'] {
+  animation-delay: 0.94s;
+  animation-duration: 1.2s;
+}
+
+@keyframes evan-portrait-reveal {
+  from {
+    filter: saturate(0.82);
+    opacity: 0;
+    transform: scale(0.985);
+  }
+  to {
+    filter: saturate(1);
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes evan-portrait-line {
+  0%, 8% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  18%, 72% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes evan-portrait-caption {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .sidebar-portrait:hover {
+    box-shadow: 0 28px 66px rgba(49, 61, 57, 0.16), 0 3px 10px rgba(49, 61, 57, 0.08);
+    transform: translateY(-2px) scale(1.005);
+  }
+
+  html.theme--dark .sidebar-portrait:hover {
+    box-shadow: 0 28px 66px rgba(0, 0, 0, 0.34), 0 3px 10px rgba(0, 0, 0, 0.2);
+  }
+}
+
+@media (max-width: 960px) {
+  .sidebar-portrait {
+    border-radius: 18px;
+    height: 354px;
+    max-width: 326px;
+    width: calc(100% - 40px);
+  }
+
+  .sidebar-portrait__figure {
+    grid-template-rows: 236px 76px;
+    padding: 20px 20px 22px;
+  }
+
+  .sidebar-portrait__artwork {
+    height: 236px;
+    width: 236px;
+  }
+
+  .sidebar-portrait__intro {
+    font-size: 13px;
+    gap: 2px;
+  }
+
+  .sidebar-portrait__caption h1,
+  .sidebar-portrait__name {
+    font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-portrait,
+  html.evan-portrait-animate .sidebar-portrait__artwork,
+  html.evan-portrait-animate .sidebar-portrait__caption,
+  html.evan-portrait-animate .sidebar-portrait__intro p {
+    animation: none;
+    transition: none;
+  }
+
+  html.evan-portrait-animate .sidebar-portrait__artwork,
+  html.evan-portrait-animate .sidebar-portrait__caption {
+    filter: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  html.evan-portrait-animate .sidebar-portrait__intro p {
+    opacity: 0;
+  }
+}
+
+/* ==========================================================
+   12. 🖼️ 侧栏翻页画廊 (Sidebar Flip Gallery)
    ========================================================== */
 
 :root {
@@ -1763,7 +2040,7 @@ html.share-poster-open body {
 
 @media (max-width: 960px) {
   :root {
-    --mobile-hero-height: clamp(340px, 76vw, 400px);
+    --mobile-hero-height: clamp(420px, 110vw, 440px);
   }
 
   /* 顶栏不再占位：头像/画廊背景直接延伸到屏幕顶部 */
@@ -1787,10 +2064,10 @@ html.share-poster-open body {
     height: 100%;
   }
 
-  /* 个人介绍保留少量顶部呼吸空间；画廊背面仍然贴顶铺满 */
+  /* 顶栏悬浮在侧栏上方，聊天窗从其下方开始；画廊背面仍然贴顶铺满 */
   .sidebar__face--front .sidebar__content {
     box-sizing: border-box;
-    padding-top: 12px;
+    padding-top: 62px;
   }
 
   .header {
