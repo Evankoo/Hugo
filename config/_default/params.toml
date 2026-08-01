@@ -2,7 +2,10 @@ title = "我是伊万"
 author = "伊万"
 copyright = "2021-2026"
 description = "个体/项目/老板IP操盘手<br>ACT心理博主<br>讲述从普通人到超级个体的故事"
-profilePicture = "images/profile.png"
+sidebarPortraitIntro = ["很高兴认识你，我是伊万", "近些年在给企业做营销服务", "也是AI深度用户，心理茶话会主持人"]
+sidebarPortraitCaption = "伊万"
+sidebarPortraitHandle = "🌍 Egan89757"
+profilePicture = "images/profile-chat-2023.jpg"
 keywords = "一人公司, IP打造, 心理成长"
 favicon = "favicons/"
 # example ["js/custom.js"]

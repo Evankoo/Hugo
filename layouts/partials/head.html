@@ -1,5 +1,16 @@
 <head>
-  <script>try{if(sessionStorage.getItem('evanGallery')==='1'){document.documentElement.classList.add('evan-gallery')}}catch(e){}</script>
+  <script>
+    try {
+      var evanGalleryActive = sessionStorage.getItem('evanGallery') === '1';
+      if (evanGalleryActive) document.documentElement.classList.add('evan-gallery');
+      var evanHomePath = location.pathname.replace(/\/+$/, '') || '/';
+      var evanReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (evanHomePath === '/' && !evanGalleryActive && sessionStorage.getItem('evanPortraitSeenV1') !== '1') {
+        sessionStorage.setItem('evanPortraitSeenV1', '1');
+        if (!evanReducedMotion) document.documentElement.classList.add('evan-portrait-animate');
+      }
+    } catch (e) {}
+  </script>
   <meta charset="utf-8" />
   <title>
     {{ if (eq .Site.Params.reversepagetitle true) }}
