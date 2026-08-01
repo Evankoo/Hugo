@@ -1414,15 +1414,24 @@ html.theme--dark body {
 }
 
 .gallery-grid {
-  columns: 2;
-  column-gap: 22px;
+  display: grid;
+  gap: 26px 22px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   margin: 20px 30px 0;
+  position: relative;
+}
+
+.gallery-grid--masonry {
+  display: block;
+}
+
+.gallery-grid--masonry .gallery-card {
+  position: absolute;
 }
 
 .gallery-card {
   display: block;
-  break-inside: avoid;
-  margin-bottom: 26px;
+  margin-bottom: 0;
   overflow: visible;
   text-decoration: none;
   background: transparent;
@@ -1557,8 +1566,16 @@ html.theme--dark body {
 
 @media (max-width: 768px) {
   .gallery-grid {
-    columns: 1;
+    grid-template-columns: 1fr;
     margin: 8px 16px 0;
+  }
+
+  .gallery-grid--masonry {
+    display: grid;
+  }
+
+  .gallery-grid--masonry .gallery-card {
+    position: static;
   }
 
   .gallery-card__title {
