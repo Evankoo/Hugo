@@ -757,6 +757,75 @@ document.addEventListener('DOMContentLoaded', function () {
    ========================================================== */
 (function () {
   let activeObserver = null;
+  let activeMasonryGrid = null;
+  let masonryResizeObserver = null;
+  let masonryFrame = 0;
+
+  function layoutMasonryGrid(grid) {
+    if (!grid || !grid.isConnected) return;
+
+    const cards = Array.from(grid.querySelectorAll('.gallery-card'));
+    const isSingleColumn = window.matchMedia('(max-width: 768px)').matches;
+    if (isSingleColumn) {
+      grid.classList.remove('gallery-grid--masonry');
+      grid.style.removeProperty('height');
+      cards.forEach(function (card) {
+        card.style.removeProperty('left');
+        card.style.removeProperty('top');
+        card.style.removeProperty('width');
+      });
+      return;
+    }
+
+    const gridStyle = window.getComputedStyle(grid);
+    const columnGap = parseFloat(gridStyle.columnGap) || 22;
+    const rowGap = parseFloat(gridStyle.rowGap) || 26;
+    const cardWidth = (grid.clientWidth - columnGap) / 2;
+    const columnHeights = [0, 0];
+
+    cards.forEach(function (card) {
+      card.style.width = cardWidth + 'px';
+    });
+
+    cards.forEach(function (card) {
+      const column = columnHeights[0] <= columnHeights[1] ? 0 : 1;
+      card.style.left = column === 0 ? '0px' : cardWidth + columnGap + 'px';
+      card.style.top = columnHeights[column] + 'px';
+      columnHeights[column] += card.getBoundingClientRect().height + rowGap;
+    });
+
+    grid.style.height = Math.max(0, Math.max.apply(null, columnHeights) - rowGap) + 'px';
+    grid.classList.add('gallery-grid--masonry');
+  }
+
+  function scheduleMasonryLayout() {
+    if (!activeMasonryGrid || masonryFrame) return;
+    masonryFrame = window.requestAnimationFrame(function () {
+      masonryFrame = 0;
+      layoutMasonryGrid(activeMasonryGrid);
+    });
+  }
+
+  function observeMasonryCards(grid) {
+    if (!masonryResizeObserver) return;
+    Array.from(grid.querySelectorAll('.gallery-card')).forEach(function (card) {
+      if (card.dataset.masonryObserved === 'true') return;
+      card.dataset.masonryObserved = 'true';
+      masonryResizeObserver.observe(card);
+    });
+  }
+
+  function bindMasonryGrid(grid) {
+    if (masonryResizeObserver) masonryResizeObserver.disconnect();
+    activeMasonryGrid = grid || null;
+    if (!grid) return;
+
+    if ('ResizeObserver' in window) {
+      masonryResizeObserver = new ResizeObserver(scheduleMasonryLayout);
+      observeMasonryCards(grid);
+    }
+    scheduleMasonryLayout();
+  }
 
   function setFeedState(feed, state, message) {
     feed.dataset.state = state;
@@ -806,6 +875,8 @@ document.addEventListener('DOMContentLoaded', function () {
         grid.appendChild(fresh);
         existing.add(href);
       });
+      observeMasonryCards(grid);
+      scheduleMasonryLayout();
 
       const followingUrl = nextFeed.dataset.nextUrl;
       if (followingUrl) {
@@ -830,6 +901,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const main = document.querySelector('.wrapper__main');
     const grid = main && main.querySelector('.gallery-grid');
     const feed = main && main.querySelector('[data-gallery-feed]');
+    bindMasonryGrid(grid);
     if (!grid || !feed || feed.dataset.galleryBound === 'true') return;
 
     feed.dataset.galleryBound = 'true';
@@ -862,6 +934,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   document.addEventListener('DOMContentLoaded', bindProgressiveGallery);
+  window.addEventListener('resize', scheduleMasonryLayout);
   window.__evanBindProgressiveGallery = bindProgressiveGallery;
 })();
 
