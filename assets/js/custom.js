@@ -535,14 +535,11 @@
 })();
 
 /* ==========================================================
-   侧栏肖像序章：每次会话首次进入首页时依次播放；
+   侧栏肖像序章：首页循环播放介绍与人物注脚；
    内页保持完成态，减少动态效果偏好下不播放。
    ========================================================== */
 (function () {
-  const STORAGE_KEY = 'evanPortraitSeenV1';
-  const ROOT_CLASS = 'evan-portrait-animate';
-  const DURATION_MS = 2600;
-  let finishTimer = null;
+  const ROOT_CLASS = 'evan-portrait-loop';
 
   function isHome(pathname) {
     return (pathname || '/').replace(/\/+$/, '') === '';
@@ -552,22 +549,8 @@
     return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 
-  function finishAnimation() {
-    clearTimeout(finishTimer);
-    finishTimer = null;
+  function stopPortraitLoop() {
     document.documentElement.classList.remove(ROOT_CLASS);
-    const sidebar = document.getElementById('sidebar');
-    if (sidebar) sidebar.removeAttribute('aria-busy');
-  }
-
-  function scheduleFinish() {
-    const sidebar = document.getElementById('sidebar');
-    if (sidebar) {
-      sidebar.setAttribute('aria-busy', 'true');
-      sidebar.dataset.portraitPlayed = 'true';
-    }
-    clearTimeout(finishTimer);
-    finishTimer = setTimeout(finishAnimation, DURATION_MS);
   }
 
   function syncPortraitHeading(pathname) {
@@ -591,34 +574,27 @@
     syncPortraitHeading(pathname);
 
     if (!isHome(pathname)) {
-      finishAnimation();
-      return;
-    }
-    if (root.classList.contains(ROOT_CLASS)) {
-      scheduleFinish();
+      stopPortraitLoop();
       return;
     }
     if (
       root.classList.contains('evan-gallery') ||
       sidebar.classList.contains('is-flipped') ||
       sidebar.classList.contains('is-resetting-gallery')
-    ) return;
+    ) {
+      stopPortraitLoop();
+      return;
+    }
+    if (prefersReducedMotion()) {
+      stopPortraitLoop();
+      return;
+    }
 
-    let seen = false;
-    try { seen = sessionStorage.getItem(STORAGE_KEY) === '1'; } catch (err) {}
-    if (seen) return;
-    try { sessionStorage.setItem(STORAGE_KEY, '1'); } catch (err) {}
-    if (prefersReducedMotion()) return;
-
-    // Restart the CSS sequence after an SPA navigation without rebuilding the sidebar.
-    root.classList.remove(ROOT_CLASS);
-    void sidebar.offsetWidth;
     root.classList.add(ROOT_CLASS);
-    scheduleFinish();
   }
 
   function cancelPortraitIntro() {
-    finishAnimation();
+    stopPortraitLoop();
   }
 
   document.addEventListener('DOMContentLoaded', function () {

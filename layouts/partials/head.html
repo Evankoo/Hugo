@@ -5,9 +5,8 @@
       if (evanGalleryActive) document.documentElement.classList.add('evan-gallery');
       var evanHomePath = location.pathname.replace(/\/+$/, '') || '/';
       var evanReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (evanHomePath === '/' && !evanGalleryActive && sessionStorage.getItem('evanPortraitSeenV1') !== '1') {
-        sessionStorage.setItem('evanPortraitSeenV1', '1');
-        if (!evanReducedMotion) document.documentElement.classList.add('evan-portrait-animate');
+      if (evanHomePath === '/' && !evanGalleryActive && !evanReducedMotion) {
+        document.documentElement.classList.add('evan-portrait-loop');
       }
     } catch (e) {}
   </script>
